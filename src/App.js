@@ -3,7 +3,7 @@ import {
   Container
 }  
 from '@material-ui/core';
-import ListOfPlans from './ListOfPlans'
+import ListOfPlans from './components/ListOfPlans'
 
 
 const App = () => {
