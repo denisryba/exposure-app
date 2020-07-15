@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios'
 import {
   Table,
   TableBody,
@@ -16,12 +17,22 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 
 const ListOfPlans = () => {
+  const [plans, setPlans] =  useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/api/plans')
+      .then(res => {
+        setPlans(res.data)
+      })
+  }, []);
 
   const useStyles = makeStyles({
     root: {
       maxWidth: '80%',
       margin: 'auto',
-      fontFamily: "Roboto"
+      fontFamily: "Roboto",
+      fontSize: 18
     },
     highlightedText: {
       color: '#a6ce39'
@@ -41,52 +52,8 @@ const ListOfPlans = () => {
   
   const classes = useStyles();
   
-  const plans = [
-    {
-    "id": "5e680f360f94107d10acba1d",
-    "position": "стажер-разработчик",
-    "employeeId": "5e680f360f94107d10acba1d",
-    "supervisorId": "5e680f360f94107d10acba1d",
-    "hrId": "5e680f360f94107d10acba1d",
-    "stage": "На выполнении",
-    "adaptationStart": "2020-03-10T22:05:42.004+00:00",
-    "adaptationEnd": "2020-03-10T22:05:42.004+00:00",
-    "result": "completed",
-    "rate": "A",
-    "tasks": ["5e680f360f94107d10acba1d", "5e680f360f94107d10acba1d", "5e680f360f94107d10acba1d"],
-    "date": "2020-03-10T22:05:42.004+00:00"
-    },
-    {
-      "id": "5e680f360f94107d10acba2d",
-      "position": "стажер-разработчик",
-      "employeeId": "5e680f360f94107d10acba1d",
-      "supervisorId": "5e680f360f94107d10acba1d",
-      "hrId": "5e680f360f94107d10acba1d",
-      "stage": "На выполнении",
-      "adaptationStart": "2020-03-10T22:05:42.004+00:00",
-      "adaptationEnd": "2020-03-10T22:05:42.004+00:00",
-      "result": "completed",
-      "rate": "A",
-      "tasks": ["5e680f360f94107d10acba1d", "5e680f360f94107d10acba1d", "5e680f360f94107d10acba1d"],
-      "date": "2020-03-10T22:05:42.004+00:00"
-      }
-  ];
-  const users = [
-    {
-    "id": "5e680f360f94107d10acba1d",
-    "name": {
-    "first": "Иван Иванович",
-    "last": "Иванов"
-    },
-    "permission": "5e680f360f94107d10acba1d",
-    "email": "qwerty@gmail.com"
-    }
-  ];     
 
-const setUserName = userId => {
-  const name = users.find(user => user.id === userId).name;
-    return name.first + ' ' + name.last;
-};
+const setName = name => name.first + ' ' + name.middle + ' ' + name.last;
 
 const formatDate = (planDate) => {
   const date = new Date(planDate);
@@ -118,9 +85,9 @@ return (
           <TableBody>
           {plans.map(plan => (
             <TableRow key={plan.id}>
-              <TableCell>{setUserName(plan.employeeId)}<div className={classes.subtitle}>{plan.position}</div></TableCell>
+              <TableCell>{setName(plan.employee.name)}<div className={classes.subtitle}>стажер-разработчик</div></TableCell>
               <TableCell className={classes.highlightedText}>{plan.stage}</TableCell>
-              <TableCell>{setUserName(plan.supervisorId)}</TableCell>
+              <TableCell>{setName(plan.supervisor.name)}</TableCell>
               <TableCell>{formatDate(plan.adaptationStart)}</TableCell>
               <TableCell>
                 <IconButton>
