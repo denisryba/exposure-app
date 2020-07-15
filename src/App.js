@@ -1,10 +1,21 @@
 import React from 'react';
-import './App.css';
+import {
+  Container
+}  
+from '@material-ui/core';
+import ListOfPlans from './ListOfPlans'
 
-function App() {
+
+const App = () => {
+
   return (
-    <h1>exposure app</h1>
-  );
+    <Container>
+      <h1>exposure app</h1> 
+      <ListOfPlans />
+    </Container>  
+  )
 }
 
-export default App;
+
+
+export default App
