@@ -2,14 +2,20 @@ const plansRouter = require('express').Router();
 const Plan = require('../models/plan.js');
 
 plansRouter.get('/', async (req, res) => {
-
-  const plans = await Plan.find({});
+  const plans = await Plan
+    .find({})
+    .populate('employee')
+    .populate('supervisor')
+    .populate('hr');
   res.json(plans);
-
 });
 
 plansRouter.get('/:id', async (req, res, next) => {
-  const plan = await Plan.findById(req.params.id);
+  const plan = await Plan
+    .findById(req.params.id)
+    .populate('employee')
+    .populate('supervisor')
+    .populate('hr');
 
   if (plan) {
     res.json(plan);
@@ -23,9 +29,9 @@ plansRouter.post('/', async (req, res) => {
 
   const plan = new Plan({
     employeePosition: body.employeePosition,
-    employeeId: body.employeeId,
-    supervisorId: body.supervisorId,
-    hrId: body.hrId,
+    employee: body.employee,
+    supervisor: body.supervisor,
+    hr: body.hr,
     stage: body.stage,
     adaptationStart: new Date(body.adaptationStart),
     adaptationEnd: new Date(),
@@ -37,7 +43,6 @@ plansRouter.post('/', async (req, res) => {
 
   const savedPlan = await plan.save();
   res.json(savedPlan);
-
 });
 
 plansRouter.delete('/:id', async (req, res) => {

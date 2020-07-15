@@ -2,9 +2,18 @@ const mongoose = require('mongoose');
 
 const planSchema = new mongoose.Schema({
   employeePosition: mongoose.Schema.Types.ObjectId,
-  employeeId: mongoose.Schema.Types.ObjectId,
-  supervisorId: mongoose.Schema.Types.ObjectId,
-  hrId: mongoose.Schema.Types.ObjectId,
+  employee: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  supervisor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  hr: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   stage: String,
   adaptationStart: Date,
   adaptationEnd: Date,

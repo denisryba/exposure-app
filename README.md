@@ -5,6 +5,4 @@
   `npm run dev`
 
 ## Features
-  - GET request to get all plans from '/api/plans'
-  - POST request to post a single plan to '/api/plans'
-
+  - '/api/plans' and '/api/users' support GET, POST, DELETE requests

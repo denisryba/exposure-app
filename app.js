@@ -3,6 +3,7 @@ const express = require('express');
 require('express-async-errors');
 const cors = require('cors');
 const plansRouter = require('./controllers/plans.js');
+const usersRouter = require('./controllers/users.js');
 const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
 const mongoose = require('mongoose');
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(morgan(logTemplate));
 
 app.use('/api/plans', plansRouter);
+app.use('/api/users', usersRouter);
 
 app.use(middleware.unknownRoute);
 app.use(middleware.errorHandler);
