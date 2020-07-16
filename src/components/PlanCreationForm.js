@@ -7,7 +7,9 @@ import {
   Button,
   DialogActions,
   DialogTitle,
-  DialogContent
+  DialogContent,
+  createMuiTheme,
+  ThemeProvider
  } 
 from '@material-ui/core';
 import axios from 'axios';
@@ -21,6 +23,14 @@ import {
 
 const secondaryColor = '#a6ce39';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#a6ce39',
+    }
+  },
+});
+
 const useStyles = makeStyles({
   modal: {
     minWidth: 400
@@ -29,11 +39,15 @@ const useStyles = makeStyles({
     paddingBottom: 0
   },
   button: {
-    backgroundColor: secondaryColor,
     color: '#ffffff',
     width: "30%",
     fontSize: 10,
     marginTop: 15
+  },
+  datePickerInput: {
+    '&:after': {
+      borderColor: secondaryColor,
+  }
   }
 });
 
@@ -47,7 +61,7 @@ const PlanCreationForm = () => {
   const [positionList, setPositionList] = useState([]);
   const [adaptationStart, setAdaptationStart] = useState(new Date());
   const [adaptationEnd, setAdaptationEnd] = useState(new Date());
-  const[isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleChangeEmployeeName = event => setEmployeeName(event.target.value);
   const handleChangePosition = event => setPosition(event.target.value);
@@ -78,8 +92,10 @@ const PlanCreationForm = () => {
   return (
     <Dialog open={isOpen} onClose={handleClose} >      
       <Box className={classes.modal}  p="1rem" >
+      <ThemeProvider theme={theme}>
         <DialogTitle className={classes.header}>Создание плана адаптации</DialogTitle>
           <DialogContent>
+          
             <FormGroup>
             <FormMenu 
               label='ФИО сотрудника' 
@@ -99,8 +115,10 @@ const PlanCreationForm = () => {
               handleChange={handleChangeSupervisorName} 
               selectList={supervisorList}
             />
+            
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker  
+              
                 disableToolbar        
                 variant="inline"
                 format="dd.MM.yyyy"
@@ -108,6 +126,7 @@ const PlanCreationForm = () => {
                 label="Начало адаптации"
                 value={adaptationStart}
                 onChange={handleAdaptationStart}
+                
               />
               <KeyboardDatePicker
                 disableToolbar
@@ -121,14 +140,19 @@ const PlanCreationForm = () => {
             </MuiPickersUtilsProvider>
           </FormGroup>
         </DialogContent>
+
         <DialogActions>
           <Button 
             variant="contained" 
             onClick={handleClose} 
-            className={classes.button}>
+            className={classes.button}
+            color="primary"
+            
+            >
             Создать
           </Button>
         </DialogActions>
+        </ThemeProvider>
       </Box>
     </Dialog>
   )
