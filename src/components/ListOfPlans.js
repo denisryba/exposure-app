@@ -71,7 +71,7 @@ const ListOfPlans = () => {
 
   return (
       <Box className={classes.root}>
-        <h1 className={classes.header}>Адапционные планы</h1>
+        <h1 className={classes.header}>Адаптационные планы</h1>
         <TableContainer component = {Paper}>
           <Table>
             <TableHead>
