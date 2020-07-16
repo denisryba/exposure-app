@@ -15,6 +15,28 @@ import {
 from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+const useStyles = makeStyles({
+  root: {
+    maxWidth: '80%',
+    margin: 'auto',
+    fontFamily: "Roboto",
+    fontSize: 18
+  },
+  highlightedText: {
+    color: '#a6ce39'
+  },
+  subtitle: {
+    color: '#838383',
+    fontSize: 14,
+  },
+  header: {
+    fontSize: 18,
+    paddingLeft: 15
+  },
+  deleteColumn: {
+    width: "5%"
+  }
+});
 
 const ListOfPlans = () => {
   const [plans, setPlans] =  useState([]);
@@ -27,29 +49,7 @@ const ListOfPlans = () => {
       })
   }, []);
 
-  const useStyles = makeStyles({
-    root: {
-      maxWidth: '80%',
-      margin: 'auto',
-      fontFamily: "Roboto",
-      fontSize: 18
-    },
-    highlightedText: {
-      color: '#a6ce39'
-    },
-    subtitle: {
-      color: '#838383',
-      fontSize: 14,
-    },
-    header: {
-      fontSize: 18,
-      paddingLeft: 15
-    },
-    deleteColumn: {
-      width: "5%"
-    }
-  });
-  
+
   const classes = useStyles();
   
 
