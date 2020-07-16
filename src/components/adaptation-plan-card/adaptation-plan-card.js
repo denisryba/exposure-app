@@ -12,7 +12,7 @@ import './adaptation-plan-card.css';
 class AdaptationPlanCard extends React.Component {
 
     state = {
-        editMode: true,
+        editMode: false,
         data: {
             stage: 'execution',
             employee: {
@@ -112,7 +112,7 @@ class AdaptationPlanCard extends React.Component {
                             <ProgressBar stage={this.state.data.stage} />
                         </Grid>
                     </Grid>
-                    <div className="plan-creation-date">
+                    <div className="bottom-creation-date">
                         Создан 25.04.12
                     </div>
                     {this.state.editMode &&
