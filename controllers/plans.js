@@ -1,5 +1,6 @@
 const plansRouter = require('express').Router();
 const Plan = require('../models/plan.js');
+const { response } = require('express');
 
 plansRouter.get('/', async (req, res) => {
   const plans = await Plan
@@ -47,11 +48,11 @@ plansRouter.post('/', async (req, res) => {
     employee: body.employee,
     supervisor: body.supervisor,
     hr: body.hr,
-    stage: body.stage,
+    stage: body.stage || 'Заполнение сотрудником',
     adaptationStart: new Date(body.adaptationStart),
     adaptationEnd: new Date(body.adaptationEnd),
-    completed: body.completed,
-    rate: body.rate,
+    completed: body.completed || false,
+    rate: body.rate || 'отсутствует',
     tasks: body.tasks,
     date: new Date(),
   });
@@ -63,6 +64,25 @@ plansRouter.post('/', async (req, res) => {
 plansRouter.delete('/:id', async (req, res) => {
   await Plan.findByIdAndDelete(req.params.id);
   res.status(204).end();
+});
+
+plansRouter.put('/:id', async (req, res) => {
+  const body = req.body;
+
+  const plan = {
+    employeePosition: body.employeePosition,
+    employee: body.employee,
+    supervisor: body.supervisor,
+    hr: body.hr,
+    stage: body.stage,
+    adaptationStart: new Date(body.adaptationStart),
+    adaptationEnd: new Date(body.adaptationEnd),
+    completed: body.completed,
+    rate: body.rate,
+  };
+
+  const updatedPlan = await Plan.findByIdAndUpdate(req.params.id, plan, { new: true });
+  res.json(updatedPlan);
 });
 
 module.exports = plansRouter;

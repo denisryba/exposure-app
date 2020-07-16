@@ -1,14 +1,30 @@
 const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false)
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    required: true
+  },
   name: {
-    first: String,
-    last: String,
+    first: {
+      type: String,
+      required: true
+    },
+    last: {
+      type: String,
+      required: true
+    },
     middle: String
   },
-  email: String,
-  role: String,
+  email: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    required: true
+  },
 });
 
 userSchema.set('toJSON', {

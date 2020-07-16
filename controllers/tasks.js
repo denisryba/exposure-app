@@ -22,21 +22,25 @@ tasksRouter.post('/', async (req, res) => {
   const body = req.body;
 
   const plan =  await Plan.findById(body.plan);
-  
-  const task = new Task({
-    name: body.name,
-    description: body.description,
-    executionStart: new Date(body.executionStart),
-    executionEnd: new Date(body.executionEnd),
-    completed: body.completed,
-    plan: plan._id,
-    date: new Date()
-  });
 
-  const savedTask = await task.save();
-  plan.tasks = plan.tasks.concat(savedTask._id);
-  await plan.save();
-  res.json(savedTask);
+  if (plan) {
+    const task = new Task({
+      name: body.name,
+      description: body.description,
+      executionStart: new Date(body.executionStart),
+      executionEnd: new Date(body.executionEnd),
+      completed: body.completed || false,
+      plan: plan._id,
+      date: new Date()
+    });
+  
+    const savedTask = await task.save();
+    plan.tasks = plan.tasks.concat(savedTask._id);
+    await plan.save();
+    res.json(savedTask);
+  }
+
+  res.status(400).json('plan does not exist for provided id')
 });
 
 tasksRouter.delete('/:id', async (req, res) => {
@@ -48,6 +52,21 @@ tasksRouter.delete('/:id', async (req, res) => {
   await Task.findByIdAndDelete(req.params.id);
   await plan.save();
   res.status(204).end();
+});
+
+tasksRouter.put('/:id', async (req, res) => {
+  const body = req.body;
+
+  const task = {
+    name: body.name,
+    description: body.description,
+    executionStart: new Date(body.executionStart),
+    executionEnd: new Date(body.executionEnd),
+    completed: body.completed,
+  };
+
+  const updatedTask = await Task.findByIdAndUpdate(req.params.id, task, { new: true });
+  res.json(updatedTask);
 });
 
 module.exports = tasksRouter;

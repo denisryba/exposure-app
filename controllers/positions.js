@@ -33,4 +33,16 @@ positionsRouter.delete('/:id', async (req, res) => {
   res.status(204).end();
 });
 
+positionsRouter.put('/:id', async (req, res) => {
+  const body = req.body;
+
+  const position = {
+    name: body.name,
+    description: body.description
+  };
+
+  const updatedPosition = await Position.findByIdAndUpdate(req.params.id, position, { new: true });
+  res.json(updatedPosition);
+});
+
 module.exports = positionsRouter;

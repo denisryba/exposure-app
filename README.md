@@ -5,4 +5,4 @@
   `npm run dev`
 
 ## Features
-  - '/api/plans', '/api/users', 'api/tasks', 'api/positions' support GET, POST, DELETE requests
+  - '/api/plans', '/api/users', 'api/tasks', 'api/positions' support GET, POST, DELETE, PUT requests
