@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const planSchema = new mongoose.Schema({
-  employeePosition: mongoose.Schema.Types.ObjectId,
+  employeePosition: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Position'
+  },
   employee: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

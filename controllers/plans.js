@@ -6,7 +6,8 @@ plansRouter.get('/', async (req, res) => {
     .find({})
     .populate('employee')
     .populate('supervisor')
-    .populate('hr');
+    .populate('hr')
+    .populate('employeePosition');
   res.json(plans);
 });
 
@@ -19,6 +20,20 @@ plansRouter.get('/:id', async (req, res, next) => {
 
   if (plan) {
     res.json(plan);
+  } else {
+    res.status(404).end();
+  }
+});
+
+plansRouter.get('/:id/tasks', async (req, res, next) => {
+  const plan = await Plan
+    .findById(req.params.id)
+    .populate('tasks');
+
+  const tasks = plan.tasks;
+
+  if (tasks) {
+    res.json(tasks);
   } else {
     res.status(404).end();
   }
