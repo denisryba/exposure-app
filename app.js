@@ -1,11 +1,13 @@
-const config = require('./utils/config');
+const config = require('./utils/config.js');
 const express = require('express');
 require('express-async-errors');
 const cors = require('cors');
 const plansRouter = require('./controllers/plans.js');
 const usersRouter = require('./controllers/users.js');
-const middleware = require('./utils/middleware');
-const logger = require('./utils/logger');
+const positionsRouter = require('./controllers/positions.js');
+const tasksRouter = require('./controllers/tasks.js');
+const middleware = require('./utils/middleware.js');
+const logger = require('./utils/logger.js');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
@@ -30,6 +32,8 @@ app.use(morgan(logTemplate));
 
 app.use('/api/plans', plansRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/positions', positionsRouter);
+app.use('/api/tasks', tasksRouter);
 
 app.use(middleware.unknownRoute);
 app.use(middleware.errorHandler);

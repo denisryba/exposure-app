@@ -34,7 +34,7 @@ plansRouter.post('/', async (req, res) => {
     hr: body.hr,
     stage: body.stage,
     adaptationStart: new Date(body.adaptationStart),
-    adaptationEnd: new Date(),
+    adaptationEnd: new Date(body.adaptationEnd),
     completed: body.completed,
     rate: body.rate,
     tasks: body.tasks,
