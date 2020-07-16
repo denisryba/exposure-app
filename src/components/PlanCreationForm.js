@@ -51,11 +51,11 @@ const useStyles = makeStyles({
   }
 });
 
-const PlanCreationForm = () => {
+const PlanCreationForm = ( ) => {
   const classes = useStyles();
-  const [employeeName, setEmployeeName] = useState('');
+  const [employee, setEmployee] = useState('');
   const [position, setPosition] = useState('');
-  const [supervisorName, setSupervisorName] = useState('');
+  const [supervisor, setSupervisor] = useState('');
   const [employeeList, setEmployeeList] = useState([]);
   const [supervisorList, setSupervisoreList] = useState([]);
   const [positionList, setPositionList] = useState([]);
@@ -63,9 +63,9 @@ const PlanCreationForm = () => {
   const [adaptationEnd, setAdaptationEnd] = useState(new Date());
   const [isOpen, setIsOpen] = useState(true);
 
-  const handleChangeEmployeeName = event => setEmployeeName(event.target.value);
+  const handleChangeEmployeeName = event => setEmployee(event.target.value);
   const handleChangePosition = event => setPosition(event.target.value);
-  const handleChangeSupervisorName = event => setSupervisorName(event.target.value);
+  const handleChangeSupervisorName = event => setSupervisor(event.target.value);
   const handleAdaptationStart = (date) => setAdaptationStart(date);
   const handleAdaptationEnd = (date) => setAdaptationEnd(date);
 
@@ -89,17 +89,36 @@ const PlanCreationForm = () => {
       })
   }, []);
 
+  const addPlan = (event) => {
+    event.preventDefault()
+    const planObject = 
+    {
+      employeePosition: position,
+      employee: employee,
+      supervisor: supervisor,
+      hr: "5e680f360f94107d10acba1d",
+      stage: "rated",
+      adaptationStart: adaptationStart,
+      adaptationEnd: adaptationEnd,
+      completed: "false",
+      rate: "A",
+      tasks: []
+      } 
+    axios
+      .post('http://localhost:3001/api/plans', planObject)
+  }
+
   return (
     <Dialog open={isOpen} onClose={handleClose} >      
       <Box className={classes.modal}  p="1rem" >
       <ThemeProvider theme={theme}>
         <DialogTitle className={classes.header}>Создание плана адаптации</DialogTitle>
-          <DialogContent>
-          
-            <FormGroup>
+        <form onSubmit={addPlan}>
+          <DialogContent>       
+            <FormGroup >
             <FormMenu 
               label='ФИО сотрудника' 
-              value={employeeName} 
+              value={employee} 
               handleChange={handleChangeEmployeeName} 
               selectList={employeeList}
             />
@@ -111,14 +130,13 @@ const PlanCreationForm = () => {
             />
             <FormMenu 
               label='ФИО руководителя' 
-              value={supervisorName} 
+              value={supervisor} 
               handleChange={handleChangeSupervisorName} 
               selectList={supervisorList}
             />
             
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker  
-              
+              <KeyboardDatePicker               
                 disableToolbar        
                 variant="inline"
                 format="dd.MM.yyyy"
@@ -147,11 +165,13 @@ const PlanCreationForm = () => {
             onClick={handleClose} 
             className={classes.button}
             color="primary"
+            type="Submit"
             
             >
             Создать
           </Button>
         </DialogActions>
+        </form>
         </ThemeProvider>
       </Box>
     </Dialog>

@@ -47,7 +47,7 @@ const ListOfPlans = () => {
       .then(res => {
         setPlans(res.data)
       })
-  }, []);
+  }, [plans]);
 
 
   const classes = useStyles();
