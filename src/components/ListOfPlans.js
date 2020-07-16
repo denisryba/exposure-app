@@ -47,7 +47,7 @@ const ListOfPlans = () => {
       .then(res => {
         setPlans(res.data)
       })
-  }, [plans]);
+  }, []);
 
 
   const classes = useStyles();
@@ -58,11 +58,12 @@ const ListOfPlans = () => {
   const formatDate = (planDate) => {
     const date = new Date(planDate);
     
-    let dd = date.getDay();
+    let dd = date.getDate();
     dd = (dd < 10) ? ('0' + dd) : dd;
     
-    let mm = date.getMonth();
-    mm = (mm < 10) ? ('0' + mm) : mm;
+    let mm = date.getMonth()  + 1;
+    mm = (mm < 10) ? ('0' + mm): mm;
+    
     
     let yy = date.getFullYear();
       return dd + "." + mm + "." + yy;
@@ -88,7 +89,7 @@ const ListOfPlans = () => {
                 <TableCell>{setName(plan.employee.name)}<div className={classes.subtitle}>стажер-разработчик</div></TableCell>
                 <TableCell className={classes.highlightedText}>{plan.stage}</TableCell>
                 <TableCell>{setName(plan.supervisor.name)}</TableCell>
-                <TableCell>{formatDate(plan.adaptationStart)}</TableCell>
+                <TableCell>{formatDate(plan.date)}</TableCell>
                 <TableCell>
                   <IconButton>
                     <DeleteIcon/>

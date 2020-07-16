@@ -166,7 +166,7 @@ const PlanCreationForm = ( ) => {
             className={classes.button}
             color="primary"
             type="Submit"
-            
+
             >
             Создать
           </Button>
