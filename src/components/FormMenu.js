@@ -20,8 +20,7 @@ const FormMenu = ( {label, value, handleChange, selectList} ) => {
           <Select value={value} onChange={handleChange} >
           {selectList.map(item => (
             <MenuItem value={item.id} key={item.id}>{setName(item.name)}</MenuItem>
-          )
-          )}    
+          ))}    
         </Select>
     </FormControl>
   )

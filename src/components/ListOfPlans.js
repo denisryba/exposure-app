@@ -49,10 +49,8 @@ const ListOfPlans = () => {
       })
   }, []);
 
-
   const classes = useStyles();
   
-
   const setName = name => name.first + ' ' + name.middle + ' ' + name.last;
 
   const formatDate = (planDate) => {
@@ -61,10 +59,9 @@ const ListOfPlans = () => {
     let dd = date.getDate();
     dd = (dd < 10) ? ('0' + dd) : dd;
     
-    let mm = date.getMonth()  + 1;
+    let mm = date.getMonth() + 1;
     mm = (mm < 10) ? ('0' + mm): mm;
-    
-    
+     
     let yy = date.getFullYear();
       return dd + "." + mm + "." + yy;
   };

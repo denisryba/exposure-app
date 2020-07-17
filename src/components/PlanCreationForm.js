@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import { 
   makeStyles, 
   Box,
@@ -12,16 +13,13 @@ import {
   ThemeProvider
  } 
 from '@material-ui/core';
-import axios from 'axios';
-import FormMenu from "./FormMenu"
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
-
-const secondaryColor = '#a6ce39';
+import FormMenu from "./FormMenu";
 
 const theme = createMuiTheme({
   palette: {
@@ -43,11 +41,6 @@ const useStyles = makeStyles({
     width: "30%",
     fontSize: 10,
     marginTop: 15
-  },
-  datePickerInput: {
-    '&:after': {
-      borderColor: secondaryColor,
-  }
   }
 });
 
@@ -66,8 +59,8 @@ const PlanCreationForm = ( ) => {
   const handleChangeEmployeeName = event => setEmployee(event.target.value);
   const handleChangePosition = event => setPosition(event.target.value);
   const handleChangeSupervisorName = event => setSupervisor(event.target.value);
-  const handleAdaptationStart = (date) => setAdaptationStart(date);
-  const handleAdaptationEnd = (date) => setAdaptationEnd(date);
+  const handleAdaptationStart = date => setAdaptationStart(date);
+  const handleAdaptationEnd = date => setAdaptationEnd(date);
 
   // const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
@@ -104,6 +97,7 @@ const PlanCreationForm = ( ) => {
       rate: "A",
       tasks: []
       } 
+
     axios
       .post('http://localhost:3001/api/plans', planObject)
   }
@@ -114,70 +108,63 @@ const PlanCreationForm = ( ) => {
       <ThemeProvider theme={theme}>
         <DialogTitle className={classes.header}>Создание плана адаптации</DialogTitle>
         <form onSubmit={addPlan}>
-          <DialogContent>       
-            <FormGroup >
-            <FormMenu 
-              label='ФИО сотрудника' 
-              value={employee} 
-              handleChange={handleChangeEmployeeName} 
-              selectList={employeeList}
-            />
-            <FormMenu 
-              label='Должность' 
-              value={position} 
-              handleChange={handleChangePosition} 
-              selectList={positionList}
-            />
-            <FormMenu 
-              label='ФИО руководителя' 
-              value={supervisor} 
-              handleChange={handleChangeSupervisorName} 
-              selectList={supervisorList}
-            />
-            
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker               
-                disableToolbar        
-                variant="inline"
-                format="dd.MM.yyyy"
-                margin="normal"
-                label="Начало адаптации"
-                value={adaptationStart}
-                onChange={handleAdaptationStart}
-                
-              />
-              <KeyboardDatePicker
-                disableToolbar
-                variant="inline"
-                format="dd.MM.yyyy"
-                margin="normal"
-                label="Конец адаптации"
-                value={adaptationEnd}
-                onChange={handleAdaptationEnd}
-              />
-            </MuiPickersUtilsProvider>
-          </FormGroup>
-        </DialogContent>
-
-        <DialogActions>
-          <Button 
-            variant="contained" 
-            onClick={handleClose} 
-            className={classes.button}
-            color="primary"
-            type="Submit"
-
-            >
-            Создать
-          </Button>
-        </DialogActions>
-        </form>
+            <DialogContent>       
+              <FormGroup >
+                <FormMenu 
+                  label='ФИО сотрудника' 
+                  value={employee} 
+                  handleChange={handleChangeEmployeeName} 
+                  selectList={employeeList}
+                />
+                <FormMenu 
+                  label='Должность' 
+                  value={position} 
+                  handleChange={handleChangePosition} 
+                  selectList={positionList}
+                />
+                <FormMenu 
+                  label='ФИО руководителя' 
+                  value={supervisor} 
+                  handleChange={handleChangeSupervisorName} 
+                  selectList={supervisorList}
+                />           
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker               
+                    disableToolbar        
+                    variant="inline"
+                    format="dd.MM.yyyy"
+                    margin="normal"
+                    label="Начало адаптации"
+                    value={adaptationStart}
+                    onChange={handleAdaptationStart}               
+                  />
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="dd.MM.yyyy"
+                    margin="normal"
+                    label="Конец адаптации"
+                    value={adaptationEnd}
+                    onChange={handleAdaptationEnd}
+                  />
+                </MuiPickersUtilsProvider>
+              </FormGroup>
+            </DialogContent>
+            <DialogActions>
+              <Button 
+                variant="contained" 
+                onClick={handleClose} 
+                className={classes.button}
+                color="primary"
+                type="Submit">
+                Создать
+              </Button>
+            </DialogActions>
+          </form>
         </ThemeProvider>
       </Box>
     </Dialog>
   )
 };
-
-
 
 export default PlanCreationForm;
