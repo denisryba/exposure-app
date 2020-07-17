@@ -104,7 +104,15 @@ const PlanCreationForm = ( {isShowing, hide, plans, setPlans} ) => {
 
     axios
       .post('http://localhost:3001/api/plans', planObject)
-      .then(res => setPlans(plans.concat(Object.assign(res.data, planParam))));
+      .then(res => {
+        setPlans(plans.concat(Object.assign(res.data, planParam)));
+        setEmployeeId('');
+        setSupervisorId('');
+        setPositionId('');
+        setAdaptationStart(new Date());
+        setAdaptationEnd(new Date());
+      })
+      .catch(error => hide());
   }
 
   return (
