@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import axios from 'axios'
 import {
   Table,
@@ -38,19 +38,9 @@ const useStyles = makeStyles({
   }
 });
 
-const ListOfPlans = () => {
-  const [plans, setPlans] =  useState([]);
-
-  useEffect(() => {
-    axios
-      .get('http://localhost:3001/api/plans')
-      .then(res => {
-        setPlans(res.data)
-      })
-  }, []);
-
+const ListOfPlans = ({plans, setPlans}) => {
   const classes = useStyles();
-  
+
   const setName = name => name.first + ' ' + name.middle + ' ' + name.last;
 
   const formatDate = (planDate) => {

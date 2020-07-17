@@ -44,26 +44,22 @@ const useStyles = makeStyles({
   }
 });
 
-const PlanCreationForm = ( ) => {
+const PlanCreationForm = ( {isShowing, hide, plans, setPlans} ) => {
   const classes = useStyles();
-  const [employee, setEmployee] = useState('');
-  const [position, setPosition] = useState('');
-  const [supervisor, setSupervisor] = useState('');
+  const [employeeId, setEmployeeId] = useState('');
+  const [positionId, setPositionId] = useState('');
+  const [supervisorId, setSupervisorId] = useState('');
   const [employeeList, setEmployeeList] = useState([]);
   const [supervisorList, setSupervisoreList] = useState([]);
   const [positionList, setPositionList] = useState([]);
   const [adaptationStart, setAdaptationStart] = useState(new Date());
   const [adaptationEnd, setAdaptationEnd] = useState(new Date());
-  const [isOpen, setIsOpen] = useState(true);
 
-  const handleChangeEmployeeName = event => setEmployee(event.target.value);
-  const handleChangePosition = event => setPosition(event.target.value);
-  const handleChangeSupervisorName = event => setSupervisor(event.target.value);
+  const handleChangeEmployeeName = event => setEmployeeId(event.target.value);
+  const handleChangePosition = event => setPositionId(event.target.value);
+  const handleChangeSupervisorName = event => setSupervisorId(event.target.value);
   const handleAdaptationStart = date => setAdaptationStart(date);
   const handleAdaptationEnd = date => setAdaptationEnd(date);
-
-  // const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
 
   useEffect(() => {
     axios
@@ -86,9 +82,9 @@ const PlanCreationForm = ( ) => {
     event.preventDefault()
     const planObject = 
     {
-      employeePosition: position,
-      employee: employee,
-      supervisor: supervisor,
+      employeePosition: positionId,
+      employee: employeeId,
+      supervisor: supervisorId,
       hr: "5e680f360f94107d10acba1d",
       stage: "rated",
       adaptationStart: adaptationStart,
@@ -96,14 +92,27 @@ const PlanCreationForm = ( ) => {
       completed: "false",
       rate: "A",
       tasks: []
-      } 
+    } 
+
+    const planParam = 
+    {
+      employeePosition: positionList.find(position => position.id === positionId),
+      employee: employeeList.find(employee => employee.id === employeeId),
+      supervisor: supervisorList.find(supervisor => supervisor.id === supervisorId),
+    } 
 
     axios
       .post('http://localhost:3001/api/plans', planObject)
+      .then(res => {
+        console.log(res)
+        setPlans(plans.concat(Object.assign(res.data, planParam)))
+      })
   }
 
+
+
   return (
-    <Dialog open={isOpen} onClose={handleClose} >      
+    <Dialog open={isShowing} onClose={hide} >      
       <Box className={classes.modal}  p="1rem" >
       <ThemeProvider theme={theme}>
         <DialogTitle className={classes.header}>Создание плана адаптации</DialogTitle>
@@ -112,19 +121,19 @@ const PlanCreationForm = ( ) => {
               <FormGroup >
                 <FormMenu 
                   label='ФИО сотрудника' 
-                  value={employee} 
+                  value={employeeId} 
                   handleChange={handleChangeEmployeeName} 
                   selectList={employeeList}
                 />
                 <FormMenu 
                   label='Должность' 
-                  value={position} 
+                  value={positionId} 
                   handleChange={handleChangePosition} 
                   selectList={positionList}
                 />
                 <FormMenu 
                   label='ФИО руководителя' 
-                  value={supervisor} 
+                  value={supervisorId} 
                   handleChange={handleChangeSupervisorName} 
                   selectList={supervisorList}
                 />           
@@ -153,7 +162,7 @@ const PlanCreationForm = ( ) => {
             <DialogActions>
               <Button 
                 variant="contained" 
-                onClick={handleClose} 
+                onClick={hide} 
                 className={classes.button}
                 color="primary"
                 type="Submit">
