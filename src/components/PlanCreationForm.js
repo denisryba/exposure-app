@@ -15,11 +15,13 @@ import {
 from '@material-ui/core';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
+import locale from "date-fns/locale/ru";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
 import FormMenu from "./FormMenu";
+
 
 const theme = createMuiTheme({
   palette: {
@@ -92,24 +94,18 @@ const PlanCreationForm = ( {isShowing, hide, plans, setPlans} ) => {
       completed: "false",
       rate: "A",
       tasks: []
-    } 
+    };
 
-    const planParam = 
-    {
+    const planParam = {
       employeePosition: positionList.find(position => position.id === positionId),
       employee: employeeList.find(employee => employee.id === employeeId),
       supervisor: supervisorList.find(supervisor => supervisor.id === supervisorId),
-    } 
+    };
 
     axios
       .post('http://localhost:3001/api/plans', planObject)
-      .then(res => {
-        console.log(res)
-        setPlans(plans.concat(Object.assign(res.data, planParam)))
-      })
+      .then(res => setPlans(plans.concat(Object.assign(res.data, planParam))));
   }
-
-
 
   return (
     <Dialog open={isShowing} onClose={hide} >      
@@ -137,7 +133,7 @@ const PlanCreationForm = ( {isShowing, hide, plans, setPlans} ) => {
                   handleChange={handleChangeSupervisorName} 
                   selectList={supervisorList}
                 />           
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
                   <KeyboardDatePicker               
                     disableToolbar        
                     variant="inline"
