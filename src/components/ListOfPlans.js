@@ -66,6 +66,12 @@ const ListOfPlans = () => {
       return dd + "." + mm + "." + yy;
   };
 
+  const deletePlan = (id) => {
+    const url = `http://localhost:3001/api/plans/${id}`;
+    axios.delete(url)
+      .then(res => setPlans(plans.filter(plan => plan.id !== id)));
+  };
+
   return (
       <Box className={classes.root}>
         <h1 className={classes.header}>Адаптационные планы</h1>
@@ -88,7 +94,7 @@ const ListOfPlans = () => {
                 <TableCell>{setName(plan.supervisor.name)}</TableCell>
                 <TableCell>{formatDate(plan.date)}</TableCell>
                 <TableCell>
-                  <IconButton>
+                  <IconButton onClick={() => deletePlan(plan.id)}>
                     <DeleteIcon/>
                   </IconButton>
                 </TableCell>
