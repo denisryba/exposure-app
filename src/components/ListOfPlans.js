@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import axios from 'axios'
 import {
   Table,
@@ -15,62 +15,56 @@ import {
 from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+const useStyles = makeStyles({
+  root: {
+    maxWidth: '80%',
+    margin: 'auto',
+    fontFamily: "Roboto",
+    fontSize: 18
+  },
+  highlightedText: {
+    color: '#a6ce39'
+  },
+  subtitle: {
+    color: '#838383',
+    fontSize: 14,
+  },
+  header: {
+    fontSize: 18,
+    paddingLeft: 15
+  },
+  deleteColumn: {
+    width: "5%"
+  }
+});
 
-const ListOfPlans = () => {
-  const [plans, setPlans] =  useState([]);
-
-  useEffect(() => {
-    axios
-      .get('http://localhost:3001/api/plans')
-      .then(res => {
-        setPlans(res.data)
-      })
-  }, []);
-
-  const useStyles = makeStyles({
-    root: {
-      maxWidth: '80%',
-      margin: 'auto',
-      fontFamily: "Roboto",
-      fontSize: 18
-    },
-    highlightedText: {
-      color: '#a6ce39'
-    },
-    subtitle: {
-      color: '#838383',
-      fontSize: 14,
-    },
-    header: {
-      fontSize: 18,
-      paddingLeft: 15
-    },
-    deleteColumn: {
-      width: "5%"
-    }
-  });
-  
+const ListOfPlans = ({plans, setPlans}) => {
   const classes = useStyles();
-  
 
   const setName = name => name.first + ' ' + name.middle + ' ' + name.last;
 
   const formatDate = (planDate) => {
     const date = new Date(planDate);
     
-    let dd = date.getDay();
+    let dd = date.getDate();
     dd = (dd < 10) ? ('0' + dd) : dd;
     
-    let mm = date.getMonth();
-    mm = (mm < 10) ? ('0' + mm) : mm;
-    
+    let mm = date.getMonth() + 1;
+    mm = (mm < 10) ? ('0' + mm): mm;
+     
     let yy = date.getFullYear();
       return dd + "." + mm + "." + yy;
   };
 
+  const deletePlan = (id) => {
+    const url = `http://localhost:3001/api/plans/${id}`;
+    axios.delete(url)
+      .then(res => setPlans(plans.filter(plan => plan.id !== id)));
+  };
+
   return (
       <Box className={classes.root}>
-        <h1 className={classes.header}>Адапционные планы</h1>
+        <h1 className={classes.header}>Адаптационные планы</h1>
         <TableContainer component = {Paper}>
           <Table>
             <TableHead>
@@ -88,9 +82,9 @@ const ListOfPlans = () => {
                 <TableCell>{setName(plan.employee.name)}<div className={classes.subtitle}>стажер-разработчик</div></TableCell>
                 <TableCell className={classes.highlightedText}>{plan.stage}</TableCell>
                 <TableCell>{setName(plan.supervisor.name)}</TableCell>
-                <TableCell>{formatDate(plan.adaptationStart)}</TableCell>
+                <TableCell>{formatDate(plan.date)}</TableCell>
                 <TableCell>
-                  <IconButton>
+                  <IconButton onClick={() => deletePlan(plan.id)}>
                     <DeleteIcon/>
                   </IconButton>
                 </TableCell>
