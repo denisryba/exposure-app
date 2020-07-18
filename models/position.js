@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false)
 
 const positionSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
   description: String
 });
 
