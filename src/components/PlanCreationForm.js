@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import exposureService from '../services/exposureService.js';
 import { 
   makeStyles, 
   Box,
@@ -64,20 +64,20 @@ const PlanCreationForm = ( {isShowing, hide, plans, setPlans} ) => {
   const handleAdaptationEnd = date => setAdaptationEnd(date);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/api/users')
-      .then(res => {
-        setEmployeeList(res.data.filter(user => user.role === "employee"))
-        setSupervisoreList(res.data.filter(user => user.role === "supervisor"))
-      })
+    exposureService
+      .getAll('users')
+      .then(users => {
+        setEmployeeList(users.filter(user => user.role === "employee"))
+        setSupervisoreList(users.filter(user => user.role === "supervisor"))
+      })    
   }, []);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/api/positions')
-      .then(res => {
-        setPositionList(res.data)
-      })
+    exposureService
+      .getAll('positions')
+      .then(positions => {
+        setPositionList(positions);
+      }); 
   }, []);
 
   const addPlan = (event) => {
@@ -102,10 +102,10 @@ const PlanCreationForm = ( {isShowing, hide, plans, setPlans} ) => {
       supervisor: supervisorList.find(supervisor => supervisor.id === supervisorId),
     };
 
-    axios
-      .post('http://localhost:3001/api/plans', planObject)
-      .then(res => {
-        setPlans(plans.concat(Object.assign(res.data, planParam)));
+    exposureService
+      .create('plan', planObject)
+      .then(createdPlan => {
+        setPlans(plans.concat(Object.assign(createdPlan, planParam)));
         setEmployeeId('');
         setSupervisorId('');
         setPositionId('');

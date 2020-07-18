@@ -5,17 +5,17 @@ import {
 from '@material-ui/core';
 import ListOfPlans from './components/ListOfPlans';
 import PlanCreationForm from './components/PlanCreationForm';
-import axios from 'axios';
+import exposureService from './services/exposureService.js';
 
 
 const App = () => {
   const [plans, setPlans] =  useState([]);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/api/plans')
-      .then(res => {
-        setPlans(res.data)
+    exposureService
+      .getAll('plans')
+      .then(plans => {
+        setPlans(plans)
       })
   }, []);
 
