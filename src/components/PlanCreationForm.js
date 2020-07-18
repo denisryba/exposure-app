@@ -43,6 +43,9 @@ const useStyles = makeStyles({
     width: "30%",
     fontSize: 10,
     marginTop: 15
+  },
+  dateInput: {
+    marginTop: 0
   }
 });
 
@@ -142,12 +145,14 @@ const PlanCreationForm = ( {isShowing, hide, plans, setPlans} ) => {
                   selectList={supervisorList}
                 />           
                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-                  <KeyboardDatePicker               
+                  <KeyboardDatePicker    
+                    className={classes.dateInput}           
                     disableToolbar        
                     variant="inline"
                     format="dd.MM.yyyy"
                     margin="normal"
                     label="Начало адаптации"
+                    autoOk={true}
                     value={adaptationStart}
                     onChange={handleAdaptationStart}               
                   />
@@ -157,6 +162,7 @@ const PlanCreationForm = ( {isShowing, hide, plans, setPlans} ) => {
                     format="dd.MM.yyyy"
                     margin="normal"
                     label="Конец адаптации"
+                    autoOk={true}
                     value={adaptationEnd}
                     onChange={handleAdaptationEnd}
                   />
