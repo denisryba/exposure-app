@@ -79,7 +79,7 @@ const ListOfPlans = ({plans, setPlans}) => {
             <TableBody>
             {plans.map(plan => (
               <TableRow key={plan.id}>
-                <TableCell>{setName(plan.employee.name)}<div className={classes.subtitle}>стажер-разработчик</div></TableCell>
+                <TableCell>{setName(plan.employee.name)}<div className={classes.subtitle}>{plan.employeePosition.name}</div></TableCell>
                 <TableCell className={classes.highlightedText}>{plan.stage}</TableCell>
                 <TableCell>{setName(plan.supervisor.name)}</TableCell>
                 <TableCell>{formatDate(plan.date)}</TableCell>
