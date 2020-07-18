@@ -29,7 +29,9 @@ const getAll = async (collection) => {
 const get = async (docName, id) => {
   const res = await getData(`${docName}s/${id}`);
   return res.data;
-}
+};
+
+const getAllTasksFromPlan = async (id) => await getAll(`plans/${id}/tasks`);
 
 const create = async (docName, newObject) => {
   const res = await postData(`${docName}s`, newObject);
@@ -42,14 +44,13 @@ const update = async (docName, id, newObject) => {
 };
 
 const remove = async (docName, id) => {
-  const res = await deleteData(`${docName}s/${id}`);
-  console.log(res);
-  return res.data;
+  await deleteData(`${docName}s/${id}`);
 };
 
 export default {
   getAll,
   get,
+  getAllTasksFromPlan,
   create,
   update,
   remove
