@@ -7,6 +7,7 @@ from '@material-ui/core';
 import ListOfPlans from './components/ListOfPlans';
 import PlanCreationForm from './components/PlanCreationForm';
 import exposureService from './services/exposureService.js';
+import loginService from './services/loginService.js';
 import LoginForm from './components/LoginForm.js';
 
 const useStyles = makeStyles({
@@ -17,7 +18,8 @@ const useStyles = makeStyles({
 });
 
 const App = () => {
-  const [plans, setPlans] =  useState([]);
+  const [ plans, setPlans ] =  useState([]);
+  const [ user, setUser ] = useState(null);
 
   const { root } = useStyles();
 
@@ -29,13 +31,26 @@ const App = () => {
       })
   }, []);
 
+  useEffect(() => {
+    const savedUser = window.localStorage.getItem('savedUser');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
   const [isShowing, setIsShowing] = useState(false);
   const toggle = () => setIsShowing(!isShowing);
 
+  const loginForm = user
+    ? null
+    : <LoginForm
+        setUser={setUser}
+        login={loginService.login} />;
+
   return (
     <Container className={root}>
-      <LoginForm />
-      <ListOfPlans 
+      {loginForm}
+      <ListOfPlans
         plans={plans}
         setPlans={setPlans}
       />
@@ -47,8 +62,8 @@ const App = () => {
       />
       <button onClick={toggle}>создать план</button>
     </Container>  
-  )
-}
+  );
+};
 
 
 
