@@ -1,4 +1,6 @@
 import React from 'react';
+import TaskComponent from './task-component';
+
 import { Grid, Paper } from '@material-ui/core';
 import './tasks-block.css';
 
@@ -10,9 +12,7 @@ class TasksBlock extends React.Component {
                 <div className="card-header">
                     <h4>Задачи</h4>
                 </div>
-                <Paper elevation={4} className="card-container">
-                    i'm the TasksBlock conponent
-                </Paper>
+            <TaskComponent></TaskComponent>
             </Grid>
         )
     }
