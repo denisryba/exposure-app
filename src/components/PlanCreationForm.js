@@ -41,7 +41,6 @@ const useStyles = makeStyles({
   button: {
     color: '#ffffff',
     width: "30%",
-    fontSize: 10,
     marginTop: 15
   },
   dateInput: {
