@@ -16,7 +16,7 @@ const app = express();
 
 logger.info('connecting to', config.MONGO_URL);
 
-mongoose.connect(config.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(result => {
     logger.info('connected to Mongo');
   })
@@ -30,6 +30,8 @@ const logTemplate = ':method :url :status :res[content-length] - :response-time 
 app.use(cors());
 app.use(express.json());
 app.use(morgan(logTemplate));
+app.use(middleware.tokenExtractor);
+app.use(middleware.tokenValidator);
 
 app.use('/api/plans', plansRouter);
 app.use('/api/users', usersRouter);
