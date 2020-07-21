@@ -30,6 +30,9 @@ const logTemplate = ':method :url :status :res[content-length] - :response-time 
 app.use(cors());
 app.use(express.json());
 app.use(morgan(logTemplate));
+
+app.use('/api/login', loginRouter);
+
 app.use(middleware.tokenExtractor);
 app.use(middleware.tokenValidator);
 
@@ -37,7 +40,7 @@ app.use('/api/plans', plansRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/positions', positionsRouter);
 app.use('/api/tasks', tasksRouter);
-app.use('/api/login', loginRouter);
+
 
 app.use(middleware.unknownRoute);
 app.use(middleware.errorHandler);
