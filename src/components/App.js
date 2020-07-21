@@ -17,7 +17,7 @@ const App = () => {
                 <AdaptationPlanCard></AdaptationPlanCard>
                 <TasksBlock></TasksBlock>
             </Grid>
-
+            
         </div>
     )
 
