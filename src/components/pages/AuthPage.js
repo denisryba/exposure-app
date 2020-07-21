@@ -1,12 +1,12 @@
 import React from 'react';
 import LoginForm from '../LoginForm.js';
 
+const AuthPage = ({ setUser, loginService }) => {
 
-const AuthPage = ({ user, setUser, loginService }) => {
   return (
-    <LoginForm
-      setUser={setUser}
-      login={loginService.login} />
+  <LoginForm
+    setUser={setUser}
+    login={loginService.login} />
   );
 };
 
