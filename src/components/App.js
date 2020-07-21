@@ -29,8 +29,6 @@ const App = () => {
     }
   }, []);
 
-  console.log(user)
-
   return (
     <Container className={root}>
       <Router>

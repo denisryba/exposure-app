@@ -1,23 +1,33 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:3001/api'
+const API_URL = 'http://localhost:3001/api';
+
+const getRequestConfig = () => {
+  const token = JSON.parse(localStorage.getItem('savedUser')).token;
+
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+};
 
 const getData = async (path) => {
-  const res = await axios.get(`${API_URL}/${path}`);
+  const res = await axios.get(`${API_URL}/${path}`, getRequestConfig());
   return res;
 };
 
 const postData = async (path, data) => {
-  const res = await axios.post(`${API_URL}/${path}`, data);
+  const res = await axios.post(`${API_URL}/${path}`, data, getRequestConfig());
   return res;
 };
 
 const putData = async (path, data) => {
-  const res = await axios.put(`${API_URL}/${path}`, data);
+  const res = await axios.put(`${API_URL}/${path}`, data, getRequestConfig());
   return res;
 };
 
 const deleteData = async (path) => {
-  const res = await axios.delete(`${API_URL}/${path}`);
+  const res = await axios.delete(`${API_URL}/${path}`, getRequestConfig());
   return res;
 };
 
