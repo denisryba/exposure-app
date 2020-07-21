@@ -10,10 +10,19 @@ import './task-component.css';
 
 class TaskComponent extends React.Component {
 
+    unfold = (e) => {
+        if (!e.target.classList.contains("task-title")) return;
+        const classArr = e.currentTarget.classList;
+        if (classArr.contains('unfold')) {
+            classArr.remove("unfold");
+        } else {
+            classArr.add('unfold');
+        }
+    }
 
     render() {
         return (
-            <Paper elevation={4} className="card-container task-container unfold">
+            <Paper onClick={this.unfold} elevation={4} className="card-container task-container unfold">
                 <div className="task-header">
                     <div className="task-icon-block">
                         <div className="task-date">
@@ -24,7 +33,7 @@ class TaskComponent extends React.Component {
                         <DeleteIcon />
                     </div>
                     <ArrowForwardIosIcon className="task-arrow-icon" />
-                    <div>Сделать презентацию</div>
+                    <div className="task-title">Сделать презентацию</div>
                 </div>
                 <div className="task-body">
                     <p className="task-description">

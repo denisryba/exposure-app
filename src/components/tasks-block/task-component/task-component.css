@@ -1,6 +1,8 @@
 .task-container {
     position: relative;
     padding-left: 40px;
+    transition-property: height;
+    transition-duration: 2s;
 }
 .task-icon-block {
     float: right;
@@ -16,19 +18,36 @@
     position: absolute;
     left: 8px;
     top: 22px;
-    color: #ABABAB;
+    color: #ababab;
 }
 .task-date {
-    color: #6B6B6B;
+    color: #6b6b6b;
     display: inline-flex;
     font-size: 14px;
     padding-top: 4px;
 }
 .task-description {
-    color: #ABABAB;
+    color: #ababab;
     font-size: 13px;
+    height: 15px;
+    overflow: hidden;
+    transition-property: height;
+    transition-duration: 2s;
+}
+.task-title:hover {
+    cursor: pointer;
+}
+.task-container .bottom-creation-date {
+    display: none;
 }
 
 .unfold .task-arrow-icon {
     transform: rotate(90deg);
+}
+.unfold .task-description {
+    overflow: initial;
+    height: fit-content;
+}
+.unfold .bottom-creation-date {
+    display: block;
 }
