@@ -40,9 +40,7 @@ plansRouter.get('/:id/tasks', async (req, res, next) => {
 });
 
 plansRouter.post('/', async (req, res) => {
-  validateToken(req.token);
-
-  const { body, token } = req;
+  const { body } = req;
 
   const plan = new Plan({
     employeePosition: body.employeePosition,
@@ -63,15 +61,11 @@ plansRouter.post('/', async (req, res) => {
 });
 
 plansRouter.delete('/:id', async (req, res) => {
-  validateToken(req.token);
-
   await Plan.findByIdAndDelete(req.params.id);
   res.status(204).end();
 });
 
 plansRouter.put('/:id', async (req, res) => {
-  validateToken(req.token);
-
   const body = req.body;
 
   const plan = {
