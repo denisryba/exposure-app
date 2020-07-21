@@ -1,11 +1,9 @@
 import React from 'react';
-import './app.css';
-import Header from '../header';
-import AdaptationPlanCard from '../adaptation-plan-card';
-import TasksBlock from '../tasks-block';
+import Header from './Header.js';
+import AdaptationPlanCard from './AdaptationPlanCard/AdaptationPlanCard.js';
+import TasksBlock from './TasksBlock/TasksBlock.js';
 
 import { Grid } from '@material-ui/core';
-//import { Route, Switch } from 'react-router-dom';
 
 const App = () => {
     return (
