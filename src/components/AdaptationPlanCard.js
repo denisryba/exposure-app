@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 //import ProgressBar from '../../old_components/progress-bar';
-import InputField from './CardInputField.js';
+import InputField from './AdaptationPlanCard/CardInputField.js';
 
 import { Grid, Paper, Button, makeStyles } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';

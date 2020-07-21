@@ -1,8 +1,10 @@
 import axios from 'axios';
+import storage from '../utils/storage.js';
+
 const API_URL = 'http://localhost:3001/api';
 
 const getRequestConfig = () => {
-  const token = JSON.parse(localStorage.getItem('savedUser')).token;
+  const token = storage.get('savedUser').token;
 
   return {
     headers: {

@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import {
+  Route,
+  Redirect,
+  Switch } from 'react-router-dom';
 import {
   Container,
-  makeStyles
-} from '@material-ui/core';
+  makeStyles } from '@material-ui/core';
 
 import exposureService from '../services/exposureService.js';
 import loginService from '../services/loginService.js';
+import storage from '../utils/storage.js';
 import AuthPage from './pages/AuthPage.js';
 import PlanListPage from './pages/PlanListPage.js';
+import PlanDetailsPage from './pages/PlanDetailsPage.js';
 
 const useStyles = makeStyles({
   root: {
@@ -23,29 +27,31 @@ const App = () => {
   const { root } = useStyles();
 
   useEffect(() => {
-    const savedUser = window.localStorage.getItem('savedUser');
+    const savedUser = storage.get('savedUser');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      setUser(savedUser);
     }
   }, []);
 
+  console.log(user)
+
   return (
     <Container className={root}>
-      <Router>
+      <Switch>
         <Route path='/login'>
-          {(!user)
-              ? <AuthPage
-                  user={user}
-                  setUser={setUser}
-                  loginService={loginService} />
-              : <Redirect to='/plans' />}
+          <AuthPage
+            user={user}
+            setUser={setUser}
+            loginService={loginService} />
         </Route>
         <Route path='/plans/'>
-          {user
-            ? <PlanListPage exposureService={exposureService} />
-            : <Redirect to='/login' />}
+          <PlanListPage exposureService={exposureService} />
         </Route>
-      </Router>
+        <Route path='/details'>
+          <PlanDetailsPage exposureService={exposureService} />
+        </Route>
+        <Redirect to='/plans' />
+      </Switch>
     </Container>  
   );
 };

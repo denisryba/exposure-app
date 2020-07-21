@@ -6,6 +6,7 @@ import {
     Button,  
     Typography,
     makeStyles} from '@material-ui/core';
+import storage from '../utils/storage.js';
 
 const useStyles = makeStyles({
   title: {
@@ -41,7 +42,7 @@ const LoginForm = ({ login, setUser }) => {
       });
       setUsername('');
       setPassword('');
-      window.localStorage.setItem('savedUser', JSON.stringify(user));
+      storage.set('savedUser', user);
       setUser(user);
     }
     catch (e) {
