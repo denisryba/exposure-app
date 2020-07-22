@@ -15,6 +15,7 @@ import PrivateRoute from '../components/helpers/PrivateRoute.js';
 import AuthPage from './pages/AuthPage.js';
 import PlanListPage from './pages/PlanListPage.js';
 import PlanDetailsPage from './pages/PlanDetailsPage.js';
+import Header from './Header.js';
 
 const useStyles = makeStyles({
   root: {
@@ -30,6 +31,10 @@ const App = () => {
 
   return (
     <AuthContext.Provider value={user}>
+      {user
+        ? <Header
+          setUser={setUser} />
+        : null}
       <Container className={root}>
         <Switch>
           <Route path='/login'>
@@ -45,7 +50,7 @@ const App = () => {
           </PrivateRoute>
           <Redirect to='/plans' />
         </Switch>
-      </Container>  
+      </Container>
     </AuthContext.Provider>
   );
 };

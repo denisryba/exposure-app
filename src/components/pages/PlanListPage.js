@@ -14,7 +14,7 @@ const PlanListPage = ({ exposureService }) => {
       .getAll('plans')
       .then(plans => {
         setPlans(plans)
-      })
+      });
   }, [exposureService]);
 
   const handleCreateButtonClick = () => setOnCreation(!onCreation);

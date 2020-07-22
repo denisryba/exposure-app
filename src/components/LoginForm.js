@@ -7,7 +7,7 @@ import {
     Typography,
     makeStyles} from '@material-ui/core';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   title: {
     textAlign: 'center',
     fontWeight: 600
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center'
   }
-});
+}));
 
 const LoginForm = ({ login }) => {
   const { title, container } = useStyles();
