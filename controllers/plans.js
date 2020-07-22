@@ -2,13 +2,40 @@ const plansRouter = require('express').Router();
 const Plan = require('../models/plan.js');
 
 plansRouter.get('/', async (req, res) => {
-  const plans = await Plan
-    .find({})
+  const page = +req.query.page;
+  const limit = +req.query.limit;
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+
+  const results = {};
+
+  const pageCount = await Plan.countDocuments().exec()/limit;
+  if (pageCount)
+    results.pageCount = Math.ceil(pageCount)
+  else results.pageCount = 1;
+
+  if (endIndex < await Plan.countDocuments().exec()) {
+    results.next = {
+      page: page + 1,
+      limit
+    }
+  }
+
+  if (startIndex > 0) {
+    results.previos = {
+      page: page - 1,
+      limit
+    }
+  }
+
+  results.plans = await Plan.find().limit(limit).skip(startIndex)
     .populate('employee')
     .populate('supervisor')
     .populate('hr')
-    .populate('employeePosition');
-  res.json(plans);
+    .populate('employeePosition')
+    .exec();
+  res.json(results);
 });
 
 plansRouter.get('/:id', async (req, res, next) => {
