@@ -12,6 +12,9 @@ import storage from '../utils/storage.js';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    marginBottom: theme.spacing(2)
+  },
   logo: {
     marginRight: theme.spacing(2),
   },
@@ -27,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = ({ setUser }) => {
-  const { title, logo, userButton } = useStyles();
+  const classes = useStyles();
   const userData = useAuth();
   const history = useHistory();
 
@@ -38,15 +41,15 @@ const Header = ({ setUser }) => {
   };
 
   return (
-    <AppBar position='static'>
+    <AppBar className={classes.root} color='primary' position='static'>
       <Toolbar>
-        <EmojiPeopleIcon className={logo} />
-        <Typography className={title} variant='h6'>
+        <EmojiPeopleIcon className={classes.logo} />
+        <Typography className={classes.title} variant='h6'>
           Exposure App
         </Typography>
         <Button
           onClick={handleLogoutClick}
-          className={userButton}
+          className={classes.userButton}
           startIcon={<AccountCircle />}>
           {userData.name.first + ' ' + userData.name.last}
         </Button>

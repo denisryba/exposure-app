@@ -5,7 +5,9 @@ import {
   Switch } from 'react-router-dom';
 import {
   Container,
-  makeStyles } from '@material-ui/core';
+  makeStyles,
+  createMuiTheme, 
+  ThemeProvider} from '@material-ui/core';
 
 import exposureService from '../services/exposureService.js';
 import loginService from '../services/loginService.js';
@@ -24,6 +26,15 @@ const useStyles = makeStyles({
   }
 });
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#5c6bc0',
+      contrastText: 'white'
+    }
+  }
+});
+
 const App = () => {
   const [ user, setUser ] = useState(storage.get('savedUser'));
 
@@ -31,26 +42,28 @@ const App = () => {
 
   return (
     <AuthContext.Provider value={user}>
-      {user
-        ? <Header
-          setUser={setUser} />
-        : null}
-      <Container className={root}>
-        <Switch>
-          <Route path='/login'>
-            <AuthPage
-              setUser={setUser}
-              loginService={loginService} />
-          </Route>
-          <PrivateRoute exact path='/plans/'>
-            <PlanListPage exposureService={exposureService} />
-          </PrivateRoute>
-          <PrivateRoute path='/plans/:id'>
-            <PlanDetailsPage exposureService={exposureService} />
-          </PrivateRoute>
-          <Redirect to='/plans' />
-        </Switch>
-      </Container>
+      <ThemeProvider theme={theme}>
+        {user
+          ? <Header
+            setUser={setUser} />
+          : null}
+        <Container className={root}>
+          <Switch>
+            <Route path='/login'>
+              <AuthPage
+                setUser={setUser}
+                loginService={loginService} />
+            </Route>
+            <PrivateRoute exact path='/plans/'>
+              <PlanListPage exposureService={exposureService} />
+            </PrivateRoute>
+            <PrivateRoute path='/plans/:id'>
+              <PlanDetailsPage exposureService={exposureService} />
+            </PrivateRoute>
+            <Redirect to='/plans/' />
+          </Switch>
+        </Container>
+      </ThemeProvider>
     </AuthContext.Provider>
   );
 };

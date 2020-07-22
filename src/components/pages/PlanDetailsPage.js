@@ -6,7 +6,7 @@ import TasksBlock from '../TasksBlock.js';
 import exposureService from '../../services/exposureService.js';
 
 const PlanDetailsPage = () => {
-  const [ planId, setPlanId ] = useState(useParams().id);
+  const [ planId ] = useState(useParams().id);
 
   return (
     <Grid container spacing={2}>

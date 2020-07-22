@@ -23,7 +23,7 @@ const PlanListPage = ({ exposureService }) => {
   const handleCreateButtonClick = () => setOnCreation(!onCreation);
 
   const onPlanClicked = (id) => {
-    history.push(id)
+    history.push(id);
   };
 
   return (
@@ -38,7 +38,7 @@ const PlanListPage = ({ exposureService }) => {
       <Grid item>
         <Fab
           onClick={handleCreateButtonClick}
-          color='secondary'>
+          color='primary'>
           <AddIcon />
         </Fab>
       </Grid>

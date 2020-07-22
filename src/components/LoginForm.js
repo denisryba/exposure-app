@@ -50,7 +50,7 @@ const LoginForm = ({ login }) => {
         <Grid item xs={12}>
           <TextField
             label='Имя пользователя'
-            variant='filled'
+            variant='outlined'
             value={username}
             onChange={handleUsernameChange}
             required
@@ -62,7 +62,7 @@ const LoginForm = ({ login }) => {
             type='password'
             value={password}
             onChange={handlePasswordChange}
-            variant='filled'
+            variant='outlined'
             autoComplete='current-password'
             required
             fullWidth />
