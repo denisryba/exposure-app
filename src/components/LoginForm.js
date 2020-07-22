@@ -6,7 +6,6 @@ import {
     Button,  
     Typography,
     makeStyles} from '@material-ui/core';
-import storage from '../utils/storage.js';
 
 const useStyles = makeStyles({
   title: {
@@ -20,7 +19,7 @@ const useStyles = makeStyles({
   }
 });
 
-const LoginForm = ({ login, setUser }) => {
+const LoginForm = ({ login }) => {
   const { title, container } = useStyles();
 
   const [ username, setUsername ] = useState('');
@@ -35,19 +34,9 @@ const LoginForm = ({ login, setUser }) => {
   };
 
   const handleLoginButtonClick = async () => {
-    try {
-      const user = await login({
-        username,
-        password
-      });
       setUsername('');
       setPassword('');
-      storage.set('savedUser', user);
-      setUser(user);
-    }
-    catch (e) {
-      console.log('wrong user data');
-    }
+      await login(username, password);
   };
 
   return (

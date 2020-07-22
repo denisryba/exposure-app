@@ -11,13 +11,14 @@ import exposureService from '../services/exposureService.js';
 import loginService from '../services/loginService.js';
 import storage from '../utils/storage.js';
 import { AuthContext } from '../context/auth.js';
+import PrivateRoute from '../components/helpers/PrivateRoute.js';
 import AuthPage from './pages/AuthPage.js';
 import PlanListPage from './pages/PlanListPage.js';
 import PlanDetailsPage from './pages/PlanDetailsPage.js';
 
 const useStyles = makeStyles({
   root: {
-    fontFamily: "Roboto",
+    fontFamily: 'Roboto',
     fontSize: 18
   }
 });
@@ -36,12 +37,12 @@ const App = () => {
               setUser={setUser}
               loginService={loginService} />
           </Route>
-          <Route path='/plans/'>
+          <PrivateRoute path='/plans/'>
             <PlanListPage exposureService={exposureService} />
-          </Route>
-          <Route path='/details'>
+          </PrivateRoute>
+          <PrivateRoute path='/details'>
             <PlanDetailsPage exposureService={exposureService} />
-          </Route>
+          </PrivateRoute>
           <Redirect to='/plans' />
         </Switch>
       </Container>  
