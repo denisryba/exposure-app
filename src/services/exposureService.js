@@ -8,9 +8,9 @@ const getRequestConfig = () => {
 
   return {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`  
     }
-  }
+  } 
 };
 
 const getData = async (path) => {

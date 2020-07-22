@@ -48,7 +48,18 @@ const useStyles = makeStyles({
   }
 });
 
-const PlanCreationForm = ( {isShowing, hide, plans, setPlans} ) => {
+const PlanCreationForm = ( 
+{
+  isShowing, 
+  hide, 
+  plans, 
+  setPlans, 
+  pageCount, 
+  setPageCount, 
+  currentPage, 
+  limit
+} 
+) => {
   const classes = useStyles();
   const [employeeId, setEmployeeId] = useState('');
   const [positionId, setPositionId] = useState('');
@@ -107,7 +118,12 @@ const PlanCreationForm = ( {isShowing, hide, plans, setPlans} ) => {
     exposureService
       .create('plan', planObject)
       .then(createdPlan => {
-        setPlans(plans.concat(Object.assign(createdPlan, planParam)));
+        if (currentPage === pageCount) {
+          if (plans.length === limit)
+            setPageCount(pageCount + 1);
+          else 
+            setPlans(plans.concat(Object.assign(createdPlan, planParam)));         
+        };
         setEmployeeId('');
         setSupervisorId('');
         setPositionId('');
