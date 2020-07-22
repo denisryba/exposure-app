@@ -58,10 +58,7 @@ const useStyles = makeStyles({
     }
 });
 
-const AdaptationPlanCard = ({expService, planId}) => {
-
-    planId = '5f134c874b785238441eb954';
-
+const AdaptationPlanCard = ({ expService, planId }) => {
     const classes = useStyles();
 
     const [editing, toggleEditMode] = useState(false);
@@ -78,7 +75,7 @@ const AdaptationPlanCard = ({expService, planId}) => {
 
     if (!data) return <h1>Loading...</h1>
     return (
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
             <Typography className={classes.cardHeader}>
                 <KeyboardBackspaceIcon />
                 <h4>Адаптационный план сотрудника</h4>

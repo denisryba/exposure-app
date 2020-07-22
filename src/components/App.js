@@ -42,10 +42,10 @@ const App = () => {
               setUser={setUser}
               loginService={loginService} />
           </Route>
-          <PrivateRoute path='/plans/'>
+          <PrivateRoute exact path='/plans/'>
             <PlanListPage exposureService={exposureService} />
           </PrivateRoute>
-          <PrivateRoute path='/details'>
+          <PrivateRoute path='/plans/:id'>
             <PlanDetailsPage exposureService={exposureService} />
           </PrivateRoute>
           <Redirect to='/plans' />

@@ -35,10 +35,13 @@ const useStyles = makeStyles({
   },
   deleteColumn: {
     width: "5%"
+  },
+  planRow: {
+    cursor: 'pointer'
   }
 });
 
-const ListOfPlans = ({plans, setPlans}) => {
+const ListOfPlans = ({ onPlanClicked, plans, setPlans}) => {
   const classes = useStyles();
 
   const setName = name => name.first + ' ' + name.middle + ' ' + name.last;
@@ -78,7 +81,7 @@ const ListOfPlans = ({plans, setPlans}) => {
             </TableHead>
             <TableBody>
             {plans.map(plan => (
-              <TableRow key={plan.id}>
+              <TableRow className={classes.planRow} onClick={() => onPlanClicked(plan.id)} key={plan.id}>
                 <TableCell>{setName(plan.employee.name)}<div className={classes.subtitle}>{plan.employeePosition.name}</div></TableCell>
                 <TableCell className={classes.highlightedText}>{plan.stage}</TableCell>
                 <TableCell>{setName(plan.supervisor.name)}</TableCell>

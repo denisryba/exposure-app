@@ -44,7 +44,7 @@ const TasksBlock = ({ expService }) => {
     }]
 
     return (
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
             <Typography className={classes.header}>
                 <Button
                     variant="contained"
@@ -59,7 +59,7 @@ const TasksBlock = ({ expService }) => {
             </Typography>
             {sampleArr ?
                 sampleArr.map((item) => {
-                    return <TaskComponent expService={expService} taskObj={item}></TaskComponent>
+                    return <TaskComponent key={item.name} expService={expService} taskObj={item}></TaskComponent>
                 }) :
                 <h1>Loading...</h1>
             }
