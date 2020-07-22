@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const TasksBlock = () => {
+const TasksBlock = ({expService}) => {
     const classes = useStyles();
 
     return (
@@ -39,7 +39,7 @@ const TasksBlock = () => {
                 </Button>
                 <h4>Задачи</h4>
             </Typography>
-            <TaskComponent></TaskComponent>
+            <TaskComponent expService={expService}></TaskComponent>
         </Grid>
 
     )

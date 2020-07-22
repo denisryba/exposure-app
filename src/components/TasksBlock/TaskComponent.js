@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
     makeStyles,
@@ -7,12 +7,10 @@ import {
     AccordionDetails,
     Checkbox,
     Typography,
-    TextField,
     Grid,
     Button,
     Select,
     MenuItem,
-    InputLabel,
     FormHelperText,
     FormControl
 } from '@material-ui/core';
@@ -23,7 +21,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles({
     root: {
-        width: '100%',
+        '& .MuiCheckbox-colorPrimary': {
+            color: '#99bd36'
+        }
     },
     content: {
         '& .MuiAccordionSummary-content': {
@@ -32,11 +32,11 @@ const useStyles = makeStyles({
         '& .MuiAccordionSummary-expandIcon': {
             display: 'block',
         },
-        '& .Mui-expanded .makeStyles-taskArrowIcon-10': {
+        '& .Mui-expanded .makeStyles-taskArrowIcon-13': {
             transform: 'rotate(90deg)',
             transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
         },
-        '& .makeStyles-taskArrowIcon-10': {
+        '& .makeStyles-taskArrowIcon-13': {
             transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
         }
     },
@@ -83,23 +83,41 @@ const useStyles = makeStyles({
             backgroundColor: '#99bd36',
         }
     },
-    root: {
-        '& .MuiCheckbox-colorPrimary': {
-            color: '#99bd36'
-        }
-    }
 });
 
-export default function TaskComponent() {
+const TaskComponent = ({ expService, planId }) => {
+    planId = '5f134c874b785238441eb954';
+
     const classes = useStyles();
 
+    const initData = {
+        name: "Сделать скринкаст",
+        description: "В пятницу будет обзор сделанного за неделю.",
+        executionStart: '2020-07-16T00:00:00.000+00:00',
+        executionEnd: '2020-07-17T00:00:00.000+00:00',
+        completed: 'false',
+        plan: '5f0f2000a2aa6b13ec894503',
+        date: '2020-07-16T16:33:02.033+00:00',
+    }
+
     const [editing, toggleEditMode] = useState(false);
+    const [data, setData] = useState(initData);
+
+    useEffect(() => {
+        // expService.getAllTasksFromPlan(planId)
+        // .then(res => setData(res));
+    })
+
+    const convertDate = (date) => {
+        return new Date(date).toLocaleDateString();
+    }
 
     const handleEditIconClick = (e) => {
         e.stopPropagation();
         toggleEditMode(!editing);
     }
 
+    //if (!data) return <h1>Loading...</h1>
     return (
         <div className={classes.root}>
             <Accordion>
@@ -109,24 +127,21 @@ export default function TaskComponent() {
                     <div className={classes.taskHeader}>
                         <div className={classes.taskIconBlock}>
                             <Typography className={classes.taskDate}>
-                                до 31.07
+                                до {convertDate(data.executionEnd).slice(0,5)}
                             </Typography>
                             <Checkbox color="primary" className={classes.root} onClick={(e) => e.stopPropagation()} />
                             <EditIcon onClick={(e) => handleEditIconClick(e)} />
                             <DeleteIcon onClick={(e) => e.stopPropagation()} />
                         </div>
                         <ArrowForwardIosIcon className={classes.taskArrowIcon} />
-                        <Typography className={classes.heading}>Сделать презентацию</Typography>
+                        <Typography className={classes.heading}>{data.name}</Typography>
                     </div>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Grid container spacing={1}>
                         <Grid item>
                             <Typography color="textSecondary">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                            Vestibulum placerat molestie ligula ac dictum. 
-                            Ut in varius turpis. Vestibulum iaculis ante nec dui facilisis, at vehicula sapien aliquam. Nam purus mauris, 
-                            iaculis sit amet neque sed, volutpat sodales elit. In sed vehicula massa. Mauris non urna in.
+                                {data.description}
                             </Typography>
                         </Grid>
                         <Grid item xs={12} className={classes.lowButtonsBlock}>
@@ -161,3 +176,5 @@ export default function TaskComponent() {
         </div>
     );
 }
+
+export default TaskComponent;
