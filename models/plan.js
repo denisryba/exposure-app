@@ -64,6 +64,6 @@ planSchema.set('toJSON', {
   }
 });
 
-userSchema.plugin(uniqueValidator);
+planSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('Plan', planSchema);
