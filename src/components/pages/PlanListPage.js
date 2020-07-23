@@ -18,7 +18,7 @@ const PlanListPage = ({ exposureService }) => {
 
   useEffect(() => {
     exposureService
-      .getAll(`plans?page=${currentPage}&limit=${limit}`)
+      .getAll(`plans`, { page: currentPage, limit: limit })
       .then(data => {
         setPlans(data.plans);
         setPageCount(data.pageCount)
