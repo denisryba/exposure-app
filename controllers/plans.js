@@ -15,20 +15,6 @@ plansRouter.get('/', async (req, res) => {
     results.pageCount = Math.ceil(pageCount)
   else results.pageCount = 1;
 
-  if (endIndex < await Plan.countDocuments().exec()) {
-    results.next = {
-      page: page + 1,
-      limit
-    }
-  }
-
-  if (startIndex > 0) {
-    results.previos = {
-      page: page - 1,
-      limit
-    }
-  }
-
   results.plans = await Plan.find().limit(limit).skip(startIndex)
     .populate('employee')
     .populate('supervisor')
