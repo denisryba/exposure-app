@@ -61,6 +61,8 @@ const PlanCreationForm = (
 } 
 ) => {
   const classes = useStyles();
+  let month = new Date().getMonth();
+  
   const [employeeId, setEmployeeId] = useState('');
   const [positionId, setPositionId] = useState('');
   const [supervisorId, setSupervisorId] = useState('');
@@ -68,7 +70,8 @@ const PlanCreationForm = (
   const [supervisorList, setSupervisoreList] = useState([]);
   const [positionList, setPositionList] = useState([]);
   const [adaptationStart, setAdaptationStart] = useState(new Date());
-  const [adaptationEnd, setAdaptationEnd] = useState(new Date());
+  // const [adaptationEnd, setAdaptationEnd] = useState(new Date());
+  const [adaptationEnd, setAdaptationEnd] = useState(new Date().setMonth(month + 7));
 
   const handleChangeEmployeeName = event => setEmployeeId(event.target.value);
   const handleChangePosition = event => setPositionId(event.target.value);
