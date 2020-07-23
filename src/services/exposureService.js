@@ -56,7 +56,7 @@ const update = async (docName, id, newObject) => {
 };
 
 const remove = async (docName, id) => {
-  await deleteData(`${docName}s/${id}`);
+  return await deleteData(`${docName}s/${id}`);
 };
 
 export default {

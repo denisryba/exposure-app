@@ -12,10 +12,10 @@ const PlanListPage = ({ exposureService }) => {
   const [ onCreation, setOnCreation ] = useState(false);
   const [ pageCount, setPageCount] =  useState(1);
   const [ currentPage, setCurrentPage] = useState(1);
-  const limit = 10;
+  const limit = 8;
 
   const history = useHistory();
-  
+
   useEffect(() => {
     exposureService
       .getAll(`plans?page=${currentPage}&limit=${limit}`)
@@ -28,6 +28,7 @@ const PlanListPage = ({ exposureService }) => {
   const handleCurrentPage = (event, value) => {
     setCurrentPage(value);
   };
+
   const handleCreateButtonClick = () => setOnCreation(!onCreation);
 
   const onPlanClicked = (id) => {
@@ -39,6 +40,7 @@ const PlanListPage = ({ exposureService }) => {
     <Grid justify='center' container spacing={2}>
       <Grid item xs={12}>
         <ListOfPlans
+          exposureService={exposureService}
           plans={plans}
           onPlanClicked={onPlanClicked}
           setPlans={setPlans} 

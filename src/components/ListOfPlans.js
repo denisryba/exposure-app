@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios'
 import {
   Table,
   TableBody,
@@ -41,7 +40,7 @@ const useStyles = makeStyles({
   }
 });
 
-const ListOfPlans = ({ onPlanClicked, plans, setPlans}) => {
+const ListOfPlans = ({ onPlanClicked, plans, setPlans, exposureService }) => {
   const classes = useStyles();
 
   const setName = name => name.first + ' ' + name.middle + ' ' + name.last;
@@ -60,8 +59,7 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans}) => {
   };
 
   const deletePlan = (id, event) => {
-    const url = `http://localhost:3001/api/plans/${id}`;
-    axios.delete(url)
+    exposureService.remove('plan', id)
       .then(res => setPlans(plans.filter(plan => plan.id !== id)));
     event.stopPropagation();
   };
