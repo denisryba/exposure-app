@@ -40,6 +40,10 @@ const Header = ({ setUser }) => {
     history.replace('/login');
   };
 
+  React.useEffect(()=>{
+    console.log(userData);
+  })
+
   return (
     <AppBar className={classes.root} color='primary' position='static'>
       <Toolbar>
