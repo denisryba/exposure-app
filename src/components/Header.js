@@ -51,7 +51,7 @@ const Header = ({ setUser }) => {
           onClick={handleLogoutClick}
           className={classes.userButton}
           startIcon={<AccountCircle />}>
-          {userData.name.first + ' ' + userData.name.last}
+          {userData.name.first + ' ' + userData.name.last + ' (' + userData.role+ ')'}
         </Button>
       </Toolbar>
     </AppBar>
