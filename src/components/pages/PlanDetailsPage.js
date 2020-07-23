@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid } from '@material-ui/core';
+import { Grid, Fab } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+
 import AdaptationPlanCard from '../AdaptationPlanCard.js';
 import TasksBlock from '../TasksBlock.js';
 import exposureService from '../../services/exposureService.js';
 import TaskCreationForm from '../TaskCreationForm.js';
+
 
 const PlanDetailsPage = () => {
   const [ planId ] = useState(useParams().id);
@@ -19,7 +22,14 @@ const PlanDetailsPage = () => {
       <Grid item xs={12} sm={6}>
         <TasksBlock />
       </Grid>
-    <TaskCreationForm/>
+      <Grid container justify='flex-end'>
+      <Fab
+        color='primary'>
+        <AddIcon />
+      </Fab>
+      </Grid>
+    <TaskCreationForm  
+    />
     </Grid>
   );
 };
