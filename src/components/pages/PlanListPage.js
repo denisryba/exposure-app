@@ -36,7 +36,7 @@ const PlanListPage = ({ exposureService }) => {
 
   return (
     <>
-    <Grid justify='center' container spacing="2">
+    <Grid justify='center' container spacing={2}>
       <Grid item xs={12}>
         <ListOfPlans
           plans={plans}

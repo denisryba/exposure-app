@@ -37,7 +37,7 @@ const useStyles = makeStyles({
     width: "5%"
   },
   planRow: {
-    cursor: 'pointer'
+    cursor: 'pointer',
   }
 });
 
@@ -59,10 +59,11 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans}) => {
       return dd + "." + mm + "." + yy;
   };
 
-  const deletePlan = (id) => {
+  const deletePlan = (id, event) => {
     const url = `http://localhost:3001/api/plans/${id}`;
     axios.delete(url)
       .then(res => setPlans(plans.filter(plan => plan.id !== id)));
+    event.stopPropagation();
   };
 
   return (
@@ -87,8 +88,8 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans}) => {
                 <TableCell>{setName(plan.supervisor.name)}</TableCell>
                 <TableCell>{formatDate(plan.date)}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => deletePlan(plan.id)}>
-                    <DeleteIcon/>
+                  <IconButton onClick={(e) => deletePlan(plan.id, e)}>
+                    <DeleteIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
