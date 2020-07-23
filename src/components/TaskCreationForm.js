@@ -16,7 +16,7 @@ import {
 } from '@material-ui/pickers';
 import exposureService from '../services/exposureService.js';
 
-const TaskCreationForm = () => {
+const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [executionStart, setExecutionStart] = useState(new Date());
@@ -36,7 +36,7 @@ const TaskCreationForm = () => {
       description,
       executionStart,
       executionEnd,
-      plan: "5f189bce3d627606ecf25e90"
+      plan: planId
     };
 
     exposureService
@@ -46,11 +46,13 @@ const TaskCreationForm = () => {
         setDescription('');
         setExecutionStart(new Date());
         setExecutionEnd(new Date());
-      })
+        setTasks(tasks.concat(createdTask));
+        toggleCreationForm();
+      });
   }
 
   return (
-    <Dialog open={false}>
+    <Dialog open={open} onClose={toggleCreationForm}>
       <Box  p="2rem">
         <form onSubmit={addTask}>
           <Grid container spacing={2} justify='flex-end' >

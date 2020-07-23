@@ -5,7 +5,6 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Checkbox,
   Typography,
   Grid,
   Button,
@@ -21,11 +20,12 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiCheckbox-colorPrimary': {
       color: '#99bd36'
-    }
+    },
+    margin: theme.spacing(2)
   },
   content: {
     '& .MuiAccordionSummary-content': {
@@ -34,11 +34,11 @@ const useStyles = makeStyles({
     '& .MuiAccordionSummary-expandIcon': {
       display: 'block',
     },
-    '& .Mui-expanded .makeStyles-taskArrowIcon-15': {
+    '& .Mui-expanded .makeStyles-taskArrowIcon-25': {
       transform: 'rotate(90deg)',
       transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
     },
-    '& .makeStyles-taskArrowIcon-15': {
+    '& .makeStyles-taskArrowIcon-25': {
       transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
     }
   },
@@ -89,7 +89,7 @@ const useStyles = makeStyles({
       backgroundColor: '#99bd36',
     }
   },
-});
+}));
 
 const TaskComponent = ({ taskObj, expService }) => {
 

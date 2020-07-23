@@ -10,9 +10,6 @@ const useStyles = makeStyles(() => ({
         '& .MuiStep-horizontal': {
             paddingLeft: '0px',
             paddingRight: '5px',
-        },
-        '& .MuiStepIcon-active, .MuiStepIcon-completed': {
-            color: '#A6CE39'
         }
     }
 }));

@@ -8,9 +8,7 @@ import {
   Button,
   DialogActions,
   DialogTitle,
-  DialogContent,
-  createMuiTheme,
-  ThemeProvider
+  DialogContent
  } 
 from '@material-ui/core';
 import 'date-fns';
@@ -18,13 +16,6 @@ import FormMenu from "./FormMenu";
 import Calendar from "../globalElements/Calendar.js";
 
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#a6ce39',
-    }
-  },
-});
 
 const useStyles = makeStyles({
   modal: {
@@ -129,7 +120,6 @@ const PlanCreationForm = (
   return (
     <Dialog open={isShowing} onClose={hide} >      
       <Box className={classes.modal}  p="1rem" >
-      <ThemeProvider theme={theme}>
         <DialogTitle className={classes.header}>Создание плана адаптации</DialogTitle>
         <form onSubmit={addPlan}>
             <DialogContent>       
@@ -172,7 +162,6 @@ const PlanCreationForm = (
               </Button>
             </DialogActions>
           </form>
-        </ThemeProvider>
       </Box>
     </Dialog>
   )

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import InputField from './CardInputField.js';
 import ProgressBar from './ProgressBar.js';
 import SelectStaff from '../globalElements/SelectStaff.js'
 
@@ -61,13 +60,6 @@ const useStyles = makeStyles({
     marginTop: '20px',
     '& button': {
       float: 'right',
-    }
-  },
-  button: {
-    backgroundColor: '#A6CE39',
-    fontSize: 10,
-    '&:hover': {
-      backgroundColor: '#99bd36',
     }
   }
 });
@@ -146,7 +138,7 @@ const AdaptationPlanCard = ({ expService, planId }) => {
 
   if (!data) return <h1>Loading...</h1>
   return (
-    <Grid item xs={12} sm={6}>
+    <>
       <Typography className={classes.cardHeader} variant='h6'>
         <KeyboardBackspaceIcon onClick={handleBackIconClick} />
         <div className={classes.title}>Адаптационный план сотрудника</div>
@@ -251,7 +243,7 @@ const AdaptationPlanCard = ({ expService, planId }) => {
           </div>
         }
       </Paper>
-    </Grid>
+    </>
   )
 
 }

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import TaskComponent from './TaskComponent.js';
+import TaskCreationForm from './TaskCreationForm.js';
 import expService from '../services/exposureService';
 
-import { Grid, Typography, Button, makeStyles } from '@material-ui/core';
+import { Typography, Button, makeStyles } from '@material-ui/core';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   header: {
     position: 'relative'
   },
@@ -19,29 +20,33 @@ const useStyles = makeStyles(() => ({
     color: 'black',
     borderRadius: '30px',
     '& .MuiButton-startIcon': {
-      color: '#A6CE39'
+      color: '#5c6bc0'
     },
     '&:hover': {
       backgroundColor: '#eaeaea'
     }
-  },
+  }
 }));
 
-const TasksBlock = () => {
+const TasksBlock = ({ planId }) => {
 
   const classes = useStyles();
   const [taskArr, setTasks] = useState(null);
+  const [ onCreation, setOnCreation ] = useState(false);
   let location = useLocation();
 
   useEffect(() => {
     expService.getAll(location.pathname.slice(1) + '/tasks')
       .then(res => setTasks(res));
-  }, [location])
+  }, [location]);
+
+  const toggleCreationForm = () => setOnCreation(!onCreation);
 
   return (
-    <Grid item xs={12} sm={6}>
+    <>
       <Typography className={classes.header} variant='h6'>
         <Button
+          onClick={toggleCreationForm}
           variant="contained"
           color="primary"
           size="small"
@@ -54,11 +59,17 @@ const TasksBlock = () => {
       </Typography>
       {taskArr ?
         taskArr.map((item) => {
-          return <TaskComponent expService={expService} taskObj={item}></TaskComponent>
+          return <TaskComponent key={item.id} expService={expService} taskObj={item} />
         }) :
         <h1>Loading...</h1>
       }
-    </Grid>
+      <TaskCreationForm
+        tasks={taskArr}
+        setTasks={setTasks}
+        toggleCreationForm={toggleCreationForm}
+        planId={planId}
+        open={onCreation} />
+    </>
 
   )
 }
