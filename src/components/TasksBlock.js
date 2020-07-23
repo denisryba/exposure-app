@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import TaskComponent from './TaskComponent.js';
 import expService from '../services/exposureService';
 
@@ -31,15 +31,12 @@ const TasksBlock = () => {
 
   const classes = useStyles();
   const [taskArr, setTasks] = useState(null);
-  let history = useHistory();
+  let location = useLocation();
 
   useEffect(() => {
-    console.log(history);
-    console.log(history.pathname);
-    const planId = history.location.pathname.slice(history.location.pathname.indexOf('/') + 1);
-    expService.getAll('tasks/' + planId)
+    expService.getAll(location.pathname.slice(1) + '/tasks')
       .then(res => setTasks(res));
-  }, [history])
+  }, [location])
 
   return (
     <Grid item xs={12} sm={6}>

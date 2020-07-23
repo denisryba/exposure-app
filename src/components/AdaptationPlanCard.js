@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import InputField from './CardInputField.js';
 import ProgressBar from './ProgressBar.js';
 import SelectStaff from '../globalElements/SelectStaff.js'
 
-import { Grid, Paper, Button, makeStyles, Typography } from '@material-ui/core';
+import { Grid, Paper, Button, makeStyles, Typography, TextField } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
+import Calendar from '../globalElements/Calendar.js';
 
 
 const useStyles = makeStyles({
@@ -16,7 +18,7 @@ const useStyles = makeStyles({
   },
   cardContainer: {
     position: 'relative',
-    padding: '24px 10px 8px 9px',
+    padding: '35px 29px 8px 9px',
   },
   cardHeader: {
     display: 'flex',
@@ -35,6 +37,11 @@ const useStyles = makeStyles({
   },
   namesInput: {
     width: '15%'
+  },
+  fieldLabelContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   },
   textEnd: {
     textAlign: 'end',
@@ -67,69 +74,24 @@ const useStyles = makeStyles({
 
 const AdaptationPlanCard = ({ expService, planId }) => {
 
-  //planId = "5f189bb33d627606ecf25e8f";
 
   const classes = useStyles();
+  let history = useHistory();
 
   const [editing, toggleEditMode] = useState(false);
   const [data, setData] = useState(null);
 
   useEffect(() => {
+    console.log(history);
     expService.get('plan', planId)
       .then(res => setData(res));
-  }, [expService, planId])
+  }, [expService, planId, history])
 
   const convertDate = (date) => {
     return new Date(date).toLocaleDateString();
   }
 
-  const changeField = (e) => {
-    console.log(e.target.value);
-  }
-
-  // const nameChange = (e, fieldName) => {
-  //   const [first, last, middle] = e.target.value.split(' ');
-  //   const nameObj = {
-  //     name: {
-  //       first: first,
-  //       last: last,
-  //       middle: middle
-  //     }
-  //   };
-  //   setData(prevData => {
-  //     return {
-  //       ...prevData,
-  //       [fieldName]: nameObj
-  //     }
-  //   })
-  // }
-  // const nameChange = (e, personType, fieldName) => {
-  //   setData(prevData => {
-  //     console.log({
-  //       ...prevData,
-  //       [personType]: {
-  //         ...prevData[personType],
-  //         name: {
-  //           ...prevData[personType].name,
-  //           [fieldName]: e.target.value
-  //         }
-  //       }
-  //     });
-  //     return {
-  //       ...prevData,
-  //       [personType]: {
-  //         ...prevData[personType],
-  //         name: {
-  //           ...prevData[personType].name,
-  //           [fieldName]: e.target.value
-  //         }
-  //       }
-  //     }
-  //   },[e.target.value])
-  //   console.log(data);
-  // }
-
-  const returnDataObj = ({ fieldType, position, nameType, value }) => {
+  const returnDataObj = (fieldType, position, nameType, value) => {
     console.log(data);
     if (fieldType === 'name') {
       setData(prevData => {
@@ -164,15 +126,29 @@ const AdaptationPlanCard = ({ expService, planId }) => {
     }
   }
 
-  const passStaffObj = (staffObj)=>{
+  const passStaffObj = (staffObj) => {
     console.log(staffObj);
+  }
+
+  const handleBackIconClick = () => {
+    history.replace('/plans/');
+  }
+
+  const handleDataChange = (dataType, value) => {
+    dataType = (dataType === 'dateStart') ? 'adaptationStart' : 'adaptationEnd';
+    returnDataObj('data', dataType, 'data', value.toJSON());
+  }
+
+  const handleRoleChange = (e) => {
+    console.log(e.taget);
+    //returnDataObj('role', 'role', 'role', e.taget.value)
   }
 
   if (!data) return <h1>Loading...</h1>
   return (
     <Grid item xs={12} sm={6}>
       <Typography className={classes.cardHeader} variant='h6'>
-        <KeyboardBackspaceIcon />
+        <KeyboardBackspaceIcon onClick={handleBackIconClick} />
         <div className={classes.title}>Адаптационный план сотрудника</div>
       </Typography>
       <Paper elevation={4} className={classes.cardContainer}>
@@ -180,100 +156,79 @@ const AdaptationPlanCard = ({ expService, planId }) => {
           <EditIcon onClick={() => toggleEditMode(!editing)} />
         </div>
         <Grid container spacing={1}>
-          <Grid item xs={6}>
+          <Grid className={classes.fieldLabelContainer} item xs={6}>
             <Typography className={classes.textEnd}>
               ФИО Сотрудника:
             </Typography>
           </Grid>
           <Grid item xs={6}>
             {editing
-              ? <div>
-                <SelectStaff
-                  fetchFunc={() => expService.getAll('users')}
-                  label="Cотрудник"
-                  passStaffObj={passStaffObj}
-                />
-              </div>
+              ? <SelectStaff
+                value={data.employee}
+                fetchFunc={() => expService.getAll('users')}
+                label="Cотрудник"
+                passStaffObj={passStaffObj}
+              />
               : <Typography>{data.employee.name.last + ' ' + data.employee.name.first + ' ' + data.employee.name.middle} </Typography>
             }
           </Grid>
-          <Grid item xs={6}>
+          <Grid className={classes.fieldLabelContainer} item xs={6}>
             <Typography className={classes.textEnd}>
               Должность:
                             </Typography>
           </Grid>
           <Grid item xs={6}>
             {editing
-              ? <InputField
+              ? <TextField
+                label="Должность"
                 value={data.employee.role}
-                returnDataObj={returnDataObj}
-                fieldType='role'
-                position='role'
-                nameType='role'
+                onChange={handleRoleChange}
               />
               : <Typography>{data.employee.role} </Typography>
             }
           </Grid>
-          <Grid item xs={6}>
+          <Grid className={classes.fieldLabelContainer} item xs={6}>
             <Typography className={classes.textEnd}>
               ФИО Руководителя:
                             </Typography>
           </Grid>
           <Grid item xs={6}>
             {editing
-              ? <div>
-                <InputField
-                  value={data.supervisor.name.last}
-                  returnDataObj={returnDataObj}
-                  fieldType='name'
-                  position='supervisor'
-                  nameType='last'
-                />
-                <InputField
-                  value={data.supervisor.name.first}
-                  returnDataObj={returnDataObj}
-                  fieldType='name'
-                  position='supervisor'
-                  nameType='first'
-                />
-                <InputField
-                  value={data.supervisor.name.middle}
-                  returnDataObj={returnDataObj}
-                  fieldType='name'
-                  position='supervisor'
-                  nameType='middle'
-                />
-              </div>
+              ? <SelectStaff
+                value={data.supervisor}
+                fetchFunc={() => expService.getAll('users')}
+                label="Руководитель"
+                passStaffObj={passStaffObj}
+              />
               : <Typography>{data.supervisor.name.last + ' ' + data.supervisor.name.first + ' ' + data.supervisor.name.middle} </Typography>
             }
           </Grid>
-          <Grid item xs={6}>
+          <Grid className={classes.fieldLabelContainer} item xs={6}>
             <Typography className={classes.textEnd}>
               Период испытательного срока:
                             </Typography>
           </Grid>
           <Grid item xs={6}>
             {editing
-              ? <InputField value={convertDate(data.adaptationStart) + '-' + convertDate(data.adaptationEnd)} />
+              ? <Calendar
+                passChanges={handleDataChange}
+                dateStart={data.adaptationStart}
+                dateStartLabel="Начало испытательного срока"
+                dateEnd={data.adaptationEnd}
+                dateEndLabel="Конец испытательного срока"
+              />
               : <Typography>{convertDate(data.adaptationStart) + '-' + convertDate(data.adaptationEnd)} </Typography>
             }
           </Grid>
-          <Grid item xs={6}>
+          <Grid className={classes.fieldLabelContainer} item xs={6}>
             <Typography className={classes.textEnd}>
               Создан HR-сотрудником:
                             </Typography>
           </Grid>
           <Grid item xs={6}>
-            {editing
-              ? <InputField
-                value={'Jane Doe [hardcoded]'}
-                returnDataObj={returnDataObj}
-                fieldType='name'
-                position='supervisor'
-                nameType='middle'
-              />
-              : <Typography>{'Jane Doe [hardcoded]'} </Typography>
-            }
+            <Typography>
+              {'Смирнова Елена Владимировна'}
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <ProgressBar stage={data.stage} />

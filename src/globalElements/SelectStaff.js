@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-export default function SelectStaff({ fetchFunc, label, passStaffObj }) {
+export default function SelectStaff({ fetchFunc, label, passStaffObj, value }) {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const loading = open && options.length === 0;
@@ -42,7 +42,6 @@ export default function SelectStaff({ fetchFunc, label, passStaffObj }) {
 
   return (
     <Autocomplete
-      style={{ width: 300 }}
       onOpen={() => {
         setOpen(true);
       }}
@@ -56,6 +55,7 @@ export default function SelectStaff({ fetchFunc, label, passStaffObj }) {
       getOptionLabel={(option) => option.name.last + ' ' + option.name.first + ' ' + option.name.middle}
       options={options}
       loading={loading}
+      value={value}
       renderInput={(params) => (
         <TextField
           {...params}
