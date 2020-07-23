@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 mongoose.set('useFindAndModify', false)
 
 const planSchema = new mongoose.Schema({
@@ -10,6 +11,7 @@ const planSchema = new mongoose.Schema({
   employee: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+    unique: true,
     ref: 'User'
   },
   supervisor: {
@@ -61,5 +63,7 @@ planSchema.set('toJSON', {
     delete returnedObject.__v;
   }
 });
+
+userSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('Plan', planSchema);

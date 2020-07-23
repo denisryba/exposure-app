@@ -9,7 +9,12 @@ plansRouter.get('/', async (req, res) => {
   const { user } = req;
   const page = +req.query.page;
   const limit = +req.query.limit;
+  const { employee } = req.query;
 
+  if (employee) {
+    const plan = await Plan.findOne({ employee }).exec();
+    return res.json(plan)
+  }
   if (user.role === 'employee') {
     return res.status(401).json(permissionError);
   }
