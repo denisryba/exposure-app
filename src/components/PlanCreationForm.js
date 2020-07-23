@@ -12,10 +12,13 @@ import {
  } 
 from '@material-ui/core';
 import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import locale from "date-fns/locale/ru";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from '@material-ui/pickers';
 import FormMenu from "./FormMenu";
-import Calendar from "../globalElements/Calendar.js";
-
-
 
 const useStyles = makeStyles({
   modal: {
@@ -25,9 +28,11 @@ const useStyles = makeStyles({
     paddingBottom: 0
   },
   button: {
-    color: '#ffffff',
     width: "30%",
     marginTop: 15
+  },
+  dateInput: {
+    marginTop: 0
   }
 });
 
@@ -59,6 +64,8 @@ const PlanCreationForm = (
   const handleChangeEmployeeName = event => setEmployeeId(event.target.value);
   const handleChangePosition = event => setPositionId(event.target.value);
   const handleChangeSupervisorName = event => setSupervisorId(event.target.value);
+  const handleAdaptationStart = date => setAdaptationStart(date);
+  const handleAdaptationEnd = date => setAdaptationEnd(date);
 
   useEffect(() => {
     exposureService
@@ -141,14 +148,30 @@ const PlanCreationForm = (
                   value={supervisorId} 
                   handleChange={handleChangeSupervisorName} 
                   selectList={supervisorList}
-                />  
-                <Calendar
-                  passChanges={setAdaptationStart}
-                  dateStart={adaptationStart}
-                  dateEnd={adaptationEnd}
-                  dateStartLabel="Начало адаптации"
-                  dateEndLabel="Конец адаптации"
-                />         
+                />           
+                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                  <KeyboardDatePicker    
+                    className={classes.dateInput}           
+                    disableToolbar        
+                    variant="inline"
+                    format="dd.MM.yyyy"
+                    margin="normal"
+                    label="Начало адаптации"
+                    autoOk={true}
+                    value={adaptationStart}
+                    onChange={handleAdaptationStart}               
+                  />
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="dd.MM.yyyy"
+                    margin="normal"
+                    label="Конец адаптации"
+                    autoOk={true}
+                    value={adaptationEnd}
+                    onChange={handleAdaptationEnd}
+                  />
+                </MuiPickersUtilsProvider>
               </FormGroup>
             </DialogContent>
             <DialogActions>
