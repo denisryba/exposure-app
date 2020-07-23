@@ -15,7 +15,7 @@ import {
 from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme)=> ({
   root: {
     maxWidth: '80%',
     margin: 'auto',
@@ -38,8 +38,11 @@ const useStyles = makeStyles({
   },
   planRow: {
     cursor: 'pointer',
+    "&:hover": {
+      backgroundColor: "#f9f9f9"
+    }
   }
-});
+}));
 
 const ListOfPlans = ({ onPlanClicked, plans, setPlans}) => {
   const classes = useStyles();
