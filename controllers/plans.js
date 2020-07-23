@@ -1,9 +1,18 @@
 const plansRouter = require('express').Router();
 const Plan = require('../models/plan.js');
 
+const permissionError = {
+  error: 'you do not have permission to perform this request'
+};
+
 plansRouter.get('/', async (req, res) => {
+  const { user } = req;
   const page = +req.query.page;
   const limit = +req.query.limit;
+
+  if (user.role === 'employee') {
+    return res.status(401).json(permissionError);
+  }
 
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
@@ -53,13 +62,17 @@ plansRouter.get('/:id/tasks', async (req, res, next) => {
 });
 
 plansRouter.post('/', async (req, res) => {
-  const { body } = req;
+  const { body, user } = req;
+
+  if (user.role !== 'hr') {
+    return res.status(401).json(permissionError);
+  }
 
   const plan = new Plan({
     employeePosition: body.employeePosition,
     employee: body.employee,
     supervisor: body.supervisor,
-    hr: body.hr,
+    hr: user.id,
     stage: body.stage || 'Заполнение сотрудником',
     adaptationStart: new Date(body.adaptationStart),
     adaptationEnd: new Date(body.adaptationEnd),
@@ -74,12 +87,20 @@ plansRouter.post('/', async (req, res) => {
 });
 
 plansRouter.delete('/:id', async (req, res) => {
+  const { user } = req;
+  if (user.role === 'employee') {
+    return res.status(401).json(permissionError);
+  }
   await Plan.findByIdAndDelete(req.params.id);
   res.status(204).end();
 });
 
 plansRouter.put('/:id', async (req, res) => {
-  const body = req.body;
+  const { body, user } = req;
+
+  if (user.role === 'employee') {
+    return res.status(401).json(permissionError);
+  }
 
   const plan = {
     employeePosition: body.employeePosition,

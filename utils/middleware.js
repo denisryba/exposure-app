@@ -37,6 +37,7 @@ const tokenValidator = (req, res, next) => {
   if (!decodedData.id) {
     return res.status(401).json({ error: 'token invalid'});
   }
+  req.user = decodedData;
 
   next();
 };

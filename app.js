@@ -34,7 +34,7 @@ app.use(morgan(logTemplate));
 app.use('/api/login', loginRouter);
 
 app.use(middleware.tokenExtractor);
-// app.use(middleware.tokenValidator);
+app.use(middleware.tokenValidator);
 
 app.use('/api/plans', plansRouter);
 app.use('/api/users', usersRouter);
