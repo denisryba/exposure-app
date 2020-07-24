@@ -37,7 +37,7 @@ tasksRouter.post('/', async (req, res) => {
     const savedTask = await task.save();
     plan.tasks = plan.tasks.concat(savedTask._id);
     await plan.save();
-    res.json(savedTask);
+    return res.json(savedTask);
   }
 
   res.status(400).json('plan does not exist for provided id')

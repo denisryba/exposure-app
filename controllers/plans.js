@@ -1,5 +1,6 @@
 const plansRouter = require('express').Router();
 const Plan = require('../models/plan.js');
+const role = require('../utils/role.js');
 
 const permissionError = {
   error: 'you do not have permission to perform this request'
@@ -9,26 +10,24 @@ plansRouter.get('/', async (req, res) => {
   const { user } = req;
   const page = +req.query.page;
   const limit = +req.query.limit;
-  const { employee } = req.query;
+  let filter = {};
 
-  if (employee) {
-    const plan = await Plan.findOne({ employee }).exec();
-    return res.json(plan)
-  }
-  if (user.role === 'employee') {
-    return res.status(401).json(permissionError);
+  if (user.role === role.employee || user.role === role.supervisor) {
+    filter = {
+      [user.role]: user.id
+    }
   }
 
   const startIndex = (page - 1) * limit;
 
   const results = {};
 
-  const pageCount = await Plan.countDocuments().exec()/limit;
+  const pageCount = await Plan.countDocuments(filter).exec()/limit;
   if (pageCount)
     results.pageCount = Math.ceil(pageCount)
   else results.pageCount = 1;
 
-  results.plans = await Plan.find().limit(limit).skip(startIndex)
+  results.plans = await Plan.find(filter).limit(limit).skip(startIndex)
     .populate('employee')
     .populate('supervisor')
     .populate('hr')
@@ -68,7 +67,7 @@ plansRouter.get('/:id/tasks', async (req, res, next) => {
 plansRouter.post('/', async (req, res) => {
   const { body, user } = req;
 
-  if (user.role !== 'hr') {
+  if (user.role !== role.hr) {
     return res.status(401).json(permissionError);
   }
 
@@ -100,7 +99,7 @@ plansRouter.post('/', async (req, res) => {
 
 plansRouter.delete('/:id', async (req, res) => {
   const { user } = req;
-  if (user.role === 'employee') {
+  if (user.role === role.employee) {
     return res.status(401).json(permissionError);
   }
   await Plan.findByIdAndDelete(req.params.id);
@@ -110,7 +109,7 @@ plansRouter.delete('/:id', async (req, res) => {
 plansRouter.put('/:id', async (req, res) => {
   const { body, user } = req;
 
-  if (user.role === 'employee') {
+  if (user.role === role.employee) {
     return res.status(401).json(permissionError);
   }
 
