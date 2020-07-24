@@ -100,20 +100,15 @@ const PlanCreationForm = (
       tasks: []
     };
 
-    const planParam = {
-      employeePosition: positionList.find(position => position.id === positionId),
-      employee: employeeList.find(employee => employee.id === employeeId),
-      supervisor: supervisorList.find(supervisor => supervisor.id === supervisorId),
-    };
-
     exposureService
       .create('plan', planObject)
       .then(createdPlan => {
+        console.log(createdPlan)
         if (currentPage === pageCount) {
           if (plans.length === limit)
             setPageCount(pageCount + 1);
           else 
-            setPlans(plans.concat(Object.assign(createdPlan, planParam)));         
+            setPlans(plans.concat(createdPlan));            
         };
         setEmployeeId('');
         setSupervisorId('');
