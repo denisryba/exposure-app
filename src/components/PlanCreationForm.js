@@ -58,7 +58,6 @@ const PlanCreationForm = (
   const [supervisorList, setSupervisoreList] = useState([]);
   const [positionList, setPositionList] = useState([]);
   const [adaptationStart, setAdaptationStart] = useState(new Date());
-  // const [adaptationEnd, setAdaptationEnd] = useState(new Date());
   const [adaptationEnd, setAdaptationEnd] = useState(new Date().setMonth(month + 3));
 
   const handleChangeEmployeeName = event => setEmployeeId(event.target.value);
