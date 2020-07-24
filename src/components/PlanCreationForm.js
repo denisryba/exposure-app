@@ -103,7 +103,6 @@ const PlanCreationForm = (
     exposureService
       .create('plan', planObject)
       .then(createdPlan => {
-        console.log(createdPlan)
         if (currentPage === pageCount) {
           if (plans.length === limit)
             setPageCount(pageCount + 1);
