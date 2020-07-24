@@ -44,12 +44,7 @@ const get = async (docName, id, params) => {
   return res.data;
 };
 
-const getAllTasksFromPlan = async (id) => await getAll(`plans/${id}/tasks`);
-
-const getPlanForEmployee = async (id) => {
-  const res = await getData('plans', { employee: id });
-  return res.data;
-};
+const getAllTasksFromPlan = async (id, params) => await getAll(`plans/${id}/tasks`, params);
 
 const create = async (docName, newObject) => {
   const res = await postData(`${docName}s`, newObject);
@@ -69,7 +64,6 @@ export default {
   getAll,
   get,
   getAllTasksFromPlan,
-  getPlanForEmployee,
   create,
   update,
   remove

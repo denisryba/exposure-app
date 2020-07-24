@@ -19,6 +19,7 @@ import {
   KeyboardDatePicker
 } from '@material-ui/pickers';
 import FormMenu from "./FormMenu";
+import role from '../utils/role.js';
 
 const useStyles = makeStyles({
   modal: {
@@ -54,7 +55,7 @@ const PlanCreationForm = (
   const [positionId, setPositionId] = useState('');
   const [supervisorId, setSupervisorId] = useState('');
   const [employeeList, setEmployeeList] = useState([]);
-  const [supervisorList, setSupervisoreList] = useState([]);
+  const [supervisorList, setSupervisorList] = useState([]);
   const [positionList, setPositionList] = useState([]);
   const [adaptationStart, setAdaptationStart] = useState(new Date());
   const [adaptationEnd, setAdaptationEnd] = useState(new Date().setMonth(month + 3));
@@ -67,19 +68,20 @@ const PlanCreationForm = (
 
   useEffect(() => {
     exposureService
-      .getAll('users')
-      .then(users => {
-        setEmployeeList(users.filter(user => user.role === "employee"))
-        setSupervisoreList(users.filter(user => user.role === "supervisor"))
-      })    
+      .getAll('users', { role: role.employee })
+      .then(employees => { setEmployeeList(employees) })    
+  }, []);
+
+  useEffect(() => {
+    exposureService
+      .getAll('users', { role: role.supervisor })
+      .then(supervisors => setSupervisorList(supervisors))
   }, []);
 
   useEffect(() => {
     exposureService
       .getAll('positions')
-      .then(positions => {
-        setPositionList(positions);
-      }); 
+      .then(positions => setPositionList(positions)); 
   }, []);
 
   const addPlan = (event) => {

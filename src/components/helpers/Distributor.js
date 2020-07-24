@@ -8,14 +8,9 @@ const Distributor = ({ exposureService }) => {
   const user = useAuth();
 
   useEffect(() => {
-    const getPlanIdForEmployee = async (id) => {
-      const plan = await exposureService.getPlanForEmployee(id);
-      return plan.id;
-    };
-
     if (user && user.role === role.employee) {
-      getPlanIdForEmployee(user.id)
-        .then(id => setPlanId(id));
+      exposureService.getAll('plans')
+        .then(({ plans: [plan] }) => setPlanId(plan.id));
     } else {
       setPlanId('all');
     }
