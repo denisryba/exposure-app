@@ -28,7 +28,6 @@ const useStyles = makeStyles({
     paddingBottom: 0
   },
   button: {
-    width: "30%",
     marginTop: 15
   },
   dateInput: {
@@ -38,8 +37,8 @@ const useStyles = makeStyles({
 
 const PlanCreationForm = ( 
 {
-  isShowing, 
-  hide, 
+  onCreation, 
+  toggleCreationMode, 
   plans, 
   setPlans, 
   pageCount, 
@@ -58,7 +57,6 @@ const PlanCreationForm = (
   const [supervisorList, setSupervisoreList] = useState([]);
   const [positionList, setPositionList] = useState([]);
   const [adaptationStart, setAdaptationStart] = useState(new Date());
-  // const [adaptationEnd, setAdaptationEnd] = useState(new Date());
   const [adaptationEnd, setAdaptationEnd] = useState(new Date().setMonth(month + 3));
 
   const handleChangeEmployeeName = event => setEmployeeId(event.target.value);
@@ -121,11 +119,11 @@ const PlanCreationForm = (
         setAdaptationStart(new Date());
         setAdaptationEnd(new Date());
       })
-      .catch(error => hide());
+      .catch(error => toggleCreationMode());
   }
 
   return (
-    <Dialog open={isShowing} onClose={hide} >      
+    <Dialog open={onCreation} onClose={toggleCreationMode} >      
       <Box className={classes.modal}  p="1rem" >
         <DialogTitle className={classes.header}>Создание плана адаптации</DialogTitle>
         <form onSubmit={addPlan}>
@@ -177,7 +175,7 @@ const PlanCreationForm = (
             <DialogActions>
               <Button 
                 variant="contained" 
-                onClick={hide} 
+                onClick={toggleCreationMode} 
                 className={classes.button}
                 color="primary"
                 type="Submit">

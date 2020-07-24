@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import TaskComponent from './TaskComponent.js';
 import TaskCreationForm from './TaskCreationForm.js';
 import expService from '../services/exposureService';
@@ -31,16 +30,15 @@ const useStyles = makeStyles((theme) => ({
 const TasksBlock = ({ planId }) => {
 
   const classes = useStyles();
-  const [taskArr, setTasks] = useState(null);
+  const [ tasks, setTasks ] = useState(null);
   const [ onCreation, setOnCreation ] = useState(false);
-  let location = useLocation();
 
   useEffect(() => {
-    expService.getAll(location.pathname.slice(1) + '/tasks')
-      .then(res => setTasks(res));
-  }, [location]);
+    expService.getAllTasksFromPlan(planId)
+      .then(tasks => setTasks(tasks));
+  }, [planId]);
 
-  const toggleCreationForm = () => setOnCreation(!onCreation);
+  const toggleCreationForm = () => setOnCreation(onCreation => !onCreation);
 
   return (
     <>
@@ -57,14 +55,14 @@ const TasksBlock = ({ planId }) => {
                 </Button>
         <div className={classes.title}>Задачи</div>
       </Typography>
-      {taskArr ?
-        taskArr.map((item) => {
+      {tasks ?
+        tasks.map((item) => {
           return <TaskComponent key={item.id} expService={expService} taskObj={item} />
         }) :
         <h1>Loading...</h1>
       }
       <TaskCreationForm
-        tasks={taskArr}
+        tasks={tasks}
         setTasks={setTasks}
         toggleCreationForm={toggleCreationForm}
         planId={planId}

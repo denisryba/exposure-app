@@ -34,8 +34,8 @@ const deleteData = async (path, params) => {
   return res;
 };
 
-const getAll = async (collection) => {
-  const res = await getData(collection);
+const getAll = async (collection, params) => {
+  const res = await getData(collection, params);
   return res.data;
 };
 

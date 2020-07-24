@@ -13,13 +13,17 @@ const Distributor = ({ exposureService }) => {
       return plan.id;
     };
 
-    if (user.role === role.employee) {
+    if (user && user.role === role.employee) {
       getPlanIdForEmployee(user.id)
         .then(id => setPlanId(id));
     } else {
       setPlanId('all');
     }
-  }, [ exposureService, user.id, user.role]);
+  }, [ exposureService, user]);
+
+  if (!user) {
+    return (<Redirect to='/login' />);
+  }
 
   if (user.role === role.employee && planId !== null) {
     return (<Redirect to={`/plans/${planId}`} />);

@@ -10,9 +10,9 @@ import PlanCreationForm from '../PlanCreationForm.js';
 const PlanListPage = ({ exposureService }) => {
   const [ plans, setPlans ] =  useState([]);
   const [ onCreation, setOnCreation ] = useState(false);
-  const [ pageCount, setPageCount] =  useState(1);
+  const [ pageCount, setPageCount ] =  useState(1);
   const [ currentPage, setCurrentPage] = useState(1);
-  const limit = 8;
+  const limit = 5;
 
   const history = useHistory();
 
@@ -29,7 +29,7 @@ const PlanListPage = ({ exposureService }) => {
     setCurrentPage(value);
   };
 
-  const handleCreateButtonClick = () => setOnCreation(!onCreation);
+  const toggleCreationMode = () => setOnCreation(onCreation => !onCreation);
 
   const onPlanClicked = (id) => {
     history.push(id);
@@ -52,14 +52,14 @@ const PlanListPage = ({ exposureService }) => {
     </Grid>
     <Grid container justify='flex-end'>
       <Fab
-        onClick={handleCreateButtonClick}
+        onClick={toggleCreationMode}
         color='primary'>
         <AddIcon />
       </Fab>
       </Grid>
     <PlanCreationForm
-      isShowing={onCreation}
-      hide={handleCreateButtonClick}
+      onCreation={onCreation}
+      toggleCreationMode={toggleCreationMode}
       plans={plans}
       setPlans={setPlans} 
       pageCount={pageCount}
