@@ -14,6 +14,8 @@ import {
 from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useExpService } from '../../context/expService.js';
+import formatService from '../../services/formatService.js';
+
 
 const useStyles = makeStyles((theme)=> ({
   root: {
@@ -48,21 +50,6 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
   const classes = useStyles();
   const exposureService = useExpService();
 
-  const setName = name => name.first + ' ' + name.middle + ' ' + name.last;
-
-  const formatDate = (planDate) => {
-    const date = new Date(planDate);
-    
-    let dd = date.getDate();
-    dd = (dd < 10) ? ('0' + dd) : dd;
-    
-    let mm = date.getMonth() + 1;
-    mm = (mm < 10) ? ('0' + mm): mm;
-     
-    let yy = date.getFullYear();
-      return dd + "." + mm + "." + yy;
-  };
-
   const deletePlan = (id, event) => {
     exposureService.remove('plan', id)
       .then(res => setPlans(plans.filter(plan => plan.id !== id)));
@@ -86,10 +73,10 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
             <TableBody>
             {plans.map(plan => (
               <TableRow className={classes.planRow} onClick={() => onPlanClicked(plan.id)} key={plan.id}>
-                <TableCell>{setName(plan.employee.name)}<div className={classes.subtitle}>{plan.employeePosition.name}</div></TableCell>
+                <TableCell>{formatService.setName(plan.employee.name)}<div className={classes.subtitle}>{plan.employeePosition.name}</div></TableCell>
                 <TableCell className={classes.highlightedText}>{plan.stage}</TableCell>
-                <TableCell>{setName(plan.supervisor.name)}</TableCell>
-                <TableCell>{formatDate(plan.date)}</TableCell>
+                <TableCell>{formatService.setName(plan.supervisor.name)}</TableCell>
+                <TableCell>{formatService.setDate(plan.date)}</TableCell>
                 <TableCell>
                   <IconButton onClick={(e) => deletePlan(plan.id, e)}>
                     <DeleteIcon />

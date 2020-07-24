@@ -10,6 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import Calendar from '../../reusable/Calendar.js';
 import { useExpService } from '../../context/expService.js';
+import formatService from '../../services/formatService.js';
 
 
 const useStyles = makeStyles({
@@ -161,7 +162,7 @@ const AdaptationPlanCard = ({ planId }) => {
                 label="Cотрудник"
                 passStaffObj={passStaffObj}
               />
-              : <Typography>{data.employee.name.last + ' ' + data.employee.name.first + ' ' + data.employee.name.middle} </Typography>
+              : <Typography>{formatService.setName(data.employee.name)}</Typography>
             }
           </Grid>
           <Grid className={classes.fieldLabelContainer} item xs={6}>
@@ -192,7 +193,7 @@ const AdaptationPlanCard = ({ planId }) => {
                 label="Руководитель"
                 passStaffObj={passStaffObj}
               />
-              : <Typography>{data.supervisor.name.last + ' ' + data.supervisor.name.first + ' ' + data.supervisor.name.middle} </Typography>
+              : <Typography>{formatService.setName(data.supervisor.name)} </Typography>
             }
           </Grid>
           <Grid className={classes.fieldLabelContainer} item xs={6}>
@@ -209,7 +210,7 @@ const AdaptationPlanCard = ({ planId }) => {
                 dateEnd={data.adaptationEnd}
                 dateEndLabel="Конец испытательного срока"
               />
-              : <Typography>{convertDate(data.adaptationStart) + '-' + convertDate(data.adaptationEnd)} </Typography>
+              : <Typography>{formatService.setDate(data.adaptationStart) + '-' + formatService.setDate(data.adaptationEnd)} </Typography>
             }
           </Grid>
           <Grid className={classes.fieldLabelContainer} item xs={6}>
@@ -227,7 +228,7 @@ const AdaptationPlanCard = ({ planId }) => {
           </Grid>
         </Grid>
         <Typography className={classes.bottomCreationDate}>
-          Создан {convertDate(data.date)}
+          Создан {formatService.setDate(data.date)}
         </Typography>
         {editing &&
           <div className={classes.adaptationPlanSaveBtn}>
