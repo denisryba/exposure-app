@@ -19,6 +19,7 @@ import {
   KeyboardDatePicker
 } from '@material-ui/pickers';
 import FormMenu from "./FormMenu";
+import role from '../utils/role.js';
 
 const useStyles = makeStyles({
   modal: {
@@ -28,7 +29,6 @@ const useStyles = makeStyles({
     paddingBottom: 0
   },
   button: {
-    width: "30%",
     marginTop: 15
   },
   dateInput: {
@@ -38,8 +38,8 @@ const useStyles = makeStyles({
 
 const PlanCreationForm = ( 
 {
-  isShowing, 
-  hide, 
+  onCreation, 
+  toggleCreationMode, 
   plans, 
   setPlans, 
   pageCount, 
@@ -55,7 +55,7 @@ const PlanCreationForm = (
   const [positionId, setPositionId] = useState('');
   const [supervisorId, setSupervisorId] = useState('');
   const [employeeList, setEmployeeList] = useState([]);
-  const [supervisorList, setSupervisoreList] = useState([]);
+  const [supervisorList, setSupervisorList] = useState([]);
   const [positionList, setPositionList] = useState([]);
   const [adaptationStart, setAdaptationStart] = useState(new Date());
   const [adaptationEnd, setAdaptationEnd] = useState(new Date().setMonth(month + 3));
@@ -68,19 +68,20 @@ const PlanCreationForm = (
 
   useEffect(() => {
     exposureService
-      .getAll('users')
-      .then(users => {
-        setEmployeeList(users.filter(user => user.role === "employee"))
-        setSupervisoreList(users.filter(user => user.role === "supervisor"))
-      })    
+      .getAll('users', { role: role.employee })
+      .then(employees => { setEmployeeList(employees) })    
+  }, []);
+
+  useEffect(() => {
+    exposureService
+      .getAll('users', { role: role.supervisor })
+      .then(supervisors => setSupervisorList(supervisors))
   }, []);
 
   useEffect(() => {
     exposureService
       .getAll('positions')
-      .then(positions => {
-        setPositionList(positions);
-      }); 
+      .then(positions => setPositionList(positions)); 
   }, []);
 
   const addPlan = (event) => {
@@ -115,11 +116,11 @@ const PlanCreationForm = (
         setAdaptationStart(new Date());
         setAdaptationEnd(new Date());
       })
-      .catch(error => hide());
+      .catch(error => toggleCreationMode());
   }
 
   return (
-    <Dialog open={isShowing} onClose={hide} >      
+    <Dialog open={onCreation} onClose={toggleCreationMode} >      
       <Box className={classes.modal}  p="1rem" >
         <DialogTitle className={classes.header}>Создание плана адаптации</DialogTitle>
         <form onSubmit={addPlan}>
@@ -171,7 +172,7 @@ const PlanCreationForm = (
             <DialogActions>
               <Button 
                 variant="contained" 
-                onClick={hide} 
+                onClick={toggleCreationMode} 
                 className={classes.button}
                 color="primary"
                 type="Submit">

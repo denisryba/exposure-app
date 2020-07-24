@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default function SelectStaff({ fetchFunc, label, passStaffObj, value }) {
-  const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState([]);
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
 
-  React.useEffect(() => {
+  useEffect(() => {
     let active = true;
 
     if (!loading) {
@@ -28,7 +28,7 @@ export default function SelectStaff({ fetchFunc, label, passStaffObj, value }) {
     };
   }, [loading, fetchFunc]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!open) {
       setOptions([]);
     }

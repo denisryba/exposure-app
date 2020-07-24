@@ -74,10 +74,10 @@ const AdaptationPlanCard = ({ expService, planId }) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    console.log(history);
+
     expService.get('plan', planId)
       .then(res => setData(res));
-  }, [expService, planId, history])
+  }, [expService, planId])
 
   const convertDate = (date) => {
     return new Date(date).toLocaleDateString();

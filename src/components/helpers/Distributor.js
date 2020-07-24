@@ -8,18 +8,17 @@ const Distributor = ({ exposureService }) => {
   const user = useAuth();
 
   useEffect(() => {
-    const getPlanIdForEmployee = async (id) => {
-      const plan = await exposureService.getPlanForEmployee(id);
-      return plan.id;
-    };
-
-    if (user.role === role.employee) {
-      getPlanIdForEmployee(user.id)
-        .then(id => setPlanId(id));
+    if (user && user.role === role.employee) {
+      exposureService.getAll('plans')
+        .then(({ plans: [plan] }) => setPlanId(plan.id));
     } else {
       setPlanId('all');
     }
-  }, [ exposureService, user.id, user.role]);
+  }, [ exposureService, user]);
+
+  if (!user) {
+    return (<Redirect to='/login' />);
+  }
 
   if (user.role === role.employee && planId !== null) {
     return (<Redirect to={`/plans/${planId}`} />);
