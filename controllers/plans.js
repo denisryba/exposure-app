@@ -20,7 +20,6 @@ plansRouter.get('/', async (req, res) => {
   }
 
   const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
 
   const results = {};
 
@@ -88,7 +87,15 @@ plansRouter.post('/', async (req, res) => {
   });
 
   const savedPlan = await plan.save();
-  res.json(savedPlan);
+  
+  const newPlan = await Plan
+    .find(savedPlan)
+    .populate('employeePosition')
+    .populate('employee')
+    .populate('supervisor')
+    .populate('hr'); 
+
+  res.json(newPlan);
 });
 
 plansRouter.delete('/:id', async (req, res) => {
