@@ -14,7 +14,7 @@ import {
   FormControl,
   TextField
 } from '@material-ui/core';
-import Calendar from '../globalElements/Calendar.js'
+import Calendar from '../../reusable/Calendar.js'
 
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import EditIcon from '@material-ui/icons/Edit';

@@ -13,6 +13,7 @@ import {
 }  
 from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useExpService } from '../../context/expService.js';
 
 const useStyles = makeStyles((theme)=> ({
   root: {
@@ -43,8 +44,9 @@ const useStyles = makeStyles((theme)=> ({
   }
 }));
 
-const ListOfPlans = ({ onPlanClicked, plans, setPlans, exposureService }) => {
+const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
   const classes = useStyles();
+  const exposureService = useExpService();
 
   const setName = name => name.first + ' ' + name.middle + ' ' + name.last;
 

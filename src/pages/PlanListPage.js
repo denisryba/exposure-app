@@ -3,11 +3,13 @@ import { useHistory } from 'react-router-dom';
 import { Grid, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import Pagination from '@material-ui/lab/Pagination';
+import { useExpService } from '../context/expService.js';
 
-import ListOfPlans from '../ListOfPlans.js';
-import PlanCreationForm from '../PlanCreationForm.js';
+import ListOfPlans from '../components/PlanList/ListOfPlans.js';
+import PlanCreationForm from '../components/PlanList/PlanCreationForm.js';
 
-const PlanListPage = ({ exposureService }) => {
+const PlanListPage = () => {
+  const exposureService = useExpService();
   const [ plans, setPlans ] =  useState([]);
   const [ onCreation, setOnCreation ] = useState(false);
   const [ pageCount, setPageCount ] =  useState(1);
@@ -40,7 +42,6 @@ const PlanListPage = ({ exposureService }) => {
     <Grid justify='center' container spacing={2}>
       <Grid item xs={12}>
         <ListOfPlans
-          exposureService={exposureService}
           plans={plans}
           onPlanClicked={onPlanClicked}
           setPlans={setPlans} 

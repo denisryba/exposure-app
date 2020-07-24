@@ -14,9 +14,10 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
-import exposureService from '../services/exposureService.js';
+import { useExpService } from '../../context/expService.js';
 
 const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm }) => {
+  const exposureService = useExpService();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [executionStart, setExecutionStart] = useState(new Date());

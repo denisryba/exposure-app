@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import exposureService from '../services/exposureService.js';
+import { useExpService } from '../../context/expService.js';
 import { 
   makeStyles, 
   Box,
@@ -18,8 +18,8 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
-import FormMenu from "./FormMenu";
-import role from '../utils/role.js';
+import FormMenu from "../../reusable/FormMenu";
+import role from '../../utils/role.js';
 
 const useStyles = makeStyles({
   modal: {
@@ -50,6 +50,7 @@ const PlanCreationForm = (
 ) => {
   const classes = useStyles();
   let month = new Date().getMonth();
+  const exposureService = useExpService();
   
   const [employeeId, setEmployeeId] = useState('');
   const [positionId, setPositionId] = useState('');
@@ -70,19 +71,19 @@ const PlanCreationForm = (
     exposureService
       .getAll('users', { role: role.employee })
       .then(employees => { setEmployeeList(employees) })    
-  }, []);
+  }, [exposureService]);
 
   useEffect(() => {
     exposureService
       .getAll('users', { role: role.supervisor })
       .then(supervisors => setSupervisorList(supervisors))
-  }, []);
+  }, [exposureService]);
 
   useEffect(() => {
     exposureService
       .getAll('positions')
       .then(positions => setPositionList(positions)); 
-  }, []);
+  }, [exposureService]);
 
   const addPlan = (event) => {
     event.preventDefault()

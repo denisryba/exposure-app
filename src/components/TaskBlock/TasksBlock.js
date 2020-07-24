@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import TaskComponent from './TaskComponent.js';
 import TaskCreationForm from './TaskCreationForm.js';
-import expService from '../services/exposureService';
 
 import { Typography, Button, makeStyles } from '@material-ui/core';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import { useExpService } from '../../context/expService.js';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TasksBlock = ({ planId }) => {
-
+  const expService = useExpService();
   const classes = useStyles();
   const [ tasks, setTasks ] = useState(null);
   const [ onCreation, setOnCreation ] = useState(false);
@@ -36,7 +36,7 @@ const TasksBlock = ({ planId }) => {
   useEffect(() => {
     expService.getAllTasksFromPlan(planId)
       .then(tasks => setTasks(tasks));
-  }, [planId]);
+  }, [planId, expService]);
 
   const toggleCreationForm = () => setOnCreation(onCreation => !onCreation);
 

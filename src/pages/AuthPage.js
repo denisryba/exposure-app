@@ -1,7 +1,7 @@
 import React from 'react';
-import LoginForm from '../LoginForm.js';
+import LoginForm from '../components/Auth/LoginForm.js';
 import { useHistory, useLocation } from 'react-router-dom';
-import storage from '../../utils/storage.js';
+import storage from '../utils/storage.js';
 
 const AuthPage = ({ setUser, loginService }) => {
   const history = useHistory();

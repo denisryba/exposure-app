@@ -7,8 +7,8 @@ import {
   makeStyles } from '@material-ui/core';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { useAuth } from '../context/auth.js';
-import storage from '../utils/storage.js';
+import { useAuth } from '../../context/auth.js';
+import storage from '../../utils/storage.js';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({

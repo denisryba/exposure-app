@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import ProgressBar from './ProgressBar.js';
-import SelectStaff from '../globalElements/SelectStaff.js'
+import ProgressBar from '../../reusable/ProgressBar.js';
+import SelectStaff from '../../reusable/SelectStaff.js'
 
 import { Grid, Paper, Button, makeStyles, Typography, TextField } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
-import Calendar from '../globalElements/Calendar.js';
+import Calendar from '../../reusable/Calendar.js';
+import { useExpService } from '../../context/expService.js';
 
 
 const useStyles = makeStyles({
@@ -64,9 +65,8 @@ const useStyles = makeStyles({
   }
 });
 
-const AdaptationPlanCard = ({ expService, planId }) => {
-
-
+const AdaptationPlanCard = ({ planId }) => {
+  const expService = useExpService();
   const classes = useStyles();
   let history = useHistory();
 
