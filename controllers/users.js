@@ -3,7 +3,10 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user.js');
 
 usersRouter.get('/', async (req, res) => {
-  const users = await User.find({});
+  const { role } = req.query;
+  const filter = role ? { role } : null;
+
+  const users = await User.find(filter);
   res.json(users);
 });
 
