@@ -9,6 +9,7 @@ import {
   IconButton,
   Paper,
   Box,
+  Typography,
   makeStyles
 }  
 from '@material-ui/core';
@@ -21,19 +22,9 @@ const useStyles = makeStyles((theme)=> ({
   root: {
     maxWidth: '80%',
     margin: 'auto',
-    fontFamily: "Roboto",
-    fontSize: 18
   },
   highlightedText: {
     color: '#a6ce39'
-  },
-  subtitle: {
-    color: '#838383',
-    fontSize: 14,
-  },
-  header: {
-    fontSize: 18,
-    paddingLeft: 15
   },
   deleteColumn: {
     width: "5%"
@@ -58,7 +49,7 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
 
   return (
       <Box className={classes.root}>
-        <h1 className={classes.header}>Адаптационные планы</h1>
+        <Typography variant="h5">Адаптационные планы</Typography>
         <TableContainer component = {Paper}>
           <Table>
             <TableHead>
@@ -73,8 +64,11 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
             <TableBody>
             {plans.map(plan => (
               <TableRow className={classes.planRow} onClick={() => onPlanClicked(plan.id)} key={plan.id}>
-                <TableCell>{formatService.setName(plan.employee.name)}<div className={classes.subtitle}>{plan.employeePosition.name}</div></TableCell>
-                <TableCell className={classes.highlightedText}>{plan.stage}</TableCell>
+                <TableCell>
+                  {formatService.setName(plan.employee.name)}
+                  <Typography variant="subtitle1">{plan.employeePosition.name}</Typography>
+                </TableCell>
+                <TableCell><Typography variant="subtitle2">{plan.stage}</Typography></TableCell>
                 <TableCell>{formatService.setName(plan.supervisor.name)}</TableCell>
                 <TableCell>{formatService.setDate(plan.date)}</TableCell>
                 <TableCell>
