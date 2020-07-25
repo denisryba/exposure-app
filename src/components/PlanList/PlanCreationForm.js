@@ -1,14 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { useExpService } from '../../context/expService.js';
 import { 
-  makeStyles, 
   Box,
-  FormGroup,
   Dialog,
   Button,
-  DialogActions,
-  DialogTitle,
-  DialogContent
+  Grid,
+  Typography
  } 
 from '@material-ui/core';
 import 'date-fns';
@@ -18,25 +15,9 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
-import FormMenu from "../../reusable/FormMenu";
-import AutoCompleteStaff from "../../reusable/AutocompleteStaff.js";
 import role from '../../utils/role.js';
-import AutocompleteStaff from '../../reusable/AutocompleteStaff.js';
+import Select from '../../reusable/Select.js';
 
-const useStyles = makeStyles({
-  modal: {
-    minWidth: 400
-  },
-  header: {
-    paddingBottom: 0
-  },
-  button: {
-    marginTop: 15
-  },
-  dateInput: {
-    marginTop: 0
-  }
-});
 
 const PlanCreationForm = ( 
 {
@@ -50,7 +31,6 @@ const PlanCreationForm = (
   limit
 } 
 ) => {
-  const classes = useStyles();
   let month = new Date().getMonth();
   const exposureService = useExpService();
   
@@ -120,62 +100,70 @@ const PlanCreationForm = (
 
   return (
     <Dialog open={onCreation} onClose={toggleCreationMode} >      
-      <Box className={classes.modal}  p="1rem" >
-        <DialogTitle className={classes.header}>Создание плана адаптации</DialogTitle>
-        <form onSubmit={addPlan}>
-            <DialogContent>       
-              <FormGroup >
-              <AutocompleteStaff 
+      <Box p="2rem">
+        <form onSubmit={addPlan}>    
+          <Grid container spacing={2} justify='flex-end' >
+            <Grid item xs={12}>
+              <Typography variant="h6">Создание плана адаптации</Typography> 
+            </Grid>
+            <Grid item xs={12}>
+              <Select 
                 optionList={employeeList} 
                 label='ФИО сотрудника'
                 setValue={setEmployeeId} 
               />
-              <AutocompleteStaff 
+            </Grid>
+            <Grid item xs={12}>
+              <Select 
                 optionList={positionList} 
                 label='Должность'
                 setValue={setPositionId} 
               />
-              <AutocompleteStaff 
+            </Grid>
+            <Grid item xs={12}>
+              <Select
                 optionList={supervisorList} 
                 label='ФИО сотрудника'
                 setValue={setSupervisorId} 
               />
-              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-                <KeyboardDatePicker    
-                  className={classes.dateInput}           
+            </Grid>
+            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+              <Grid item xs={6}>
+                <KeyboardDatePicker             
                   disableToolbar        
                   variant="inline"
                   format="dd.MM.yyyy"
-                  margin="normal"
                   label="Начало адаптации"
                   autoOk={true}
+                  fullWidth
                   value={adaptationStart}
                   onChange={handleAdaptationStart}               
                 />
+              </Grid>
+              <Grid item xs={6}>
                 <KeyboardDatePicker
                   disableToolbar
                   variant="inline"
                   format="dd.MM.yyyy"
-                  margin="normal"
                   label="Конец адаптации"
                   autoOk={true}
+                  fullWidth
                   value={adaptationEnd}
                   onChange={handleAdaptationEnd}
                 />
-              </MuiPickersUtilsProvider>
-              </FormGroup>
-            </DialogContent>
-            <DialogActions>
+              </Grid>
+            </MuiPickersUtilsProvider>
+            <Grid item>
               <Button 
                 variant="contained" 
                 onClick={toggleCreationMode} 
-                className={classes.button}
                 color="primary"
                 type="Submit">
                 Создать
               </Button>
-            </DialogActions>
-          </form>
+            </Grid>
+          </Grid>
+        </form>
       </Box>
     </Dialog>
   )
