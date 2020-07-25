@@ -19,7 +19,9 @@ import {
   KeyboardDatePicker
 } from '@material-ui/pickers';
 import FormMenu from "../../reusable/FormMenu";
+import AutoCompleteStaff from "../../reusable/AutocompleteStaff.js";
 import role from '../../utils/role.js';
+import AutocompleteStaff from '../../reusable/AutocompleteStaff.js';
 
 const useStyles = makeStyles({
   modal: {
@@ -61,16 +63,13 @@ const PlanCreationForm = (
   const [adaptationStart, setAdaptationStart] = useState(new Date());
   const [adaptationEnd, setAdaptationEnd] = useState(new Date().setMonth(month + 3));
 
-  const handleChangeEmployeeName = event => setEmployeeId(event.target.value);
-  const handleChangePosition = event => setPositionId(event.target.value);
-  const handleChangeSupervisorName = event => setSupervisorId(event.target.value);
   const handleAdaptationStart = date => setAdaptationStart(date);
   const handleAdaptationEnd = date => setAdaptationEnd(date);
 
   useEffect(() => {
     exposureService
       .getAll('users', { role: role.employee })
-      .then(employees => { setEmployeeList(employees) })    
+      .then(employees => setEmployeeList(employees))    
   }, [exposureService]);
 
   useEffect(() => {
@@ -126,47 +125,44 @@ const PlanCreationForm = (
         <form onSubmit={addPlan}>
             <DialogContent>       
               <FormGroup >
-                <FormMenu 
-                  label='ФИО сотрудника' 
-                  value={employeeId} 
-                  handleChange={handleChangeEmployeeName} 
-                  selectList={employeeList}
+              <AutocompleteStaff 
+                optionList={employeeList} 
+                label='ФИО сотрудника'
+                setValue={setEmployeeId} 
+              />
+              <AutocompleteStaff 
+                optionList={positionList} 
+                label='Должность'
+                setValue={setPositionId} 
+              />
+              <AutocompleteStaff 
+                optionList={supervisorList} 
+                label='ФИО сотрудника'
+                setValue={setSupervisorId} 
+              />
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                <KeyboardDatePicker    
+                  className={classes.dateInput}           
+                  disableToolbar        
+                  variant="inline"
+                  format="dd.MM.yyyy"
+                  margin="normal"
+                  label="Начало адаптации"
+                  autoOk={true}
+                  value={adaptationStart}
+                  onChange={handleAdaptationStart}               
                 />
-                <FormMenu 
-                  label='Должность' 
-                  value={positionId} 
-                  handleChange={handleChangePosition} 
-                  selectList={positionList}
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="dd.MM.yyyy"
+                  margin="normal"
+                  label="Конец адаптации"
+                  autoOk={true}
+                  value={adaptationEnd}
+                  onChange={handleAdaptationEnd}
                 />
-                <FormMenu 
-                  label='ФИО руководителя' 
-                  value={supervisorId} 
-                  handleChange={handleChangeSupervisorName} 
-                  selectList={supervisorList}
-                />           
-                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-                  <KeyboardDatePicker    
-                    className={classes.dateInput}           
-                    disableToolbar        
-                    variant="inline"
-                    format="dd.MM.yyyy"
-                    margin="normal"
-                    label="Начало адаптации"
-                    autoOk={true}
-                    value={adaptationStart}
-                    onChange={handleAdaptationStart}               
-                  />
-                  <KeyboardDatePicker
-                    disableToolbar
-                    variant="inline"
-                    format="dd.MM.yyyy"
-                    margin="normal"
-                    label="Конец адаптации"
-                    autoOk={true}
-                    value={adaptationEnd}
-                    onChange={handleAdaptationEnd}
-                  />
-                </MuiPickersUtilsProvider>
+              </MuiPickersUtilsProvider>
               </FormGroup>
             </DialogContent>
             <DialogActions>
