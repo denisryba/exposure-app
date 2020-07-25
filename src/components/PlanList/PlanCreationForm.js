@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { useExpService } from '../../context/expService.js';
 import { 
   Box,
@@ -37,32 +37,11 @@ const PlanCreationForm = (
   const [employeeId, setEmployeeId] = useState('');
   const [positionId, setPositionId] = useState('');
   const [supervisorId, setSupervisorId] = useState('');
-  const [employeeList, setEmployeeList] = useState([]);
-  const [supervisorList, setSupervisorList] = useState([]);
-  const [positionList, setPositionList] = useState([]);
   const [adaptationStart, setAdaptationStart] = useState(new Date());
   const [adaptationEnd, setAdaptationEnd] = useState(new Date().setMonth(month + 3));
 
   const handleAdaptationStart = date => setAdaptationStart(date);
   const handleAdaptationEnd = date => setAdaptationEnd(date);
-
-  useEffect(() => {
-    exposureService
-      .getAll('users', { role: role.employee })
-      .then(employees => setEmployeeList(employees))    
-  }, [exposureService]);
-
-  useEffect(() => {
-    exposureService
-      .getAll('users', { role: role.supervisor })
-      .then(supervisors => setSupervisorList(supervisors))
-  }, [exposureService]);
-
-  useEffect(() => {
-    exposureService
-      .getAll('positions')
-      .then(positions => setPositionList(positions)); 
-  }, [exposureService]);
 
   const addPlan = (event) => {
     event.preventDefault()
@@ -108,23 +87,25 @@ const PlanCreationForm = (
             </Grid>
             <Grid item xs={12}>
               <Select 
-                optionList={employeeList} 
                 label='ФИО сотрудника'
                 setValue={setEmployeeId} 
+                path='users'
+                role={role.employee}
               />
             </Grid>
             <Grid item xs={12}>
-              <Select 
-                optionList={positionList} 
+              <Select  
                 label='Должность'
                 setValue={setPositionId} 
+                path='positions'
               />
             </Grid>
             <Grid item xs={12}>
               <Select
-                optionList={supervisorList} 
                 label='ФИО сотрудника'
                 setValue={setSupervisorId} 
+                path='users'
+                role={role.supervisor}
               />
             </Grid>
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>

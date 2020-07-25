@@ -80,10 +80,6 @@ const AdaptationPlanCard = ({ planId }) => {
       .then(res => setData(res));
   }, [expService, planId])
 
-  const convertDate = (date) => {
-    return new Date(date).toLocaleDateString();
-  }
-
   const returnDataObj = (fieldType, position, nameType, value) => {
     console.log(data);
     if (fieldType === 'name') {
@@ -156,7 +152,8 @@ const AdaptationPlanCard = ({ planId }) => {
           </Grid>
           <Grid item xs={6}>
             {editing
-              ? <SelectStaff
+              ? 
+              <SelectStaff
                 value={data.employee}
                 fetchFunc={() => expService.getAll('users')}
                 label="Cотрудник"
