@@ -25,7 +25,7 @@ const AutocompleteStaff = ( {label, setValue, path, role} ) => {
     {...defaultProps}
     disableClearable
     onChange={(e, newValue) => setValue(newValue.id)}
-    renderInput={(params) => <TextField {...params} label={label}/>}
+    renderInput={(params) => <TextField {...params} label={label} variant="outlined"/>}
   />
   )
 };

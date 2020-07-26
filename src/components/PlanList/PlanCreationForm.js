@@ -79,7 +79,7 @@ const PlanCreationForm = (
 
   return (
     <Dialog open={onCreation} onClose={toggleCreationMode} >      
-      <Box p="2rem">
+      <Box p="2rem" maxWidth={400}>
         <form onSubmit={addPlan}>    
           <Grid container spacing={2} justify='flex-end' >
             <Grid item xs={12}>
@@ -102,7 +102,7 @@ const PlanCreationForm = (
             </Grid>
             <Grid item xs={12}>
               <Select
-                label='ФИО сотрудника'
+                label='ФИО руководителя'
                 setValue={setSupervisorId} 
                 path='users'
                 role={role.supervisor}
@@ -110,7 +110,8 @@ const PlanCreationForm = (
             </Grid>
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
               <Grid item xs={6}>
-                <KeyboardDatePicker             
+                <KeyboardDatePicker  
+                  inputVariant="outlined"           
                   disableToolbar        
                   variant="inline"
                   format="dd.MM.yyyy"
@@ -123,6 +124,7 @@ const PlanCreationForm = (
               </Grid>
               <Grid item xs={6}>
                 <KeyboardDatePicker
+                  inputVariant="outlined"
                   disableToolbar
                   variant="inline"
                   format="dd.MM.yyyy"
