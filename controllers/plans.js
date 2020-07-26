@@ -41,7 +41,8 @@ plansRouter.get('/:id', async (req, res, next) => {
     .findById(req.params.id)
     .populate('employee')
     .populate('supervisor')
-    .populate('hr');
+    .populate('hr')
+    .populate('employeePosition');
 
   if (plan) {
     res.json(plan);
