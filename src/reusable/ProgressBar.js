@@ -11,6 +11,9 @@ const useStyles = makeStyles(() => ({
             paddingLeft: '0px',
             paddingRight: '5px',
         }
+    },
+    stepper: {
+        flexWrap: 'wrap'
     }
 }));
 
@@ -44,7 +47,7 @@ export default function ProgressBar({ stage }) {
 
     return (
         <div className={classes.root}>
-            <Stepper activeStep={activeStep} alternativeLabel>
+            <Stepper className={classes.stepper} activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
                     <Step key={label}>
                         <StepLabel>{label}</StepLabel>

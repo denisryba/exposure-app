@@ -10,7 +10,6 @@ import {
 export default function Calendar({ passChanges, dateStart, dateEnd, dateStartLabel, dateEndLabel }) {
 
   const handleDateChange = (e, dateField) => {
-    console.log(e);
     passChanges(dateField, e);
   }
 

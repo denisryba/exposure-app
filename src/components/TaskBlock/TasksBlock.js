@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
 const TasksBlock = ({ planId }) => {
   const expService = useExpService();
   const classes = useStyles();
-  const [ tasks, setTasks ] = useState(null);
-  const [ onCreation, setOnCreation ] = useState(false);
+  const [tasks, setTasks] = useState(null);
+  const [onCreation, setOnCreation] = useState(false);
 
   useEffect(() => {
     expService.getAllTasksFromPlan(planId)
@@ -40,8 +40,12 @@ const TasksBlock = ({ planId }) => {
 
   const toggleCreationForm = () => setOnCreation(onCreation => !onCreation);
 
+  const removeTask = (i) => {
+    setTasks(prevTasks => prevTasks.filter((item, indx) => indx !== i))
+  }
+
   return (
-    <>
+    <React.Fragment>
       <Typography className={classes.header} variant='h6'>
         <Button
           onClick={toggleCreationForm}
@@ -56,8 +60,8 @@ const TasksBlock = ({ planId }) => {
         <div className={classes.title}>Задачи</div>
       </Typography>
       {tasks ?
-        tasks.map((item) => {
-          return <TaskComponent key={item.id} expService={expService} taskObj={item} />
+        tasks.map((item, index) => {
+          return <TaskComponent key={item.id} expService={expService} taskObj={item} removeTask={() => removeTask(index)} />
         }) :
         <h1>Loading...</h1>
       }
@@ -67,8 +71,7 @@ const TasksBlock = ({ planId }) => {
         toggleCreationForm={toggleCreationForm}
         planId={planId}
         open={onCreation} />
-    </>
-
+    </React.Fragment>
   )
 }
 
