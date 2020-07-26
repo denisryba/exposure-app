@@ -17,7 +17,7 @@ const AutocompleteStaff = ( {label, setValue, path, role} ) => {
 
   const defaultProps = {
     options: optionList,
-    getOptionLabel: (option) => typeof option.name === "string" ? option.name : formatService.setName(option.name),
+    getOptionLabel: (option) => typeof option.name === "string" ? option.name : formatService.getName(option.name),
   };
 
   return (

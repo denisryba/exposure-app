@@ -159,7 +159,7 @@ const AdaptationPlanCard = ({ planId }) => {
                 label="Cотрудник"
                 passStaffObj={passStaffObj}
               />
-              : <Typography>{formatService.setName(data.employee.name)}</Typography>
+              : <Typography>{formatService.getName(data.employee.name)}</Typography>
             }
           </Grid>
           <Grid className={classes.fieldLabelContainer} item xs={6}>
@@ -190,7 +190,7 @@ const AdaptationPlanCard = ({ planId }) => {
                 label="Руководитель"
                 passStaffObj={passStaffObj}
               />
-              : <Typography>{formatService.setName(data.supervisor.name)} </Typography>
+              : <Typography>{formatService.getName(data.supervisor.name)} </Typography>
             }
           </Grid>
           <Grid className={classes.fieldLabelContainer} item xs={6}>
@@ -207,7 +207,7 @@ const AdaptationPlanCard = ({ planId }) => {
                 dateEnd={data.adaptationEnd}
                 dateEndLabel="Конец испытательного срока"
               />
-              : <Typography>{formatService.setDate(data.adaptationStart) + '-' + formatService.setDate(data.adaptationEnd)} </Typography>
+              : <Typography>{formatService.getDate(data.adaptationStart) + '-' + formatService.getDate(data.adaptationEnd)} </Typography>
             }
           </Grid>
           <Grid className={classes.fieldLabelContainer} item xs={6}>
@@ -225,7 +225,7 @@ const AdaptationPlanCard = ({ planId }) => {
           </Grid>
         </Grid>
         <Typography className={classes.bottomCreationDate}>
-          Создан {formatService.setDate(data.date)}
+          Создан {formatService.getDate(data.date)}
         </Typography>
         {editing &&
           <div className={classes.adaptationPlanSaveBtn}>
