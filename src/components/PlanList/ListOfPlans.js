@@ -20,7 +20,6 @@ import formatService from '../../services/formatService.js';
 
 const useStyles = makeStyles((theme)=> ({
   root: {
-    maxWidth: '80%',
     margin: 'auto',
   },
   highlightedText: {
