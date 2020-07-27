@@ -25,7 +25,9 @@ const planSchema = new mongoose.Schema({
     ref: 'User'
   },
   stage: {
-    type: String,
+    type: Number,
+    min: 0,
+    max: 4,
     required: true
   },
   adaptationStart: {
@@ -48,6 +50,12 @@ const planSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Task'
+    }
+  ],
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment'
     }
   ],
   date: {

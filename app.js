@@ -6,6 +6,7 @@ const plansRouter = require('./controllers/plans.js');
 const usersRouter = require('./controllers/users.js');
 const positionsRouter = require('./controllers/positions.js');
 const tasksRouter = require('./controllers/tasks.js');
+const commentsRouter = require('./controllers/comments.js');
 const loginRouter = require('./controllers/login.js');
 const middleware = require('./utils/middleware.js');
 const logger = require('./utils/logger.js');
@@ -40,6 +41,7 @@ app.use('/api/plans', plansRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/positions', positionsRouter);
 app.use('/api/tasks', tasksRouter);
+app.use('/api/comments', commentsRouter);
 
 
 app.use(middleware.unknownRoute);
