@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import ProgressBar from '../../reusable/ProgressBar.js';
-import SelectStaff from '../../reusable/SelectStaff.js'
+import SelectUsers from '../../reusable/Select.js';
 
-import { Grid, Paper, Button, makeStyles, Typography, TextField, IconButton } from '@material-ui/core';
+import { Grid, Paper, Button, makeStyles, Typography, IconButton, Select, FormHelperText, MenuItem, FormControl } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
@@ -44,10 +44,9 @@ const useStyles = makeStyles((theme) => ({
     right: '3%',
   },
   saveButtonContainer: {
-    position: 'relative',
-    '& button': {
-      float: 'right'
-    }
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 }));
 
@@ -59,53 +58,63 @@ const AdaptationPlanCard = ({ planId }) => {
 
   const [editing, setEditMode] = useState(false);
   const [plan, setPlan] = useState(null);
+  const [oldPlan, setOldPlan] = useState(null);
+  const [displayPlan, setDisplayPlan] = useState(null);
+  const [oldDisplayPlan, setOldDisplayPlan] = useState(null);
 
   useEffect(() => {
     expService.get('plan', planId)
-      .then(res => setPlan(res));
+      .then(res => {
+        setDisplayPlan(res);
+        setOldDisplayPlan(res);
+        setPlan({
+          ...res,
+          employeePosition: res.employeePosition.id,
+          hr: res.hr.id,
+          employee: res.employee.id,
+          supervisor: res.supervisor.id,
+        });
+        setOldPlan({
+          ...res,
+          employeePosition: res.employeePosition.id,
+          hr: res.hr.id,
+          employee: res.employee.id,
+          supervisor: res.supervisor.id,
+        });
+      });
   }, [expService, planId])
 
   const convertDate = (date) => {
     return new Date(date).toLocaleDateString();
   }
 
-  const editPlanField = (fieldType, position, nameType, value) => {
+  const editPlanField = (position, value) => {
     console.log(plan);
-    if (fieldType === 'name') {
-      setPlan(prevData => {
-        return {
-          ...prevData,
-          [position]: {
-            ...prevData[position],
-            name: {
-              ...prevData[position].name,
-              [nameType]: value
-            }
-          }
-        }
-      })
-    } else if (fieldType === 'role') {
-      setPlan(prevData => {
-        return {
-          ...prevData,
-          employee: {
-            ...prevData.employee,
-            role: [value]
-          }
-        }
-      })
-    } else {
-      setPlan(prevData => {
-        return {
-          ...prevData,
-          [position]: value
-        }
-      })
-    }
+    setPlan(prevData => {
+      return {
+        ...prevData,
+        [position]: value
+      }
+    })
   }
 
-  const passStaffObj = (staffObj) => {
-    console.log(staffObj);
+  const editInitialPlanField = (position, value) => {
+    setDisplayPlan(prevData => {
+      return {
+        ...prevData,
+        [position]: value
+      }
+    })
+  }
+
+  const passUserObj = (userObj, role) => {
+    editPlanField(role, userObj.id);
+    editInitialPlanField(role, userObj);
+  }
+
+  const passPositionId = (positionObj, role) => {
+    editPlanField(role, positionObj.id);
+    editInitialPlanField(role, positionObj);
   }
 
   const handleBackIconClick = () => {
@@ -113,17 +122,30 @@ const AdaptationPlanCard = ({ planId }) => {
   }
 
   const handleDataChange = (dataField, value) => {
-    editPlanField('date', dataField, 'data', value);
+    editPlanField(dataField, value);
+    editInitialPlanField(dataField, value);
   }
 
-  const handleRoleChange = (e) => {
-    console.log(e.taget);
-    //returnDataObj('role', 'role', 'role', e.taget.value)
+  const handleStageChange = (e) => {
+    editPlanField('stage', e.target.value);
+    editInitialPlanField('stage', e.target.value);
   }
 
-  const handleEditIconClick = ()=>{
+  const handleEditIconClick = () => {
     spaces.current = editing ? 3 : 2;
+    setDisplayPlan(oldDisplayPlan);
+    setPlan(oldPlan);
     setEditMode(!editing);
+  }
+
+  const handleSaveBtnClick = () => {
+    expService.update('plan', plan.id, plan)
+      .then(() => {
+        spaces.current = editing ? 3 : 2;
+        setEditMode(false);
+        setOldDisplayPlan(displayPlan);
+        setOldPlan(plan);
+      });
   }
 
   if (!plan) return <h1>Loading...</h1>
@@ -152,12 +174,15 @@ const AdaptationPlanCard = ({ planId }) => {
             </Grid>
             <Grid item xs={6}>
               {editing
-                ? <SelectStaff
-                  value={plan.employee}
-                  fetchFunc={() => expService.getAll('users')}
-                  passStaffObj={passStaffObj}
+                ? <SelectUsers
+                  label=''
+                  variant="standard"
+                  setValue={passUserObj}
+                  path='users'
+                  role='employee'
+                  value={displayPlan.employee}
                 />
-                : <Typography>{plan.employee.name.last + ' ' + plan.employee.name.first + ' ' + plan.employee.name.middle} </Typography>
+                : <Typography>{displayPlan.employee.name.last + ' ' + displayPlan.employee.name.first + ' ' + displayPlan.employee.name.middle} </Typography>
               }
             </Grid>
           </Grid>
@@ -169,11 +194,15 @@ const AdaptationPlanCard = ({ planId }) => {
             </Grid>
             <Grid item xs={6}>
               {editing
-                ? <TextField
-                  value={plan.employee.role}
-                  onChange={handleRoleChange}
+                ? <SelectUsers
+                  label=''
+                  variant="standard"
+                  setValue={passPositionId}
+                  path='positions'
+                  role='employeePosition'
+                  value={displayPlan.employeePosition}
                 />
-                : <Typography>{plan.employee.role} </Typography>
+                : <Typography>{displayPlan.employeePosition.name} </Typography>
               }
             </Grid>
           </Grid>
@@ -185,13 +214,16 @@ const AdaptationPlanCard = ({ planId }) => {
             </Grid>
             <Grid item xs={6}>
               {editing
-                ? <SelectStaff
-                  value={plan.supervisor}
-                  fetchFunc={() => expService.getAll('users')}
-                  passStaffObj={passStaffObj}
+                ? <SelectUsers
+                  label=''
+                  variant="standard"
+                  setValue={passUserObj}
+                  path='users'
+                  role='supervisor'
+                  value={displayPlan.supervisor}
                 />
                 : <Typography>
-                  {plan.supervisor.name.last + ' ' + plan.supervisor.name.first + ' ' + plan.supervisor.name.middle}
+                  {displayPlan.supervisor.name.last + ' ' + displayPlan.supervisor.name.first + ' ' + displayPlan.supervisor.name.middle}
                 </Typography>
               }
             </Grid>
@@ -207,9 +239,9 @@ const AdaptationPlanCard = ({ planId }) => {
                 ? <CalendarSingle
                   passChanges={handleDataChange}
                   dateField='adaptationStart'
-                  value={plan.adaptationStart}
+                  value={displayPlan.adaptationStart}
                 />
-                : <Typography>{convertDate(plan.adaptationStart)} </Typography>
+                : <Typography>{convertDate(displayPlan.adaptationStart)} </Typography>
               }
             </Grid>
           </Grid>
@@ -224,9 +256,9 @@ const AdaptationPlanCard = ({ planId }) => {
                 ? <CalendarSingle
                   passChanges={handleDataChange}
                   dateField='adaptationEnd'
-                  value={plan.adaptationEnd}
+                  value={displayPlan.adaptationEnd}
                 />
-                : <Typography>{convertDate(plan.adaptationEnd)} </Typography>
+                : <Typography>{convertDate(displayPlan.adaptationEnd)} </Typography>
               }
             </Grid>
           </Grid>
@@ -238,32 +270,47 @@ const AdaptationPlanCard = ({ planId }) => {
             </Grid>
             <Grid item xs={6}>
               <Typography>
-                {'Смирнова Елена Владимировна'}
+                {displayPlan.hr.name.last + ' ' + displayPlan.hr.name.first + ' ' + displayPlan.hr.name.middle}
               </Typography>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <ProgressBar stage={plan.stage} />
-          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <ProgressBar stage={displayPlan.stage} />
         </Grid>
         <Grid item>
           <Typography color="secondary" variant="body2" className={classes.bottomCreationDate}>
-            Создан {convertDate(plan.date)}
+            Создан {convertDate(displayPlan.date)}
           </Typography>
         </Grid>
-        <Grid item className={classes.saveButtonContainer}>
-          {editing &&
+        {editing &&
+          <Grid xs={12} item container className={classes.saveButtonContainer}>
+            <FormControl>
+              <Select
+                value={displayPlan.stage}
+                onChange={handleStageChange}
+              >
+                <MenuItem value={"creation"}>Создание</MenuItem>
+                <MenuItem value={"filling"}>Заполнение</MenuItem>
+                <MenuItem value={"assigning"}>Согласование</MenuItem>
+                <MenuItem value={"execution"}>Выполнение</MenuItem>
+                <MenuItem value={"rating"}>Оценка</MenuItem>
+                <MenuItem value={"completed"}>Завершение</MenuItem>
+              </Select>
+              <FormHelperText>Выберите стадию плана</FormHelperText>
+            </FormControl>
             <Button
               variant="contained"
-              className={classes.saveButton}
               color="primary"
               type="Submit"
+              size='small'
               startIcon={<SaveIcon />}
+              onClick={handleSaveBtnClick}
             >
               Сохранить
             </Button>
-          }
-        </Grid>
+          </Grid>
+        }
       </Paper>
     </>
   )

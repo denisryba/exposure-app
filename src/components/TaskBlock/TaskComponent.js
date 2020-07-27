@@ -13,6 +13,7 @@ import {
   IconButton
 } from '@material-ui/core';
 import Calendar from '../../reusable/Calendar.js'
+import formatService from '../../services/formatService.js'
 
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import EditIcon from '@material-ui/icons/Edit';
@@ -77,10 +78,6 @@ const TaskComponent = ({ taskObj, expService, removeTask }) => {
   const [expandAccordion, setExpandAccordion] = useState(false);
   const [task, setTask] = useState(taskObj);
   const [initialTask, setInitialTask] = useState(taskObj);
-
-  const convertDate = (date) => {
-    return new Date(date).toLocaleDateString();
-  }
 
   const updateTaskField = (fieldName, value) => {
     setTask(prevData => {
@@ -179,7 +176,7 @@ const TaskComponent = ({ taskObj, expService, removeTask }) => {
                 className={classes.taskDate}
                 variant="body2"
               >
-                до {convertDate(task.executionEnd).slice(0, 5)}
+                до {formatService.setDate(task.executionEnd).slice(0, 5)}
               </Typography>
               <Checkbox
                 color="primary"

@@ -27,9 +27,9 @@ function getStepContent(rawStep) {
             return 2
         case 'execution':
             return 3
-        case 'rated':
+        case 'rating':
             return 4
-        case 'completing':
+        case 'completed':
             return 5
         default:
             return 'Unknown step';
@@ -43,7 +43,7 @@ export default function ProgressBar({ stage }) {
 
     useEffect(() => {
         setActiveStep(getStepContent(stage));
-    }, [stage]);
+    }, [stage, activeStep]);
 
     return (
         <div className={classes.root}>
