@@ -1,16 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import { useExpService } from '../../context/expService.js';
-import { 
-  makeStyles, 
+import {
   Box,
-  FormGroup,
   Dialog,
   Button,
-  DialogActions,
-  DialogTitle,
-  DialogContent
- } 
-from '@material-ui/core';
+  Grid,
+  Typography
+}
+  from '@material-ui/core';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import locale from "date-fns/locale/ru";
@@ -18,80 +15,41 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
-import FormMenu from "../../reusable/FormMenu";
 import role from '../../utils/role.js';
+import Select from '../../reusable/Select.js';
 
-const useStyles = makeStyles({
-  modal: {
-    minWidth: 400
-  },
-  header: {
-    paddingBottom: 0
-  },
-  button: {
-    marginTop: 15
-  },
-  dateInput: {
-    marginTop: 0
+
+const PlanCreationForm = (
+  {
+    onCreation,
+    toggleCreationMode,
+    plans,
+    setPlans,
+    pageCount,
+    setPageCount,
+    currentPage,
+    limit
   }
-});
-
-const PlanCreationForm = ( 
-{
-  onCreation, 
-  toggleCreationMode, 
-  plans, 
-  setPlans, 
-  pageCount, 
-  setPageCount, 
-  currentPage, 
-  limit
-} 
 ) => {
-  const classes = useStyles();
   let month = new Date().getMonth();
   const exposureService = useExpService();
-  
-  const [employeeId, setEmployeeId] = useState('');
-  const [positionId, setPositionId] = useState('');
-  const [supervisorId, setSupervisorId] = useState('');
-  const [employeeList, setEmployeeList] = useState([]);
-  const [supervisorList, setSupervisorList] = useState([]);
-  const [positionList, setPositionList] = useState([]);
+
+  const [employeeObj, setEmployeeObj] = useState(null);
+  const [positionObj, setPositionObj] = useState(null);
+  const [supervisorObj, setSupervisorObj] = useState(null);
   const [adaptationStart, setAdaptationStart] = useState(new Date());
   const [adaptationEnd, setAdaptationEnd] = useState(new Date().setMonth(month + 3));
 
-  const handleChangeEmployeeName = event => setEmployeeId(event.target.value);
-  const handleChangePosition = event => setPositionId(event.target.value);
-  const handleChangeSupervisorName = event => setSupervisorId(event.target.value);
   const handleAdaptationStart = date => setAdaptationStart(date);
   const handleAdaptationEnd = date => setAdaptationEnd(date);
 
-  useEffect(() => {
-    exposureService
-      .getAll('users', { role: role.employee })
-      .then(employees => { setEmployeeList(employees) })    
-  }, [exposureService]);
-
-  useEffect(() => {
-    exposureService
-      .getAll('users', { role: role.supervisor })
-      .then(supervisors => setSupervisorList(supervisors))
-  }, [exposureService]);
-
-  useEffect(() => {
-    exposureService
-      .getAll('positions')
-      .then(positions => setPositionList(positions)); 
-  }, [exposureService]);
-
   const addPlan = (event) => {
     event.preventDefault()
-    const planObject = 
+    const planObject =
     {
-      employeePosition: positionId,
-      employee: employeeId,
-      supervisor: supervisorId,
+      employeePosition: positionObj.id,
+      employee: employeeObj.id,
+      supervisor: supervisorObj.id,
       hr: "5e680f360f94107d10acba1d",
       stage: "rated",
       adaptationStart: adaptationStart,
@@ -107,12 +65,12 @@ const PlanCreationForm = (
         if (currentPage === pageCount) {
           if (plans.length === limit)
             setPageCount(pageCount + 1);
-          else 
-            setPlans(plans.concat(createdPlan));            
+          else
+            setPlans(plans.concat(createdPlan));
         };
-        setEmployeeId('');
-        setSupervisorId('');
-        setPositionId('');
+        setEmployeeObj(null);
+        setSupervisorObj(null);
+        setPositionObj(null);
         setAdaptationStart(new Date());
         setAdaptationEnd(new Date());
       })
@@ -120,66 +78,78 @@ const PlanCreationForm = (
   }
 
   return (
-    <Dialog open={onCreation} onClose={toggleCreationMode} >      
-      <Box className={classes.modal}  p="1rem" >
-        <DialogTitle className={classes.header}>Создание плана адаптации</DialogTitle>
+    <Dialog open={onCreation} onClose={toggleCreationMode} >
+      <Box p="2rem" maxWidth={400}>
         <form onSubmit={addPlan}>
-            <DialogContent>       
-              <FormGroup >
-                <FormMenu 
-                  label='ФИО сотрудника' 
-                  value={employeeId} 
-                  handleChange={handleChangeEmployeeName} 
-                  selectList={employeeList}
+          <Grid container spacing={2} justify='flex-end' >
+            <Grid item xs={12}>
+              <Typography variant="h6">Создание плана адаптации</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Select
+                label='ФИО сотрудника'
+                variant='outlined'
+                setValue={setEmployeeObj}
+                path='users'
+                role={role.employee}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Select
+                label='Должность'
+                variant='outlined'
+                setValue={setPositionObj}
+                path='positions'
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Select
+                label='ФИО руководителя'
+                variant='outlined'
+                setValue={setSupervisorObj}
+                path='users'
+                role={role.supervisor}
+              />
+            </Grid>
+            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+              <Grid item xs={6}>
+                <KeyboardDatePicker
+                  inputVariant="outlined"
+                  disableToolbar
+                  variant="inline"
+                  format="dd.MM.yyyy"
+                  label="Начало адаптации"
+                  autoOk={true}
+                  fullWidth
+                  value={adaptationStart}
+                  onChange={handleAdaptationStart}
                 />
-                <FormMenu 
-                  label='Должность' 
-                  value={positionId} 
-                  handleChange={handleChangePosition} 
-                  selectList={positionList}
+              </Grid>
+              <Grid item xs={6}>
+                <KeyboardDatePicker
+                  inputVariant="outlined"
+                  disableToolbar
+                  variant="inline"
+                  format="dd.MM.yyyy"
+                  label="Конец адаптации"
+                  autoOk={true}
+                  fullWidth
+                  value={adaptationEnd}
+                  onChange={handleAdaptationEnd}
                 />
-                <FormMenu 
-                  label='ФИО руководителя' 
-                  value={supervisorId} 
-                  handleChange={handleChangeSupervisorName} 
-                  selectList={supervisorList}
-                />           
-                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-                  <KeyboardDatePicker    
-                    className={classes.dateInput}           
-                    disableToolbar        
-                    variant="inline"
-                    format="dd.MM.yyyy"
-                    margin="normal"
-                    label="Начало адаптации"
-                    autoOk={true}
-                    value={adaptationStart}
-                    onChange={handleAdaptationStart}               
-                  />
-                  <KeyboardDatePicker
-                    disableToolbar
-                    variant="inline"
-                    format="dd.MM.yyyy"
-                    margin="normal"
-                    label="Конец адаптации"
-                    autoOk={true}
-                    value={adaptationEnd}
-                    onChange={handleAdaptationEnd}
-                  />
-                </MuiPickersUtilsProvider>
-              </FormGroup>
-            </DialogContent>
-            <DialogActions>
-              <Button 
-                variant="contained" 
-                onClick={toggleCreationMode} 
-                className={classes.button}
+              </Grid>
+            </MuiPickersUtilsProvider>
+            <Grid item>
+              <Button
+                variant="contained"
+                onClick={toggleCreationMode}
                 color="primary"
                 type="Submit">
                 Создать
               </Button>
-            </DialogActions>
-          </form>
+            </Grid>
+          </Grid>
+        </form>
       </Box>
     </Dialog>
   )

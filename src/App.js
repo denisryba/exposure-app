@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import {
   Route,
   Redirect,
-  Switch } from 'react-router-dom';
+  Switch
+} from 'react-router-dom';
 import {
   Container,
   makeStyles,
-  createMuiTheme, 
-  ThemeProvider} from '@material-ui/core';
+  createMuiTheme,
+  ThemeProvider
+} from '@material-ui/core';
 
 import exposureService from './services/exposureService.js';
 import loginService from './services/loginService.js';
@@ -37,12 +39,27 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: '#0000008a'
-    }
+    },
+    typography: {
+      subtitle1: {
+        color: '#838383',
+        fontSize: 14,
+      },
+      h5: {
+        paddingBottom: 10,
+        paddingLeft: 15,
+        fontWeight: 500,
+        fontSize: 18
+      },
+      subtitle2: {
+        color: '#5c6bc0',
+      }
+    },
   }
 });
 
 const App = () => {
-  const [ user, setUser ] = useState(storage.get('savedUser'));
+  const [user, setUser] = useState(storage.get('savedUser'));
 
   const { root } = useStyles();
 
