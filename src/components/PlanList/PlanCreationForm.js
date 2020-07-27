@@ -17,6 +17,7 @@ import {
 } from '@material-ui/pickers';
 import role from '../../utils/role.js';
 import Select from '../../reusable/Select.js';
+import Notification, { notify } from '../../reusable/Notification.js';
 
 
 const PlanCreationForm = (
@@ -51,7 +52,7 @@ const PlanCreationForm = (
       employee: employeeObj.id,
       supervisor: supervisorObj.id,
       hr: "5e680f360f94107d10acba1d",
-      stage: "rated",
+      stage: 0,
       adaptationStart: adaptationStart,
       adaptationEnd: adaptationEnd,
       completed: "false",
@@ -73,11 +74,16 @@ const PlanCreationForm = (
         setPositionObj(null);
         setAdaptationStart(new Date());
         setAdaptationEnd(new Date());
+        notify('success', 'План был успешно создан.');
       })
-      .catch(error => toggleCreationMode());
+      .catch(error => {
+        notify('error', 'Ошибка при создании плана.');
+        toggleCreationMode()
+      });
   }
 
   return (
+    <>
     <Dialog open={onCreation} onClose={toggleCreationMode} >
       <Box p="2rem" maxWidth={400}>
         <form onSubmit={addPlan}>
@@ -152,6 +158,8 @@ const PlanCreationForm = (
         </form>
       </Box>
     </Dialog>
+    <Notification />
+  </>
   )
 };
 

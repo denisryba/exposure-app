@@ -46,6 +46,8 @@ const get = async (docName, id, params) => {
 
 const getAllTasksFromPlan = async (id, params) => await getAll(`plans/${id}/tasks`, params);
 
+const getAllCommentsFromPlan = async (id, params) => await getAll(`plans/${id}/comments`, params);
+
 const create = async (docName, newObject) => {
   const res = await postData(`${docName}s`, newObject);
   return res.data;
@@ -64,6 +66,7 @@ export default {
   getAll,
   get,
   getAllTasksFromPlan,
+  getAllCommentsFromPlan,
   create,
   update,
   remove
