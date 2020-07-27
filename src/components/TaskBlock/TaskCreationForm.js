@@ -6,7 +6,10 @@ import {
   Button,
   Box,
   Typography,
-  IconButton
+  IconButton,
+  FormControl,
+  Select,
+  MenuItem
  } 
 from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -21,6 +24,7 @@ import { useExpService } from '../../context/expService.js';
 const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm }) => {
   const exposureService = useExpService();
   const [name, setName] = useState('');
+  const [isCompleted, setIsCompleted] = useState(false);
   const [description, setDescription] = useState('');
   const [executionStart, setExecutionStart] = useState(new Date());
   let day = new Date().getDate();
@@ -30,6 +34,10 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
   const handleChangeDescription = event => setDescription(event.target.value);
   const handleChangeExecutionStart = date => setExecutionStart(date);
   const handleChangeExecutionEnd = date => setExecutionEnd(date);
+  
+  const handleChangeIsCompleted = (event) => {
+    setIsCompleted(event.target.value);
+  };
 
   const addTask = (event) => {
     event.preventDefault();
@@ -39,7 +47,8 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
       description,
       executionStart,
       executionEnd,
-      plan: planId
+      plan: planId,
+      completed: isCompleted
     };
 
     exposureService
@@ -113,6 +122,14 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
                 />
                 </Grid>
             </MuiPickersUtilsProvider>
+            <Grid item xs={12}>
+              <FormControl variant="outlined" fullWidth>
+                <Select value={isCompleted} onChange={handleChangeIsCompleted}>
+                  <MenuItem value={false}>Не выполнена</MenuItem>
+                  <MenuItem value={true}>Выполнена</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={12} sm={3}>
               <Button 
                 variant="contained" 
