@@ -9,9 +9,9 @@ const getRole = role => {
     employee: 'сотрудник',
     supervisor: 'руководитель',
     hr: 'сотрудник кадровой службы',
-  }
+  };
   return roleMaps[role];
-}
+};
 
 const capitalizeFirstLetter = str => str[0].toUpperCase() + str.slice(1);
 

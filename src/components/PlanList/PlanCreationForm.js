@@ -17,6 +17,7 @@ import {
 } from '@material-ui/pickers';
 import role from '../../utils/role.js';
 import Select from '../../reusable/Select.js';
+import Notification, { notify } from '../../reusable/Notification.js';
 
 
 const PlanCreationForm = ( 
@@ -51,7 +52,7 @@ const PlanCreationForm = (
       employee: employeeId,
       supervisor: supervisorId,
       hr: "5e680f360f94107d10acba1d",
-      stage: "rated",
+      stage: 0,
       adaptationStart: adaptationStart,
       adaptationEnd: adaptationEnd,
       completed: "false",
@@ -73,82 +74,89 @@ const PlanCreationForm = (
         setPositionId('');
         setAdaptationStart(new Date());
         setAdaptationEnd(new Date());
+        notify('success', 'План был успешно создан.');
       })
-      .catch(error => toggleCreationMode());
+      .catch(error => {
+        notify('error', 'Ошибка при создании плана.');
+        toggleCreationMode()
+      });
   }
 
   return (
-    <Dialog open={onCreation} onClose={toggleCreationMode} >      
-      <Box p="2rem" maxWidth={400}>
-        <form onSubmit={addPlan}>    
-          <Grid container spacing={2} justify='flex-end' >
-            <Grid item xs={12}>
-              <Typography variant="h6">Создание плана адаптации</Typography> 
-            </Grid>
-            <Grid item xs={12}>
-              <Select 
-                label='ФИО сотрудника'
-                setValue={setEmployeeId} 
-                path='users'
-                role={role.employee}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Select  
-                label='Должность'
-                setValue={setPositionId} 
-                path='positions'
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Select
-                label='ФИО руководителя'
-                setValue={setSupervisorId} 
-                path='users'
-                role={role.supervisor}
-              />
-            </Grid>
-            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-              <Grid item xs={6}>
-                <KeyboardDatePicker  
-                  inputVariant="outlined"           
-                  disableToolbar        
-                  variant="inline"
-                  format="dd.MM.yyyy"
-                  label="Начало адаптации"
-                  autoOk={true}
-                  fullWidth
-                  value={adaptationStart}
-                  onChange={handleAdaptationStart}               
+    <>
+      <Dialog open={onCreation} onClose={toggleCreationMode} >      
+        <Box p="2rem" maxWidth={400}>
+          <form onSubmit={addPlan}>    
+            <Grid container spacing={2} justify='flex-end' >
+              <Grid item xs={12}>
+                <Typography variant="h6">Создание плана адаптации</Typography> 
+              </Grid>
+              <Grid item xs={12}>
+                <Select 
+                  label='ФИО сотрудника'
+                  setValue={setEmployeeId} 
+                  path='users'
+                  role={role.employee}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <KeyboardDatePicker
-                  inputVariant="outlined"
-                  disableToolbar
-                  variant="inline"
-                  format="dd.MM.yyyy"
-                  label="Конец адаптации"
-                  autoOk={true}
-                  fullWidth
-                  value={adaptationEnd}
-                  onChange={handleAdaptationEnd}
+              <Grid item xs={12}>
+                <Select  
+                  label='Должность'
+                  setValue={setPositionId} 
+                  path='positions'
                 />
               </Grid>
-            </MuiPickersUtilsProvider>
-            <Grid item>
-              <Button 
-                variant="contained" 
-                onClick={toggleCreationMode} 
-                color="primary"
-                type="Submit">
-                Создать
-              </Button>
+              <Grid item xs={12}>
+                <Select
+                  label='ФИО руководителя'
+                  setValue={setSupervisorId} 
+                  path='users'
+                  role={role.supervisor}
+                />
+              </Grid>
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                <Grid item xs={6}>
+                  <KeyboardDatePicker  
+                    inputVariant="outlined"           
+                    disableToolbar        
+                    variant="inline"
+                    format="dd.MM.yyyy"
+                    label="Начало адаптации"
+                    autoOk={true}
+                    fullWidth
+                    value={adaptationStart}
+                    onChange={handleAdaptationStart}               
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <KeyboardDatePicker
+                    inputVariant="outlined"
+                    disableToolbar
+                    variant="inline"
+                    format="dd.MM.yyyy"
+                    label="Конец адаптации"
+                    autoOk={true}
+                    fullWidth
+                    value={adaptationEnd}
+                    onChange={handleAdaptationEnd}
+                  />
+                </Grid>
+              </MuiPickersUtilsProvider>
+              <Grid item>
+                <Button 
+                  variant="contained" 
+                  onClick={toggleCreationMode} 
+                  color="primary"
+                  type="Submit">
+                  Создать
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </Box>
-    </Dialog>
+          </form>
+        </Box>
+      </Dialog>
+      <Notification />
+    </>
   )
 };
 
