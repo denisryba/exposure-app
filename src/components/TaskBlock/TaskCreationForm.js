@@ -5,9 +5,11 @@ import {
   TextField,
   Button,
   Box,
-  Typography
+  Typography,
+  IconButton
  } 
 from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import DateFnsUtils from '@date-io/date-fns';
 import locale from "date-fns/locale/ru";
 import {
@@ -57,8 +59,11 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
       <Box  p="2rem">
         <form onSubmit={addTask}>
           <Grid container spacing={2} justify='flex-end' >
-            <Grid item xs={12}>
+            <Grid item xs={12} container justify='space-between'>
              <Typography variant="h6">Создание задачи</Typography>
+              <IconButton size="small" onClick={toggleCreationForm} >
+                <CloseIcon />
+              </IconButton> 
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -81,7 +86,7 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
               />
             </Grid>
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-              <Grid item xs={6}>
+              <Grid item sm={6} xs={12}>
                 <KeyboardDatePicker             
                   disableToolbar        
                   variant="inline"
@@ -94,7 +99,7 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
                   inputVariant="outlined"     
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6} xs={12}>
                 <KeyboardDatePicker
                   disableToolbar
                   variant="inline"
