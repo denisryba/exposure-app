@@ -89,7 +89,6 @@ const AdaptationPlanCard = ({ planId }) => {
   }
 
   const editPlanField = (position, value) => {
-    console.log(plan);
     setPlan(prevData => {
       return {
         ...prevData,
