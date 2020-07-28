@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useExpService } from '../../context/expService.js';
-import { 
+import {
   Box,
   Dialog,
   Button,
@@ -19,25 +19,27 @@ import {
 } from '@material-ui/pickers';
 import role from '../../utils/role.js';
 import Select from '../../reusable/Select.js';
- 
-const PlanCreationForm = ( 
-{
-  onCreation, 
-  toggleCreationMode, 
-  plans, 
-  setPlans, 
-  pageCount, 
-  setPageCount, 
-  currentPage, 
-  limit
-} 
+import Notification, { notify } from '../../reusable/Notification.js';
+
+
+const PlanCreationForm = (
+  {
+    onCreation,
+    toggleCreationMode,
+    plans,
+    setPlans,
+    pageCount,
+    setPageCount,
+    currentPage,
+    limit
+  }
 ) => {
   let month = new Date().getMonth();
   const exposureService = useExpService();
-  
-  const [employeeId, setEmployeeId] = useState('');
-  const [positionId, setPositionId] = useState('');
-  const [supervisorId, setSupervisorId] = useState('');
+
+  const [employeeObj, setEmployeeObj] = useState(null);
+  const [positionObj, setPositionObj] = useState(null);
+  const [supervisorObj, setSupervisorObj] = useState(null);
   const [adaptationStart, setAdaptationStart] = useState(new Date());
   const [adaptationEnd, setAdaptationEnd] = useState(new Date().setMonth(month + 3));
 
@@ -46,13 +48,13 @@ const PlanCreationForm = (
 
   const addPlan = (event) => {
     event.preventDefault()
-    const planObject = 
+    const planObject =
     {
-      employeePosition: positionId,
-      employee: employeeId,
-      supervisor: supervisorId,
+      employeePosition: positionObj.id,
+      employee: employeeObj.id,
+      supervisor: supervisorObj.id,
       hr: "5e680f360f94107d10acba1d",
-      stage: "rated",
+      stage: 0,
       adaptationStart: adaptationStart,
       adaptationEnd: adaptationEnd,
       completed: "false",
@@ -66,19 +68,24 @@ const PlanCreationForm = (
         if (currentPage === pageCount) {
           if (plans.length === limit)
             setPageCount(pageCount + 1);
-          else 
-            setPlans(plans.concat(createdPlan));            
+          else
+            setPlans(plans.concat(createdPlan));
         };
-        setEmployeeId('');
-        setSupervisorId('');
-        setPositionId('');
+        setEmployeeObj(null);
+        setSupervisorObj(null);
+        setPositionObj(null);
         setAdaptationStart(new Date());
         setAdaptationEnd(new Date());
+        notify('success', 'План был успешно создан.');
       })
-      .catch(error => toggleCreationMode());
+      .catch(error => {
+        notify('error', 'Ошибка при создании плана.');
+        toggleCreationMode()
+      });
   }
 
   return (
+    <>
     <Dialog open={onCreation} onClose={toggleCreationMode} > 
       <Box p="1.5rem" maxWidth={400}>
         <form onSubmit={addPlan}>    
@@ -90,24 +97,27 @@ const PlanCreationForm = (
               </IconButton> 
             </Grid>
             <Grid item xs={12}>
-              <Select 
+              <Select
                 label='ФИО сотрудника'
-                setValue={setEmployeeId} 
+                variant='outlined'
+                setValue={setEmployeeObj}
                 path='users'
                 role={role.employee}
               />
             </Grid>
             <Grid item xs={12}>
-              <Select  
+              <Select
                 label='Должность'
-                setValue={setPositionId} 
+                variant='outlined'
+                setValue={setPositionObj}
                 path='positions'
               />
             </Grid>
             <Grid item xs={12}>
               <Select
                 label='ФИО руководителя'
-                setValue={setSupervisorId} 
+                variant='outlined'
+                setValue={setSupervisorObj}
                 path='users'
                 role={role.supervisor}
               />
@@ -123,7 +133,7 @@ const PlanCreationForm = (
                   autoOk={true}
                   fullWidth
                   value={adaptationStart}
-                  onChange={handleAdaptationStart}               
+                  onChange={handleAdaptationStart}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -154,6 +164,8 @@ const PlanCreationForm = (
         </form>
       </Box>
     </Dialog>
+    <Notification />
+  </>
   )
 };
 

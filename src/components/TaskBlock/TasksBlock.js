@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../context/auth.js';
+
 import TaskComponent from './TaskComponent.js';
 import TaskCreationForm from './TaskCreationForm.js';
+import Loader from '../../reusable/Loader.js';
+import ComponentAvailability from '../../reusable/ComponentAvailability.js';
 
 import { Typography, Button, makeStyles } from '@material-ui/core';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
@@ -27,48 +31,65 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const TasksBlock = ({ planId }) => {
+const TasksBlock = ({ planObj }) => {
   const expService = useExpService();
   const classes = useStyles();
-  const [ tasks, setTasks ] = useState(null);
-  const [ onCreation, setOnCreation ] = useState(false);
+  const [tasks, setTasks] = useState(null);
+  const [onCreation, setOnCreation] = useState(false);
+  const user = useAuth()
+
+  const stageRoleModel = {
+    createTaskBtn: {
+      supervisor: [1],
+      employee: [0]
+    }
+  }
 
   useEffect(() => {
-    expService.getAllTasksFromPlan(planId)
+    expService.getAllTasksFromPlan(planObj.id)
       .then(tasks => setTasks(tasks));
-  }, [planId, expService]);
+  }, [planObj, expService]);
 
   const toggleCreationForm = () => setOnCreation(onCreation => !onCreation);
 
+  const removeTask = (i) => {
+    setTasks(prevTasks => prevTasks.filter((item, indx) => indx !== i))
+  }
+
   return (
-    <>
+    <React.Fragment>
       <Typography className={classes.header} variant='h6'>
-        <Button
-          onClick={toggleCreationForm}
-          variant="contained"
-          color="primary"
-          size="small"
-          className={classes.button}
-          startIcon={<NoteAddIcon />}
+        <ComponentAvailability
+          stageRoleObj={stageRoleModel.createTaskBtn}
+          currentRole={user.role}
+          currentStage={planObj.stage}
         >
-          Создать задачу
-                </Button>
+          <Button
+            onClick={toggleCreationForm}
+            variant="contained"
+            color="primary"
+            size="small"
+            className={classes.button}
+            startIcon={<NoteAddIcon />}
+          >
+            Создать задачу
+        </Button>
+        </ComponentAvailability>
         <div className={classes.title}>Задачи</div>
       </Typography>
       {tasks ?
-        tasks.map((item) => {
-          return <TaskComponent key={item.id} expService={expService} taskObj={item} />
+        tasks.map((item, index) => {
+          return <TaskComponent key={item.id} expService={expService} taskObj={item} planStage={planObj.stage} removeTask={() => removeTask(index)} />
         }) :
-        <h1>Loading...</h1>
+        <Loader size={200} />
       }
       <TaskCreationForm
         tasks={tasks}
         setTasks={setTasks}
         toggleCreationForm={toggleCreationForm}
-        planId={planId}
+        planId={planObj.id}
         open={onCreation} />
-    </>
-
+    </React.Fragment>
   )
 }
 

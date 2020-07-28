@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import formatService from '../services/formatService.js';
 
-const AutocompleteStaff = ( {label, setValue, path, role} ) => {
+const AutocompleteStaff = ( {variant, label, setValue, path, role, value} ) => {
   const [optionList, setOptionList] = useState([]);
   const exposureService = useExpService();
   
@@ -23,9 +23,11 @@ const AutocompleteStaff = ( {label, setValue, path, role} ) => {
   return (
     <Autocomplete
     {...defaultProps}
+    value={value}
+    getOptionSelected={(option, value)=> JSON.stringify(option) === JSON.stringify(value)}
     disableClearable
-    onChange={(e, newValue) => setValue(newValue.id)}
-    renderInput={(params) => <TextField {...params} label={label} variant="outlined"/>}
+    onChange={(e, newValue) => setValue(newValue, role)}
+    renderInput={(params) => <TextField {...params} label={label} variant={variant}/>}
   />
   )
 };

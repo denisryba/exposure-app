@@ -1,25 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useAuth } from '../../context/auth.js';
 
 import ProgressBar from '../../reusable/ProgressBar.js';
-import SelectStaff from '../../reusable/SelectStaff.js'
+import SelectUsers from '../../reusable/Select.js';
+import formatService from '../../services/formatService.js'
+import { useExpService } from '../../context/expService.js';
+import ComponentAvailability from '../../reusable/ComponentAvailability.js';
 
-import { Grid, Paper, Button, makeStyles, Typography, TextField } from '@material-ui/core';
+import {
+  Grid,
+  Paper,
+  Button,
+  makeStyles,
+  Typography,
+  IconButton,
+  Select,
+  FormHelperText,
+  MenuItem,
+  FormControl
+} from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
-import Calendar from '../../reusable/Calendar.js';
-import { useExpService } from '../../context/expService.js';
-import formatService from '../../services/formatService.js';
+import CalendarSingle from '../../reusable/CalendarSingle.js';
+import Loader from '../../reusable/Loader.js';
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   title: {
     margin: '20px 0'
   },
   cardContainer: {
     position: 'relative',
-    padding: '35px 29px 8px 9px',
+    padding: theme.spacing(3),
   },
   cardHeader: {
     display: 'flex',
@@ -31,217 +45,268 @@ const useStyles = makeStyles({
     }
   },
   bottomCreationDate: {
-    textAlign: 'end',
-    color: '#6B6B6B',
-    fontSize: '13px',
-    padding: '12px 6px 0px 0px',
-  },
-  namesInput: {
-    width: '15%'
+    textAlign: 'end'
   },
   fieldLabelContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-  },
-  textEnd: {
-    textAlign: 'end',
-    marginBottom: '2px',
+    alignItems: 'baseline',
   },
   editButtonContainer: {
     position: 'absolute',
-    top: '17px',
-    right: '4%',
-    '& svg': {
-      fontSize: '20px',
-    }
+    zIndex: '2',
+    top: '5px',
+    right: '3%',
   },
-  adaptationPlanSaveBtn: {
-    position: 'relative',
-    height: '30px',
-    marginTop: '20px',
-    '& button': {
-      float: 'right',
-    }
+  saveButtonContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
-});
+}));
 
-const AdaptationPlanCard = ({ planId }) => {
+const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
   const expService = useExpService();
   const classes = useStyles();
-  let history = useHistory();
+  const history = useHistory();
+  let spaces = useRef(3);
+  const user = useAuth()
 
-  const [editing, toggleEditMode] = useState(false);
-  const [data, setData] = useState(null);
+  const [editing, setEditMode] = useState(false);
+  const [oldDisplayPlan, setOldDisplayPlan] = useState(displayPlan);
 
-  useEffect(() => {
-
-    expService.get('plan', planId)
-      .then(res => setData(res));
-  }, [expService, planId])
-
-  const returnDataObj = (fieldType, position, nameType, value) => {
-    console.log(data);
-    if (fieldType === 'name') {
-      setData(prevData => {
-        return {
-          ...prevData,
-          [position]: {
-            ...prevData[position],
-            name: {
-              ...prevData[position].name,
-              [nameType]: value
-            }
-          }
-        }
-      })
-    } else if (fieldType === 'role') {
-      setData(prevData => {
-        return {
-          ...prevData,
-          employee: {
-            ...prevData.employee,
-            role: [value]
-          }
-        }
-      })
-    } else {
-      setData(prevData => {
-        return {
-          ...prevData,
-          [position]: value
-        }
-      })
+  const stageRoleModel = {
+    editBtn: {
+      supervisor: [1],
+      employee: []
+    },
+    editSummary: {
+      supervisor: [3],
+      employee: []
     }
   }
 
-  const passStaffObj = (staffObj) => {
-    console.log(staffObj);
+  const editDisplayPlanField = (position, value) => {
+    setDisplayPlan(prevData => {
+      return {
+        ...prevData,
+        [position]: value
+      }
+    })
+  }
+
+  const passUserObj = (userObj, role) => {
+    editDisplayPlanField(role, userObj);
+  }
+
+  const passPositionId = (positionObj, role) => {
+    editDisplayPlanField(role, positionObj);
   }
 
   const handleBackIconClick = () => {
     history.replace('/plans/');
   }
 
-  const handleDataChange = (dataType, value) => {
-    dataType = (dataType === 'dateStart') ? 'adaptationStart' : 'adaptationEnd';
-    returnDataObj('data', dataType, 'data', value.toJSON());
+  const handleDataChange = (dataField, value) => {
+    editDisplayPlanField(dataField, value);
   }
 
-  const handleRoleChange = (e) => {
-    console.log(e.taget);
-    //returnDataObj('role', 'role', 'role', e.taget.value)
+  const handleStageChange = (e) => {
+    editDisplayPlanField('stage', e.target.value);
   }
 
-  if (!data) return <h1>Loading...</h1>
+  const handleEditIconClick = () => {
+    spaces.current = editing ? 3 : 2;
+    setDisplayPlan(oldDisplayPlan);
+    setEditMode(!editing);
+  }
+
+  const handleSaveBtnClick = () => {
+    expService.update('plan', displayPlan.id, {
+      ...displayPlan,
+      employee: displayPlan.employee.id,
+      hr: displayPlan.hr.id,
+      supervisor: displayPlan.supervisor.id,
+      employeePosition: displayPlan.employeePosition.id,
+    })
+      .then(() => {
+        spaces.current = editing ? 3 : 2;
+        setEditMode(false);
+        setOldDisplayPlan(displayPlan);
+      });
+  }
+
   return (
     <>
       <Typography className={classes.cardHeader} variant='h6'>
-        <KeyboardBackspaceIcon onClick={handleBackIconClick} />
+        <IconButton color="inherit" onClick={handleBackIconClick}>
+          <KeyboardBackspaceIcon />
+        </IconButton>
         <div className={classes.title}>Адаптационный план сотрудника</div>
       </Typography>
-      <Paper elevation={4} className={classes.cardContainer}>
-        <div className={classes.editButtonContainer}>
-          <EditIcon onClick={() => toggleEditMode(!editing)} />
-        </div>
-        <Grid container spacing={1}>
-          <Grid className={classes.fieldLabelContainer} item xs={6}>
-            <Typography className={classes.textEnd}>
-              ФИО Сотрудника:
-            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            {editing
-              ? 
-              <SelectStaff
-                value={data.employee}
-                fetchFunc={() => expService.getAll('users')}
-                label="Cотрудник"
-                passStaffObj={passStaffObj}
-              />
-              : <Typography>{formatService.getName(data.employee.name)}</Typography>
-            }
-          </Grid>
-          <Grid className={classes.fieldLabelContainer} item xs={6}>
-            <Typography className={classes.textEnd}>
-              Должность:
-                            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            {editing
-              ? <TextField
-                label="Должность"
-                value={data.employee.role}
-                onChange={handleRoleChange}
-              />
-              : <Typography>{data.employee.role} </Typography>
-            }
-          </Grid>
-          <Grid className={classes.fieldLabelContainer} item xs={6}>
-            <Typography className={classes.textEnd}>
-              ФИО Руководителя:
-                            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            {editing
-              ? <SelectStaff
-                value={data.supervisor}
-                fetchFunc={() => expService.getAll('users')}
-                label="Руководитель"
-                passStaffObj={passStaffObj}
-              />
-              : <Typography>{formatService.getName(data.supervisor.name)} </Typography>
-            }
-          </Grid>
-          <Grid className={classes.fieldLabelContainer} item xs={6}>
-            <Typography className={classes.textEnd}>
-              Период испытательного срока:
-                            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            {editing
-              ? <Calendar
-                passChanges={handleDataChange}
-                dateStart={data.adaptationStart}
-                dateStartLabel="Начало испытательного срока"
-                dateEnd={data.adaptationEnd}
-                dateEndLabel="Конец испытательного срока"
-              />
-              : <Typography>{formatService.getDate(data.adaptationStart) + '-' + formatService.getDate(data.adaptationEnd)} </Typography>
-            }
-          </Grid>
-          <Grid className={classes.fieldLabelContainer} item xs={6}>
-            <Typography className={classes.textEnd}>
-              Создан HR-сотрудником:
-                            </Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography>
-              {'Смирнова Елена Владимировна'}
-            </Typography>
+      {displayPlan ?
+        <Paper elevation={4} className={classes.cardContainer}>
+          <ComponentAvailability
+            stageRoleObj={stageRoleModel.editBtn}
+            currentRole={user.role}
+            currentStage={oldDisplayPlan.stage}
+          >
+            <IconButton
+              color="inherit"
+              className={classes.editButtonContainer}
+              onClick={handleEditIconClick}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </ComponentAvailability>
+          <Grid container spacing={spaces.current}>
+            <Grid item container spacing={2}>
+              <Grid className={classes.fieldLabelContainer} item xs={6}>
+                <Typography className={classes.textEnd}>
+                  ФИО Сотрудника:
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                {editing
+                  ? <SelectUsers
+                    label=''
+                    variant="standard"
+                    setValue={passUserObj}
+                    path='users'
+                    role='employee'
+                    value={displayPlan.employee}
+                  />
+                  : <Typography>{displayPlan.employee.name.last + ' ' + displayPlan.employee.name.first + ' ' + displayPlan.employee.name.middle} </Typography>
+                }
+              </Grid>
+            </Grid>
+            <Grid item container spacing={2}>
+              <Grid className={classes.fieldLabelContainer} item xs={6}>
+                <Typography className={classes.textEnd}>
+                  Должность:
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                {editing
+                  ? <SelectUsers
+                    label=''
+                    variant="standard"
+                    setValue={passPositionId}
+                    path='positions'
+                    role='employeePosition'
+                    value={displayPlan.employeePosition}
+                  />
+                  : <Typography>{displayPlan.employeePosition.name} </Typography>
+                }
+              </Grid>
+            </Grid>
+            <Grid item container spacing={2}>
+              <Grid className={classes.fieldLabelContainer} item xs={6}>
+                <Typography className={classes.textEnd}>
+                  ФИО Руководителя:
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                {editing
+                  ? <SelectUsers
+                    label=''
+                    variant="standard"
+                    setValue={passUserObj}
+                    path='users'
+                    role='supervisor'
+                    value={displayPlan.supervisor}
+                  />
+                  : <Typography>
+                    {displayPlan.supervisor.name.last + ' ' + displayPlan.supervisor.name.first + ' ' + displayPlan.supervisor.name.middle}
+                  </Typography>
+                }
+              </Grid>
+            </Grid>
+            <Grid item container spacing={2}>
+              <Grid className={classes.fieldLabelContainer} item xs={6}>
+                <Typography className={classes.textEnd}>
+                  Начало испытательного срока:
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                {editing
+                  ? <CalendarSingle
+                    passChanges={handleDataChange}
+                    dateField='adaptationStart'
+                    value={displayPlan.adaptationStart}
+                  />
+                  : <Typography>{formatService.setDate(displayPlan.adaptationStart)} </Typography>
+                }
+              </Grid>
+            </Grid>
+            <Grid item container spacing={2}>
+              <Grid className={classes.fieldLabelContainer} item xs={6}>
+                <Typography className={classes.textEnd}>
+                  Конец испытательного срока:
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                {editing
+                  ? <CalendarSingle
+                    passChanges={handleDataChange}
+                    dateField='adaptationEnd'
+                    value={displayPlan.adaptationEnd}
+                  />
+                  : <Typography>{formatService.setDate(displayPlan.adaptationEnd)} </Typography>
+                }
+              </Grid>
+            </Grid>
+            <Grid item container spacing={2}>
+              <Grid className={classes.fieldLabelContainer} item xs={6}>
+                <Typography className={classes.textEnd}>
+                  Создан HR-сотрудником:
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography>
+                  {displayPlan.hr.name.last + ' ' + displayPlan.hr.name.first + ' ' + displayPlan.hr.name.middle}
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={12}>
-            <ProgressBar stage={data.stage} />
+            <ProgressBar stage={displayPlan.stage} />
           </Grid>
-        </Grid>
-        <Typography className={classes.bottomCreationDate}>
-          Создан {formatService.getDate(data.date)}
-        </Typography>
-        {editing &&
-          <div className={classes.adaptationPlanSaveBtn}>
-            <Button
-              variant="contained"
-              className={classes.button}
-              color="primary"
-              type="Submit"
-              startIcon={<SaveIcon />}
-            >
-              Сохранить
-                            </Button>
-          </div>
-        }
-      </Paper>
-    </>
+          <Grid item>
+            <Typography color="secondary" variant="body2" className={classes.bottomCreationDate}>
+              Создан {formatService.setDate(displayPlan.date)}
+            </Typography>
+          </Grid>
+          {editing &&
+            <Grid xs={12} item container className={classes.saveButtonContainer}>
+              <FormControl>
+                <Select
+                  value={displayPlan.stage}
+                  onChange={handleStageChange}
+                >
+                  <MenuItem value={0}>Заполнение</MenuItem>
+                  <MenuItem value={1}>Согласование</MenuItem>
+                  <MenuItem value={2}>Выполнение</MenuItem>
+                  <MenuItem value={3}>Оценка</MenuItem>
+                  <MenuItem value={4}>Завершение</MenuItem>
+                </Select>
+                <FormHelperText>Выберите стадию плана</FormHelperText>
+              </FormControl>
+              <Button
+                variant="contained"
+                color="primary"
+                type="Submit"
+                size='small'
+                startIcon={<SaveIcon />}
+                onClick={handleSaveBtnClick}
+              >
+                Сохранить
+              </Button>
+            </Grid>
+          }
+        </Paper>
+        : <Loader size={200} />
+      }</>
   )
 
 }

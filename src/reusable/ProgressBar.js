@@ -11,40 +11,24 @@ const useStyles = makeStyles(() => ({
             paddingLeft: '0px',
             paddingRight: '5px',
         }
+    },
+    stepper: {
+        flexWrap: 'wrap'
     }
 }));
-
-function getStepContent(rawStep) {
-    switch (rawStep) {
-        case 'creation':
-            return 0
-        case 'filling':
-            return 1
-        case 'assigning':
-            return 2
-        case 'execution':
-            return 3
-        case 'rated':
-            return 4
-        case 'completing':
-            return 5
-        default:
-            return 'Unknown step';
-    }
-}
 
 export default function ProgressBar({ stage }) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
-    const steps = ['Создание', 'Заполнение', 'Согласование', 'Выполнение', 'Оценка', 'Завершение'];
+    const steps = ['Заполнение', 'Согласование', 'Выполнение', 'Оценка', 'Завершение'];
 
     useEffect(() => {
-        setActiveStep(getStepContent(stage));
-    }, [stage]);
+        setActiveStep(stage);
+    }, [stage, activeStep]);
 
     return (
         <div className={classes.root}>
-            <Stepper activeStep={activeStep} alternativeLabel>
+            <Stepper className={classes.stepper} activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
                     <Step key={label}>
                         <StepLabel>{label}</StepLabel>
