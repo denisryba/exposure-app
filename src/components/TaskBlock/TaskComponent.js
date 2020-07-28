@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TaskComponent = ({ taskObj, expService, removeTask }) => {
+const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
 
   const classes = useStyles();
 
@@ -197,10 +197,10 @@ const TaskComponent = ({ taskObj, expService, removeTask }) => {
               >
                 до {formatService.setDate(task.executionEnd).slice(0, 5)}
               </Typography>
-              {/* <ComponentAvailability
-                stageRoleObj={stageRoleModel.editBtn}
+              <ComponentAvailability
+                stageRoleObj={stageRoleModel.checkBox}
                 currentRole={user.role}
-                curentStage={oldDisplayPlan.stage}
+                curentStage={planStage}
               >
                 <Checkbox
                   color="primary"
@@ -208,13 +208,25 @@ const TaskComponent = ({ taskObj, expService, removeTask }) => {
                   onChange={handleCheckbox}
                   onClick={(e) => e.stopPropagation()}
                 />
-              </ComponentAvailability> */}
-              <IconButton size="small" color="inherit" onClick={(e) => handleEditIconClick(e)}>
-                <EditIcon />
-              </IconButton>
-              <IconButton size="small" color="inherit" onClick={(e) => handleDeleteIconClick(e)}>
-                <DeleteIcon />
-              </IconButton>
+              </ComponentAvailability>
+              <ComponentAvailability
+                stageRoleObj={stageRoleModel.editBtn}
+                currentRole={user.role}
+                curentStage={planStage}
+              >
+                <IconButton size="small" color="inherit" onClick={(e) => handleEditIconClick(e)}>
+                  <EditIcon />
+                </IconButton>
+              </ComponentAvailability>
+              <ComponentAvailability
+                stageRoleObj={stageRoleModel.deleteBtn}
+                currentRole={user.role}
+                curentStage={planStage}
+              >
+                <IconButton size="small" color="inherit" onClick={(e) => handleDeleteIconClick(e)}>
+                  <DeleteIcon />
+                </IconButton>
+              </ComponentAvailability>
             </div>
           </div>
         </AccordionSummary>

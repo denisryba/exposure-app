@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../context/auth.js';
 
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const AdaptationPlanCard = ({ planId }) => {
+const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
   const expService = useExpService();
   const classes = useStyles();
   const history = useHistory();
@@ -73,8 +73,7 @@ const AdaptationPlanCard = ({ planId }) => {
   const user = useAuth()
 
   const [editing, setEditMode] = useState(false);
-  const [displayPlan, setDisplayPlan] = useState(null);
-  const [oldDisplayPlan, setOldDisplayPlan] = useState(null);
+  const [oldDisplayPlan, setOldDisplayPlan] = useState(displayPlan);
 
   const stageRoleModel = {
     editBtn: {
@@ -86,14 +85,6 @@ const AdaptationPlanCard = ({ planId }) => {
       employee: []
     }
   }
-
-  useEffect(() => {
-    expService.get('plan', planId)
-      .then(res => {
-        setOldDisplayPlan(res);
-        setDisplayPlan(res);
-      });
-  }, [expService, planId])
 
   const editDisplayPlanField = (position, value) => {
     setDisplayPlan(prevData => {

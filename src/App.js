@@ -38,23 +38,23 @@ const theme = createMuiTheme({
       contrastText: 'white'
     },
     secondary: {
-      main: '#0000008a'
+      main: '#e63212'
     },
-    typography: {
-      subtitle1: {
-        color: '#838383',
-        fontSize: 14,
-      },
-      h5: {
-        paddingBottom: 10,
-        paddingLeft: 15,
-        fontWeight: 500,
-        fontSize: 18
-      },
-      subtitle2: {
-        color: '#5c6bc0',
-      }
+  },
+  typography: {
+    subtitle1: {
+      color: '#838383',
+      fontSize: 14,
     },
+    h5: {
+      paddingBottom: 10,
+      paddingLeft: 15,
+      fontWeight: 500,
+      fontSize: 18
+    },
+    subtitle2: {
+      color: '#5c6bc0',
+    }
   }
 });
 
