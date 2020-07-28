@@ -45,6 +45,7 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
       .then(res => setPlans(plans.filter(plan => plan.id !== id)));
     event.stopPropagation();
   };
+  console.log(plans)
 
   return (
       <Box className={classes.root}>
@@ -64,11 +65,11 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
             {plans.map(plan => (
               <TableRow className={classes.planRow} onClick={() => onPlanClicked(plan.id)} key={plan.id}>
                 <TableCell>
-                  {formatService.setName(plan.employee[0].name)}
-                  <Typography variant="subtitle1">{plan.employeePosition[0].name}</Typography>
+                  {plan.employee.name}
+                  <Typography variant="subtitle1">{plan.employeePosition.name}</Typography>
                 </TableCell>
                 <TableCell><Typography variant="subtitle2">{plan.stage}</Typography></TableCell>
-                <TableCell>{formatService.setName(plan.supervisor[0].name)}</TableCell>
+                <TableCell>{plan.supervisor.name}</TableCell>
                 <TableCell>{formatService.setDate(plan.date)}</TableCell>
                 <TableCell>
                   <IconButton onClick={(e) => deletePlan(plan.id, e)}>

@@ -176,7 +176,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                     role='employee'
                     value={displayPlan.employee}
                   />
-                  : <Typography>{displayPlan.employee.name.last + ' ' + displayPlan.employee.name.first + ' ' + displayPlan.employee.name.middle} </Typography>
+                  : <Typography>{displayPlan.employee.name} </Typography>
                 }
               </Grid>
             </Grid>
@@ -217,7 +217,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                     value={displayPlan.supervisor}
                   />
                   : <Typography>
-                    {displayPlan.supervisor.name.last + ' ' + displayPlan.supervisor.name.first + ' ' + displayPlan.supervisor.name.middle}
+                    {displayPlan.supervisor.name}
                   </Typography>
                 }
               </Grid>
@@ -264,7 +264,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
               </Grid>
               <Grid item xs={6}>
                 <Typography>
-                  {displayPlan.hr.name.last + ' ' + displayPlan.hr.name.first + ' ' + displayPlan.hr.name.middle}
+                  {displayPlan.hr.name}
                 </Typography>
               </Grid>
             </Grid>

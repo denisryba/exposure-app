@@ -9,7 +9,6 @@ import {
   InputBase,
   useScrollTrigger, 
   Slide,
-  Grid,
   Popover } from '@material-ui/core';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2)
   },
   toolbar: {
-    // justifyContent: 'space-between' 
+    justifyContent: 'space-between' 
   },
   logo: {
     marginRight: theme.spacing(2),
@@ -34,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
   },
   search: {
-    flexGrow: 1,
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
