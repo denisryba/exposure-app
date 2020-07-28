@@ -64,12 +64,12 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
             {plans.map(plan => (
               <TableRow className={classes.planRow} onClick={() => onPlanClicked(plan.id)} key={plan.id}>
                 <TableCell>
-                  {formatService.getName(plan.employee[0].name)}
+                  {formatService.setName(plan.employee[0].name)}
                   <Typography variant="subtitle1">{plan.employeePosition[0].name}</Typography>
                 </TableCell>
                 <TableCell><Typography variant="subtitle2">{plan.stage}</Typography></TableCell>
-                <TableCell>{formatService.getName(plan.supervisor[0].name)}</TableCell>
-                <TableCell>{formatService.getDate(plan.date)}</TableCell>
+                <TableCell>{formatService.setName(plan.supervisor[0].name)}</TableCell>
+                <TableCell>{formatService.setDate(plan.date)}</TableCell>
                 <TableCell>
                   <IconButton onClick={(e) => deletePlan(plan.id, e)}>
                     <DeleteIcon />
