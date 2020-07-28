@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 
+import { useAuth } from '../../context/auth.js';
+import Calendar from '../../reusable/Calendar.js';
+import formatService from '../../services/formatService.js';
+import ComponentAvailability from '../../reusable/ComponentAvailability.js';
+
 import {
   makeStyles,
   Accordion,
@@ -12,9 +17,6 @@ import {
   Checkbox,
   IconButton
 } from '@material-ui/core';
-import Calendar from '../../reusable/Calendar.js'
-import formatService from '../../services/formatService.js'
-
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -78,6 +80,22 @@ const TaskComponent = ({ taskObj, expService, removeTask }) => {
   const [expandAccordion, setExpandAccordion] = useState(false);
   const [task, setTask] = useState(taskObj);
   const [initialTask, setInitialTask] = useState(taskObj);
+  const user = useAuth()
+
+  const stageRoleModel = {
+    checkBox: {
+      supervisor: [1, 3],
+      employee: [2]
+    },
+    editBtn: {
+      supervisor: [1],
+      employee: [0]
+    },
+    deleteBtn: {
+      supervisor: [1],
+      employee: [0]
+    },
+  }
 
   const updateTaskField = (fieldName, value) => {
     setTask(prevData => {
@@ -110,6 +128,7 @@ const TaskComponent = ({ taskObj, expService, removeTask }) => {
   }
 
   const handleDateChange = (dateType, value) => {
+    console.log(task);
     dateType = (dateType === 'dateStart') ? 'executionStart' : 'executionEnd';
     updateTaskField(dateType, value.toJSON());
   }
@@ -178,12 +197,18 @@ const TaskComponent = ({ taskObj, expService, removeTask }) => {
               >
                 до {formatService.setDate(task.executionEnd).slice(0, 5)}
               </Typography>
-              <Checkbox
-                color="primary"
-                checked={task.completed}
-                onChange={handleCheckbox}
-                onClick={(e) => e.stopPropagation()}
-              />
+              {/* <ComponentAvailability
+                stageRoleObj={stageRoleModel.editBtn}
+                currentRole={user.role}
+                curentStage={oldDisplayPlan.stage}
+              >
+                <Checkbox
+                  color="primary"
+                  checked={task.completed}
+                  onChange={handleCheckbox}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </ComponentAvailability> */}
               <IconButton size="small" color="inherit" onClick={(e) => handleEditIconClick(e)}>
                 <EditIcon />
               </IconButton>

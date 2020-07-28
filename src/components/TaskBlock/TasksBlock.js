@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TaskComponent from './TaskComponent.js';
 import TaskCreationForm from './TaskCreationForm.js';
+import Loader from '../../reusable/Loader.js';
 
 import { Typography, Button, makeStyles } from '@material-ui/core';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
@@ -63,7 +64,7 @@ const TasksBlock = ({ planId }) => {
         tasks.map((item, index) => {
           return <TaskComponent key={item.id} expService={expService} taskObj={item} removeTask={() => removeTask(index)} />
         }) :
-        <h1>Loading...</h1>
+        <Loader size={200} />
       }
       <TaskCreationForm
         tasks={tasks}
