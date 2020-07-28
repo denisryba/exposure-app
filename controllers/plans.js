@@ -171,7 +171,15 @@ plansRouter.put('/:id', async (req, res) => {
   };
 
   const updatedPlan = await Plan.findByIdAndUpdate(req.params.id, plan, { new: true });
-  res.json(updatedPlan);
+
+  const newPlan = await Plan
+    .findById(updatedPlan.id)
+    .populate('employeePosition')
+    .populate('employee')
+    .populate('supervisor')
+    .populate('hr');
+ 
+  res.json(newPlan);
 });
 
 module.exports = plansRouter;
