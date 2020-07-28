@@ -10,6 +10,7 @@ plansRouter.get('/', async (req, res) => {
   const { user } = req;
   const page = +req.query.page;
   const limit = +req.query.limit;
+  const search = new RegExp(req.query.search)
   let filter = {};
 
   if (user.role === role.employee || user.role === role.supervisor) {
@@ -22,17 +23,63 @@ plansRouter.get('/', async (req, res) => {
 
   const results = {};
 
-  const pageCount = await Plan.countDocuments(filter).exec()/limit;
+  results.plans = await Plan.aggregate([
+    { $lookup:
+      {
+        from: "users",
+        localField: "employee",
+        foreignField: "_id",
+        as: "employee"
+      }
+    },
+    { $lookup:
+      {
+        from: "users",
+        localField: "supervisor",
+        foreignField: "_id",
+        as: "supervisor"
+      }
+    },
+    { $lookup:
+      {
+        from: "positions",
+        localField: "employeePosition",
+        foreignField: "_id",
+        as: "employeePosition"
+      }
+    },
+    { 
+      $addFields: { id: "$_id"}
+    },
+    { $project: {
+        'employee.passwordHash': 0, 
+        'employee.__v': 0,
+        'supervisor.passwordHash': 0,
+        'supervisor.__v': 0,
+        'employeePosition.__v': 0,
+        _id: 0,
+        __v: 0 
+      }
+    },
+    { $match: { 
+      $or: [
+      {'employee.name.first': {$regex: search, $options : 'i'}}, 
+      {'employee.name.middle': {$regex: search, $options : 'i'}}, 
+      {'employee.name.last': {$regex: search, $options : 'i'}},
+      {'supervisor.name.first': {$regex: search, $options : 'i'}}, 
+      {'supervisor.name.middle': {$regex: search, $options : 'i'}}, 
+      {'supervisor.name.last': {$regex: search, $options : 'i'}},
+      {'employeePosition.name': {$regex: search, $options : 'i'}},
+    ]}
+    },
+ ])
+ 
+  const pageCount = results.plans.length/limit;
   if (pageCount)
     results.pageCount = Math.ceil(pageCount)
   else results.pageCount = 1;
 
-  results.plans = await Plan.find(filter).limit(limit).skip(startIndex)
-    .populate('employee')
-    .populate('supervisor')
-    .populate('hr')
-    .populate('employeePosition')
-    .exec();
+  results.plans = results.plans.slice(startIndex, startIndex + limit);
   res.json(results);
 });
 

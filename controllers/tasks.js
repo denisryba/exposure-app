@@ -29,7 +29,7 @@ tasksRouter.post('/', async (req, res) => {
       description: body.description,
       executionStart: new Date(body.executionStart),
       executionEnd: new Date(body.executionEnd),
-      completed: body.completed || false,
+      completed: body.completed,
       plan: plan._id,
       date: new Date()
     });
