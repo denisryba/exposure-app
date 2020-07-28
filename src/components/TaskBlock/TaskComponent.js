@@ -200,7 +200,7 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
               <ComponentAvailability
                 stageRoleObj={stageRoleModel.checkBox}
                 currentRole={user.role}
-                curentStage={planStage}
+                currentStage={planStage}
               >
                 <Checkbox
                   color="primary"
@@ -212,7 +212,7 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
               <ComponentAvailability
                 stageRoleObj={stageRoleModel.editBtn}
                 currentRole={user.role}
-                curentStage={planStage}
+                currentStage={planStage}
               >
                 <IconButton size="small" color="inherit" onClick={(e) => handleEditIconClick(e)}>
                   <EditIcon />
@@ -221,7 +221,7 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
               <ComponentAvailability
                 stageRoleObj={stageRoleModel.deleteBtn}
                 currentRole={user.role}
-                curentStage={planStage}
+                currentStage={planStage}
               >
                 <IconButton size="small" color="inherit" onClick={(e) => handleDeleteIconClick(e)}>
                   <DeleteIcon />

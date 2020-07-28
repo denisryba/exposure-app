@@ -62,7 +62,7 @@ const TasksBlock = ({ planObj }) => {
         <ComponentAvailability
           stageRoleObj={stageRoleModel.createTaskBtn}
           currentRole={user.role}
-          curentStage={planObj.stage}
+          currentStage={planObj.stage}
         >
           <Button
             onClick={toggleCreationForm}

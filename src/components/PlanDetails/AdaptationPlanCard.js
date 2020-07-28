@@ -149,7 +149,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
           <ComponentAvailability
             stageRoleObj={stageRoleModel.editBtn}
             currentRole={user.role}
-            curentStage={oldDisplayPlan.stage}
+            currentStage={oldDisplayPlan.stage}
           >
             <IconButton
               color="inherit"
