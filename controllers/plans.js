@@ -73,22 +73,54 @@ plansRouter.get('/', async (req, res) => {
     ]}
     },
  ])
- 
+
   const pageCount = results.plans.length/limit;
   if (pageCount)
     results.pageCount = Math.ceil(pageCount)
   else results.pageCount = 1;
 
   results.plans = results.plans.slice(startIndex, startIndex + limit);
+  // results.plans = await Plan.find(filter).limit(limit).skip(startIndex)
+  //   .populate({
+  //     path: 'employee',
+  //     select: '-email -username -role'
+  //   })
+  //   .populate({
+  //     path: 'supervisor',
+  //     select: '-email -username -role'
+  //   })
+  //   .populate({
+  //     path: 'hr',
+  //     select: '-email -username -role'
+  //   })
+  //   .populate({
+  //     path: 'employeePosition',
+  //     select: '-description'
+  //   })
+  //   .exec();
   res.json(results);
 });
 
 plansRouter.get('/:id', async (req, res, next) => {
   const plan = await Plan
     .findById(req.params.id)
-    .populate('employee')
-    .populate('supervisor')
-    .populate('hr');
+    .populate({
+      path: 'employee',
+      select: '-email -username -role'
+    })
+    .populate({
+      path: 'supervisor',
+      select: '-email -username -role'
+    })
+    .populate({
+      path: 'hr',
+      select: '-email -username -role'
+    })
+    .populate({
+      path: 'employeePosition',
+      select: '-description'
+    })
+    .exec();
 
   if (plan) {
     res.json(plan);
@@ -97,7 +129,7 @@ plansRouter.get('/:id', async (req, res, next) => {
   }
 });
 
-plansRouter.get('/:id/tasks', async (req, res, next) => {
+plansRouter.get('/:id/tasks', async (req, res) => {
   const plan = await Plan
     .findById(req.params.id)
     .populate('tasks');
@@ -106,6 +138,25 @@ plansRouter.get('/:id/tasks', async (req, res, next) => {
 
   if (tasks) {
     res.json(tasks);
+  } else {
+    res.status(404).end();
+  }
+});
+
+plansRouter.get('/:id/comments', async (req, res) => {
+  const plan = await Plan
+    .findById(req.params.id)
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'user',
+        select: '-email -username'
+    }});
+
+  const comments = plan.comments;
+
+  if (comments) {
+    res.json(comments);
   } else {
     res.status(404).end();
   }
@@ -123,7 +174,7 @@ plansRouter.post('/', async (req, res) => {
     employee: body.employee,
     supervisor: body.supervisor,
     hr: user.id,
-    stage: body.stage || 'Заполнение сотрудником',
+    stage: body.stage || 0,
     adaptationStart: new Date(body.adaptationStart),
     adaptationEnd: new Date(body.adaptationEnd),
     completed: body.completed || false,
@@ -173,7 +224,15 @@ plansRouter.put('/:id', async (req, res) => {
   };
 
   const updatedPlan = await Plan.findByIdAndUpdate(req.params.id, plan, { new: true });
-  res.json(updatedPlan);
+
+  const newPlan = await Plan
+    .findById(updatedPlan.id)
+    .populate('employeePosition')
+    .populate('employee')
+    .populate('supervisor')
+    .populate('hr');
+ 
+  res.json(newPlan);
 });
 
 module.exports = plansRouter;
