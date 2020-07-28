@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import ProgressBar from '../../reusable/ProgressBar.js';
@@ -50,39 +50,25 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const AdaptationPlanCard = ({ planId }) => {
+const AdaptationPlanCard = ({ planId, displayPlan, setDisplayPlan }) => {
   const expService = useExpService();
   const classes = useStyles();
   const history = useHistory();
   let spaces = useRef(3);;
 
-  const [editing, setEditMode] = useState(false);
-  const [plan, setPlan] = useState(null);
-  const [oldPlan, setOldPlan] = useState(null);
-  const [displayPlan, setDisplayPlan] = useState(null);
-  const [oldDisplayPlan, setOldDisplayPlan] = useState(null);
+  const extractedIds = {
+    ...displayPlan,
+    employeePosition: displayPlan.employeePosition.id,
+    hr: displayPlan.hr.id,
+    employee: displayPlan.employee.id,
+    supervisor: displayPlan.supervisor.id,
+  };
 
-  useEffect(() => {
-    expService.get('plan', planId)
-      .then(res => {
-        setDisplayPlan(res);
-        setOldDisplayPlan(res);
-        setPlan({
-          ...res,
-          employeePosition: res.employeePosition.id,
-          hr: res.hr.id,
-          employee: res.employee.id,
-          supervisor: res.supervisor.id,
-        });
-        setOldPlan({
-          ...res,
-          employeePosition: res.employeePosition.id,
-          hr: res.hr.id,
-          employee: res.employee.id,
-          supervisor: res.supervisor.id,
-        });
-      });
-  }, [expService, planId])
+  const [editing, setEditMode] = useState(false);
+  const [plan, setPlan] = useState(extractedIds);
+  const [oldPlan, setOldPlan] = useState(extractedIds);
+  const [oldDisplayPlan, setOldDisplayPlan] = useState(displayPlan);
+
 
   const convertDate = (date) => {
     return new Date(date).toLocaleDateString();

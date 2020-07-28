@@ -19,17 +19,15 @@ const useStyles = makeStyles(() => ({
 
 function getStepContent(rawStep) {
     switch (rawStep) {
-        case 'creation':
-            return 0
-        case 'filling':
+        case 0:
             return 1
-        case 'assigning':
+        case 1:
             return 2
-        case 'execution':
+        case 2:
             return 3
-        case 'rating':
+        case 3:
             return 4
-        case 'completed':
+        case 4:
             return 5
         default:
             return 'Unknown step';
