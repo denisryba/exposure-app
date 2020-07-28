@@ -56,6 +56,8 @@ const theme = createMuiTheme({
 
 const App = () => {
   const [ user, setUser ] = useState(storage.get('savedUser'));
+  const [ search, setSearch] = useState('а');
+  console.log(search)
 
   const { root } = useStyles();
 
@@ -65,7 +67,9 @@ const App = () => {
         <ThemeProvider theme={theme}>
           {user
             ? <Header
-              setUser={setUser} />
+              setUser={setUser} 
+              setSearch={setSearch}
+              />
             : null}
           <Container className={root}>
             <Switch>
@@ -75,7 +79,7 @@ const App = () => {
                   loginService={loginService} />
               </Route>
               <PrivateRoute exact path='/plans/' roles={[role.hr, role.supervisor]}>
-                <PlanListPage />
+                <PlanListPage search={search}/>
               </PrivateRoute>
               <PrivateRoute path='/plans/:id'>
                 <PlanDetailsPage />
