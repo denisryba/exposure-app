@@ -10,15 +10,8 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   name: {
-    first: {
       type: String,
       required: true
-    },
-    last: {
-      type: String,
-      required: true
-    },
-    middle: String
   },
   email: {
     type: String,

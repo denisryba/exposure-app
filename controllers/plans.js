@@ -48,6 +48,9 @@ plansRouter.get('/', async (req, res) => {
         as: "employeePosition"
       }
     },
+    {"$unwind": {path: "$employeePosition"}},
+    {"$unwind": {path: "$employee"}},
+    {"$unwind": {path: "$supervisor"}},
     { 
       $addFields: { id: "$_id"}
     },
@@ -63,12 +66,8 @@ plansRouter.get('/', async (req, res) => {
     },
     { $match: { 
       $or: [
-      {'employee.name.first': {$regex: search, $options : 'i'}}, 
-      {'employee.name.middle': {$regex: search, $options : 'i'}}, 
-      {'employee.name.last': {$regex: search, $options : 'i'}},
-      {'supervisor.name.first': {$regex: search, $options : 'i'}}, 
-      {'supervisor.name.middle': {$regex: search, $options : 'i'}}, 
-      {'supervisor.name.last': {$regex: search, $options : 'i'}},
+      {'employee.name': {$regex: search, $options : 'i'}}, 
+      {'supervisor.name': {$regex: search, $options : 'i'}}, 
       {'employeePosition.name': {$regex: search, $options : 'i'}},
     ]}
     },
@@ -80,24 +79,6 @@ plansRouter.get('/', async (req, res) => {
   else results.pageCount = 1;
 
   results.plans = results.plans.slice(startIndex, startIndex + limit);
-  // results.plans = await Plan.find(filter).limit(limit).skip(startIndex)
-  //   .populate({
-  //     path: 'employee',
-  //     select: '-email -username -role'
-  //   })
-  //   .populate({
-  //     path: 'supervisor',
-  //     select: '-email -username -role'
-  //   })
-  //   .populate({
-  //     path: 'hr',
-  //     select: '-email -username -role'
-  //   })
-  //   .populate({
-  //     path: 'employeePosition',
-  //     select: '-description'
-  //   })
-  //   .exec();
   res.json(results);
 });
 

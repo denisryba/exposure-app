@@ -28,11 +28,7 @@ usersRouter.post('/', async (req, res) => {
 
   const user = new User({
     username: body.username,
-    name: {
-      first: body.name.first,
-      last: body.name.last,
-      middle: body.name.middle
-    },
+    name: body.name,
     email: body.email,
     role: body.role || 'employee',
     passwordHash,
@@ -52,11 +48,7 @@ usersRouter.put('/:id', async (req, res) => {
 
   const user = {
     username: body.username,
-    name: {
-      first: body.name.first,
-      last: body.name.last,
-      middle: body.name.middle
-    },
+    name: body.name,
     email: body.email,
     role: body.role
   };
