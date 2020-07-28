@@ -33,6 +33,9 @@ const useStyles = makeStyles({
 
 const theme = createMuiTheme({
   palette: {
+    common: {
+      white: '#ffffff'
+    },
     primary: {
       main: '#5c6bc0',
       contrastText: 'white'
