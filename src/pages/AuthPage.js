@@ -9,18 +9,13 @@ const AuthPage = ({ setUser, loginService }) => {
   const { from } = location.state || { from: '/' };
 
   const login = async (username, password) => {
-    try {
-      const user = await loginService.login({
-        username,
-        password
-      });
-      storage.set('savedUser', user);
-      setUser(user);
-      history.replace(from);
-    }
-    catch (e) {
-      console.log('wrong user data');
-    }
+    const user = await loginService.login({
+      username,
+      password
+    });
+    storage.set('savedUser', user);
+    setUser(user);
+    history.replace(from);
   };
 
   return (
