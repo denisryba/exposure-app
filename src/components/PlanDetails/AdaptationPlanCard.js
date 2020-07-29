@@ -14,11 +14,7 @@ import {
   Button,
   makeStyles,
   Typography,
-  IconButton,
-  Select,
-  FormHelperText,
-  MenuItem,
-  FormControl
+  IconButton
 } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import EditIcon from '@material-ui/icons/Edit';
@@ -58,11 +54,6 @@ const useStyles = makeStyles((theme) => ({
     top: '5px',
     right: '3%',
   },
-  saveButtonContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  }
 }));
 
 const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
@@ -111,10 +102,6 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
     editDisplayPlanField(dataField, value);
   }
 
-  const handleStageChange = (e) => {
-    editDisplayPlanField('stage', e.target.value);
-  }
-
   const handleEditIconClick = () => {
     spaces.current = editing ? 3 : 2;
     setDisplayPlan(oldDisplayPlan);
@@ -136,6 +123,10 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
       });
   }
 
+  React.useEffect(() => {
+    console.log(displayPlan);
+  })
+
   return (
     <>
       <Typography className={classes.cardHeader} variant='h6'>
@@ -149,7 +140,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
           <ComponentAvailability
             stageRoleObj={stageRoleModel.editBtn}
             currentRole={user.role}
-            currentStage={oldDisplayPlan.stage}
+            currentStage={displayPlan.stage}
           >
             <IconButton
               color="inherit"
@@ -278,20 +269,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
             </Typography>
           </Grid>
           {editing &&
-            <Grid xs={12} item container className={classes.saveButtonContainer}>
-              <FormControl>
-                <Select
-                  value={displayPlan.stage}
-                  onChange={handleStageChange}
-                >
-                  <MenuItem value={0}>Заполнение</MenuItem>
-                  <MenuItem value={1}>Согласование</MenuItem>
-                  <MenuItem value={2}>Выполнение</MenuItem>
-                  <MenuItem value={3}>Оценка</MenuItem>
-                  <MenuItem value={4}>Завершение</MenuItem>
-                </Select>
-                <FormHelperText>Выберите стадию плана</FormHelperText>
-              </FormControl>
+            <Grid xs={12} item container justify='flex-end'>
               <Button
                 variant="contained"
                 color="primary"
