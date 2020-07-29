@@ -1,6 +1,7 @@
 const plansRouter = require('express').Router();
 const Plan = require('../models/plan.js');
 const role = require('../utils/role.js');
+const mongoose = require('mongoose');
 
 const permissionError = {
   error: 'you do not have permission to perform this request'
@@ -14,10 +15,11 @@ plansRouter.get('/', async (req, res) => {
   let filter = {};
 
   if (user.role === role.employee || user.role === role.supervisor) {
+    const field = `${user.role}.id`;
     filter = {
-      [user.role]: user.id
-    }
-  }
+      [field]: mongoose.Types.ObjectId(user.id)
+    };
+  };
 
   const startIndex = (page - 1) * limit;
 
@@ -52,33 +54,60 @@ plansRouter.get('/', async (req, res) => {
     {"$unwind": {path: "$employee"}},
     {"$unwind": {path: "$supervisor"}},
     { 
-      $addFields: { id: "$_id"}
+      $addFields: { 
+        id: "$_id", 
+        "employee.id": "$employee._id",
+        "supervisor.id": "$supervisor._id",
+        "employeePosition.id": "$employeePosition._id"
+      }
     },
-    { $project: {
-        'employee.passwordHash': 0, 
-        'employee.__v': 0,
-        'supervisor.passwordHash': 0,
-        'supervisor.__v': 0,
-        'employeePosition.__v': 0,
+    { 
+      $project: { 
+        "employee": {
+          "_id": 0, 
+          "role": 0,
+          "username": 0,
+          "email": 0,
+          "passwordHash": 0,
+          "__v": 0,
+        },
+        "supervisor": {
+          "_id": 0, 
+          "role": 0,
+          "username": 0,
+          "email": 0,
+          "passwordHash": 0,
+          "__v": 0,
+        },
+        "employeePosition": {
+          "_id": 0, 
+          "description": 0,
+          "__v": 0
+        },  
         _id: 0,
         __v: 0 
       }
     },
+    { $match: filter },
     { $match: { 
       $or: [
       {'employee.name': {$regex: search, $options : 'i'}}, 
       {'supervisor.name': {$regex: search, $options : 'i'}}, 
       {'employeePosition.name': {$regex: search, $options : 'i'}},
-    ]}
+      {'employee._id': filter},
+  
+    ]},
     },
+
  ])
 
   const pageCount = results.plans.length/limit;
   if (pageCount)
     results.pageCount = Math.ceil(pageCount)
   else results.pageCount = 1;
-
-  results.plans = results.plans.slice(startIndex, startIndex + limit);
+  
+  if (page && limit)
+    results.plans = results.plans.slice(startIndex, startIndex + limit);
   res.json(results);
 });
 
@@ -188,9 +217,9 @@ plansRouter.delete('/:id', async (req, res) => {
 plansRouter.put('/:id', async (req, res) => {
   const { body, user } = req;
 
-  if (user.role === role.employee) {
-    return res.status(401).json(permissionError);
-  }
+  // if (user.role === role.employee) {
+  //   return res.status(401).json(permissionError);
+  // }
 
   const plan = {
     employeePosition: body.employeePosition,
