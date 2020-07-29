@@ -3,8 +3,9 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user.js');
 
 usersRouter.get('/', async (req, res) => {
-  const { role } = req.query;
-  const filter = role ? { role } : null;
+  const { role, attached } = req.query;
+  const filter = (role || attached)
+    ? { role, attachedToPlan: attached } : null;
 
   const users = await User.find(filter);
   res.json(users);
@@ -31,7 +32,8 @@ usersRouter.post('/', async (req, res) => {
     name: body.name,
     email: body.email,
     role: body.role || 'employee',
-    passwordHash,
+    attachedToPlan: body.attachedToPlan || false,
+    passwordHash
   });
 
   const savedUser = await user.save();
@@ -50,7 +52,8 @@ usersRouter.put('/:id', async (req, res) => {
     username: body.username,
     name: body.name,
     email: body.email,
-    role: body.role
+    role: body.role,
+    attachedToPlan: body.attachedToPlan
   };
 
   const updatedUser = await User.findByIdAndUpdate(req.params.id, user, { new: true });

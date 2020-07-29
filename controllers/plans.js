@@ -1,5 +1,6 @@
 const plansRouter = require('express').Router();
 const Plan = require('../models/plan.js');
+const User = require('../models/user.js');
 const role = require('../utils/role.js');
 const mongoose = require('mongoose');
 
@@ -193,6 +194,9 @@ plansRouter.post('/', async (req, res) => {
   });
 
   const savedPlan = await plan.save();
+
+  await User
+    .findByIdAndUpdate(body.employee, { attachedToPlan: true });
   
   const newPlan = await Plan
     .find(savedPlan)
@@ -209,6 +213,8 @@ plansRouter.delete('/:id', async (req, res) => {
   if (user.role === role.employee) {
     return res.status(401).json(permissionError);
   }
+  const plan = await Plan.findById(req.params.id);
+  await User.findByIdAndUpdate(plan.employee, { attachedToPlan: false });
   await Plan.findByIdAndDelete(req.params.id);
   res.status(204).end();
 });
@@ -219,6 +225,8 @@ plansRouter.put('/:id', async (req, res) => {
   // if (user.role === role.employee) {
   //   return res.status(401).json(permissionError);
   // }
+
+  const oldPlan = await Plan.findById(req.params.id);
 
   const plan = {
     employeePosition: body.employeePosition,
@@ -233,6 +241,12 @@ plansRouter.put('/:id', async (req, res) => {
   };
 
   const updatedPlan = await Plan.findByIdAndUpdate(req.params.id, plan, { new: true });
+
+  await User
+    .findByIdAndUpdate(oldPlan.employee, { attachedToPlan: false });
+
+  await User
+    .findByIdAndUpdate(body.employee, { attachedToPlan: true });
 
   const newPlan = await Plan
     .findById(updatedPlan.id)
