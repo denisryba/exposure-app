@@ -1,5 +1,5 @@
 
-const setShortName = name => name.split(/\s+/).map((w, i) => (i === 2) ? w : w.substring(0,1).toUpperCase() + '.' ).join(' ');
+const setShortName = name => name.split(/\s+/).map((w, i) => i ? w.substring(0,1).toUpperCase() + '.' : w ).join(' ');
 
 const getStage = (stage) => {
   switch (stage) {
