@@ -106,6 +106,7 @@ const PlanCreationForm = (
                 setValue={setEmployeeObj}
                 path='users'
                 role={role.employee}
+                attached={false}
               />
             </Grid>
             <Grid item xs={12}>

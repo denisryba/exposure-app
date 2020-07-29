@@ -174,6 +174,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                     setValue={passUserObj}
                     path='users'
                     role='employee'
+                    attached='false'
                     value={displayPlan.employee}
                   />
                   : <Typography>{displayPlan.employee.name} </Typography>

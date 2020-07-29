@@ -3,15 +3,15 @@ import { useExpService } from '../context/expService.js';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-const AutocompleteStaff = ( {variant, label, setValue, path, role, value} ) => {
+const AutocompleteStaff = ( {variant, label, setValue, path, role, attached, value} ) => {
   const [optionList, setOptionList] = useState([]);
   const exposureService = useExpService();
   
   useEffect(() => {
     exposureService
-      .getAll(path, { role })
+      .getAll(path, { role, attached })
       .then(employees => setOptionList(employees))    
-  }, [exposureService, role, path]);
+  }, [exposureService, role, path, attached]);
 
 
   const defaultProps = {
