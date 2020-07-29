@@ -45,7 +45,6 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
       .then(res => setPlans(plans.filter(plan => plan.id !== id)));
     event.stopPropagation();
   };
-  console.log(plans)
 
   return (
       <Box className={classes.root}>

@@ -27,7 +27,6 @@ const PlanListPage = ({search}) => {
         setPageCount(data.pageCount)
       });
   }, [currentPage, exposureService, search]);
-  console.log(plans)
 
   const handleCurrentPage = (event, value) => {
     setCurrentPage(value);

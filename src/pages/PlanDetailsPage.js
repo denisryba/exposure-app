@@ -1,17 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid } from '@material-ui/core';
+import { Grid, makeStyles, Box } from '@material-ui/core';
 
 import AdaptationPlanCard from '../components/PlanDetails/AdaptationPlanCard.js';
 import TasksBlock from '../components/TaskBlock/TasksBlock.js';
 import CommentBlock from '../components/CommentBlock/CommentBlock.js';
 import SendButton from '../components/PlanDetails/SendButton.js';
 import { useExpService } from '../context/expService.js';
+import { useAuth } from '../context/auth.js';
+import role from '../utils/role.js';
+
+const useStyles = makeStyles(theme => ({
+  sendButtonsBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2)
+  }
+}));
 
 const PlanDetailsPage = () => {
   const expService = useExpService();
   const [ planId ] = useState(useParams().id);
   const [ plan, setPlan ] = useState(null);
+  const user = useAuth();
+  const classes = useStyles();
 
   useEffect(() => {
     expService
@@ -21,11 +36,11 @@ const PlanDetailsPage = () => {
 
   const getSendButtonText = (stage, direction) => {
     const maps = {
-      0: 'на заполнение',
-      1: 'на согласование',
-      2: 'на выполнение',
-      3: 'на оценку',
-      4: 'завершить оценку'
+      0: 'На заполнение',
+      1: 'На согласование',
+      2: 'На выполнение',
+      3: 'На оценку',
+      4: 'Завершить оценку'
     };
 
     const buttonText = (direction === 'backward')
@@ -61,6 +76,24 @@ const PlanDetailsPage = () => {
     setPlan(updatedPlan);
   };
 
+  const allowedToForward = () => {
+    const permissions = {
+      [role.employee]: [1, 0, 1, 0, 0],
+      [role.supervisor]: [0, 1, 1, 1, 0],
+      [role.hr]: [1, 1, 1, 1, 0],
+    };
+    return Boolean(permissions[user.role][plan.stage])
+  };
+
+  const allowedToBackward= () => {
+    const permissions = {
+      [role.employee]: [0, 0, 0, 0, 0],
+      [role.supervisor]: [0, 1, 0, 1, 0],
+      [role.hr]: [0, 1, 1, 1, 1],
+    };
+    return Boolean(permissions[user.role][plan.stage])
+  };
+
   if (!plan) {
     return null
   };
@@ -80,18 +113,20 @@ const PlanDetailsPage = () => {
           <CommentBlock planId={planId} />
         </Grid>
       </Grid>
-      { plan.stage !== 4
-        ? <SendButton
-            type='forward'
-            handler={handleForwardClick}
-            text={getSendButtonText(plan.stage, 'forward')} />
-        : null}
-      {plan.stage !== 0
-        ? <SendButton
-            type='backward'
-            handler={handleBackwardClick}
-            text={getSendButtonText(plan.stage, 'backward')} />
-        : null}
+      <Box className={classes.sendButtonsBox}>
+        { allowedToBackward()
+          ? <SendButton
+              type='backward'
+              handler={handleBackwardClick}
+              text={getSendButtonText(plan.stage, 'backward')} />
+          : null}
+        { allowedToForward()
+          ? <SendButton
+              type='forward'
+              handler={handleForwardClick}
+              text={getSendButtonText(plan.stage, 'forward')} />
+          : null}
+      </Box>
     </>
   );
 };
