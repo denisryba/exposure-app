@@ -88,17 +88,16 @@ plansRouter.get('/', async (req, res) => {
         __v: 0 
       }
     },
-    { $match: filter },
+    { 
+      $match: filter 
+    },
     { $match: { 
       $or: [
       {'employee.name': {$regex: search, $options : 'i'}}, 
       {'supervisor.name': {$regex: search, $options : 'i'}}, 
-      {'employeePosition.name': {$regex: search, $options : 'i'}},
-      {'employee._id': filter},
-  
+      {'employeePosition.name': {$regex: search, $options : 'i'}}
     ]},
     },
-
  ])
 
   const pageCount = results.plans.length/limit;
