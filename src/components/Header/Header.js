@@ -16,7 +16,7 @@ import UserCard from './UserCard.js';
 import { useAuth } from '../../context/auth.js';
 import storage from '../../utils/storage.js';
 import SearchIcon from '@material-ui/icons/Search';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, useRouteMatch  } from 'react-router-dom';
 import format from '../../services/formatService.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -79,8 +79,7 @@ const Header = ({ setUser, setSearch }) => {
   const classes = useStyles();
   const userData = useAuth();
   const history = useHistory();
-  const [isShowing, setIsShowing] = useState(history.location.pathname === '/plans/')
-  history.listen((location) => setIsShowing(location.pathname  === '/plans/'))
+  const isShowing = useRouteMatch('/plans/').isExact;
 
   const [ anchorEl, setAnchorEl ] = useState(null);
 
@@ -109,7 +108,7 @@ const Header = ({ setUser, setSearch }) => {
               Exposure App
             </Typography>
           </Link>
-          {isShowing ? 
+          {isShowing &&
             <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -122,8 +121,7 @@ const Header = ({ setUser, setSearch }) => {
                 input: classes.inputInput,
               }}
           />
-          </div>
-          : null}
+          </div>}
           <Button
             onClick={handleNameClick}
             color='inherit'

@@ -64,13 +64,9 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans, isHr }) => {
               <TableRow>
                 <TableCell>Сотрудник</TableCell>
                 <TableCell>Статус</TableCell>
-                {isHr  
-                ? <TableCell>Руководитель</TableCell>
-                : null}
+                {isHr && <TableCell>Руководитель</TableCell>}
                 <TableCell>Дата создания</TableCell>
-                {isHr  
-                ? <TableCell className={classes.deleteColumn}></TableCell>
-                : null}           
+                {isHr && <TableCell className={classes.deleteColumn}></TableCell>}           
               </TableRow>
             </TableHead>
             <TableBody>
@@ -81,17 +77,14 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans, isHr }) => {
                   <Typography variant="subtitle1">{plan.employeePosition.name}</Typography>
                 </TableCell>
                 <TableCell><Typography variant="subtitle2">{formatService.getStage(plan.stage)}</Typography></TableCell>
-                {isHr  
-                ? <TableCell><Name name={plan.supervisor.name}/></TableCell>
-                : null} 
+                {isHr && <TableCell><Name name={plan.supervisor.name}/></TableCell>} 
                 <TableCell>{formatService.setDate(plan.date)}</TableCell>
-                {isHr  
-                ? <TableCell>
+                {isHr && 
+                  <TableCell>
                   <IconButton onClick={(e) => deletePlan(plan.id, e)}>
                     <DeleteIcon />
                   </IconButton>
-                </TableCell>
-                : null} 
+                </TableCell>} 
               </TableRow>
               ))
             }
