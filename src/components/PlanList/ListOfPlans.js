@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme)=> ({
   }
 }));
 
-const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
+const ListOfPlans = ({ onPlanClicked, plans, setPlans, isHr }) => {
+
   const classes = useStyles();
   const exposureService = useExpService();
 
@@ -55,9 +56,13 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
               <TableRow>
                 <TableCell>Сотрудник</TableCell>
                 <TableCell>Статус</TableCell>
-                <TableCell>Руководитель</TableCell>
+                {isHr  
+                ? <TableCell>Руководитель</TableCell>
+                : null}
                 <TableCell>Дата создания</TableCell>
-                <TableCell className={classes.deleteColumn}></TableCell>             
+                {isHr  
+                ? <TableCell className={classes.deleteColumn}></TableCell>
+                : null}           
               </TableRow>
             </TableHead>
             <TableBody>
@@ -67,14 +72,18 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans }) => {
                   {plan.employee.name}
                   <Typography variant="subtitle1">{plan.employeePosition.name}</Typography>
                 </TableCell>
-                <TableCell><Typography variant="subtitle2">{plan.stage}</Typography></TableCell>
-                <TableCell>{plan.supervisor.name}</TableCell>
+                <TableCell><Typography variant="subtitle2">{formatService.getStage(plan.stage)}</Typography></TableCell>
+                {isHr  
+                ? <TableCell>{plan.supervisor.name}</TableCell>
+                : null} 
                 <TableCell>{formatService.setDate(plan.date)}</TableCell>
-                <TableCell>
+                {isHr  
+                ? <TableCell>
                   <IconButton onClick={(e) => deletePlan(plan.id, e)}>
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
+                : null} 
               </TableRow>
               ))
             }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useExpService } from '../../context/expService.js';
+import { useAuth } from '../../context/auth.js';
 import {
   Box,
   Dialog,
@@ -34,6 +35,7 @@ const PlanCreationForm = (
     limit
   }
 ) => {
+  const user = useAuth();
   let month = new Date().getMonth();
   const exposureService = useExpService();
 
@@ -53,7 +55,7 @@ const PlanCreationForm = (
       employeePosition: positionObj.id,
       employee: employeeObj.id,
       supervisor: supervisorObj.id,
-      hr: "5e680f360f94107d10acba1d",
+      hr: user.id,
       stage: 0,
       adaptationStart: adaptationStart,
       adaptationEnd: adaptationEnd,
