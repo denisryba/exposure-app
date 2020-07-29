@@ -1,6 +1,6 @@
 const setName = name => name.last + ' ' + name.first + ' ' + name.middle;
 
-const setShortName = name =>  name.last + ' ' + name.first[0] + '. ' + name.middle[0] + '.';
+const setShortName = (name)=> 'черепашка'
 
 const setDate = date => new Date(date).toLocaleDateString();
 

@@ -70,12 +70,11 @@ const PlanDetailsPage = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <AdaptationPlanCard
-            planId={planId}
             displayPlan={plan}
             setDisplayPlan={setPlan} />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TasksBlock planId={planId} />
+          <TasksBlock planObj={plan} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <CommentBlock planId={planId} />

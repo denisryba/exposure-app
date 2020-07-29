@@ -27,7 +27,7 @@ const UserCard = ({ user, handleLogoutClick }) => {
     <Card className={classes.root}>
       <CardContent>
         <Typography className={classes.name} gutterBottom>
-          {format.setName(user.name)}
+          {user.name}
         </Typography>
         <Typography className={classes.role} variant='subtitle1'>
           {format.capitalizeFirstLetter(format.getRole(user.role))}

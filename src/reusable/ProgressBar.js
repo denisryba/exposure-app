@@ -17,30 +17,13 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-function getStepContent(rawStep) {
-    switch (rawStep) {
-        case 0:
-            return 1
-        case 1:
-            return 2
-        case 2:
-            return 3
-        case 3:
-            return 4
-        case 4:
-            return 5
-        default:
-            return 'Unknown step';
-    }
-}
-
 export default function ProgressBar({ stage }) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
-    const steps = ['Создание', 'Заполнение', 'Согласование', 'Выполнение', 'Оценка', 'Завершение'];
+    const steps = ['Заполнение', 'Согласование', 'Выполнение', 'Оценка', 'Завершение'];
 
     useEffect(() => {
-        setActiveStep(getStepContent(stage));
+        setActiveStep(stage);
     }, [stage, activeStep]);
 
     return (
