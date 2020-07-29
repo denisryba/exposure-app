@@ -9,6 +9,7 @@ import {
   InputBase,
   useScrollTrigger, 
   Slide,
+  Hidden,
   Popover } from '@material-ui/core';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -109,9 +110,11 @@ const Header = ({ setUser, setSearch }) => {
         <Toolbar className={classes.toolbar}>
           <Link to='/' className={classes.appName}>
             <EmojiPeopleIcon className={classes.logo} />
-            <Typography variant='h6'>
-              Exposure App
-            </Typography>
+            <Hidden smDown>
+              <Typography variant='h6'>
+                Exposure App
+              </Typography>
+            </Hidden>
           </Link>
           {isShowing &&
             <div className={classes.search}>
