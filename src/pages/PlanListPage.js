@@ -8,7 +8,7 @@ import { useExpService } from '../context/expService.js';
 import ListOfPlans from '../components/PlanList/ListOfPlans.js';
 import PlanCreationForm from '../components/PlanList/PlanCreationForm.js';
 
-const PlanListPage = () => {
+const PlanListPage = ({search}) => {
   const exposureService = useExpService();
   const [ plans, setPlans ] =  useState([]);
   const [ onCreation, setOnCreation ] = useState(false);
@@ -17,15 +17,16 @@ const PlanListPage = () => {
   const limit = 5;
 
   const history = useHistory();
+  console.log(search)
 
   useEffect(() => {
     exposureService
-      .getAll(`plans`, { page: currentPage, limit: limit })
+      .getAll(`plans`, { page: currentPage, limit: limit, search: search})
       .then(data => {
         setPlans(data.plans);
         setPageCount(data.pageCount)
       });
-  }, [currentPage, exposureService]);
+  }, [currentPage, exposureService, search]);
 
   const handleCurrentPage = (event, value) => {
     setCurrentPage(value);

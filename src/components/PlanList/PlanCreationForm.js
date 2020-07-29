@@ -5,9 +5,11 @@ import {
   Dialog,
   Button,
   Grid,
-  Typography
-}
-  from '@material-ui/core';
+  Typography,
+  IconButton
+ } 
+from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import locale from "date-fns/locale/ru";
@@ -84,12 +86,15 @@ const PlanCreationForm = (
 
   return (
     <>
-    <Dialog open={onCreation} onClose={toggleCreationMode} >
-      <Box p="2rem" maxWidth={400}>
-        <form onSubmit={addPlan}>
-          <Grid container spacing={2} justify='flex-end' >
-            <Grid item xs={12}>
-              <Typography variant="h6">Создание плана адаптации</Typography>
+    <Dialog open={onCreation} onClose={toggleCreationMode} > 
+      <Box p="1.5rem" maxWidth={400}>
+        <form onSubmit={addPlan}>    
+          <Grid container spacing={2} justify='flex-end'>
+            <Grid item xs={12} container justify='space-between'>
+              <Typography variant="h6">Создание плана</Typography> 
+              <IconButton size="small" onClick={toggleCreationMode} >
+                <CloseIcon />
+              </IconButton> 
             </Grid>
             <Grid item xs={12}>
               <Select
@@ -98,6 +103,7 @@ const PlanCreationForm = (
                 setValue={setEmployeeObj}
                 path='users'
                 role={role.employee}
+                attached={false}
               />
             </Grid>
             <Grid item xs={12}>
@@ -118,10 +124,10 @@ const PlanCreationForm = (
               />
             </Grid>
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-              <Grid item xs={6}>
-                <KeyboardDatePicker
-                  inputVariant="outlined"
-                  disableToolbar
+              <Grid item xs={12} sm={6}>
+                <KeyboardDatePicker  
+                  inputVariant="outlined"           
+                  disableToolbar        
                   variant="inline"
                   format="dd.MM.yyyy"
                   label="Начало адаптации"
@@ -131,7 +137,7 @@ const PlanCreationForm = (
                   onChange={handleAdaptationStart}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <KeyboardDatePicker
                   inputVariant="outlined"
                   disableToolbar
@@ -145,12 +151,13 @@ const PlanCreationForm = (
                 />
               </Grid>
             </MuiPickersUtilsProvider>
-            <Grid item>
-              <Button
-                variant="contained"
-                onClick={toggleCreationMode}
+            <Grid item xs={12} sm={3}>
+              <Button 
+                variant="contained" 
+                onClick={toggleCreationMode} 
                 color="primary"
-                type="Submit">
+                type="Submit"
+                fullWidth>
                 Создать
               </Button>
             </Grid>

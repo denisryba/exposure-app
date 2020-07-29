@@ -24,6 +24,7 @@ import PlanListPage from './pages/PlanListPage.js';
 import PlanDetailsPage from './pages/PlanDetailsPage.js';
 import Header from './components/Header/Header.js';
 
+
 const useStyles = makeStyles({
   root: {
     fontFamily: 'Roboto',
@@ -33,6 +34,9 @@ const useStyles = makeStyles({
 
 const theme = createMuiTheme({
   palette: {
+    common: {
+      white: '#ffffff'
+    },
     primary: {
       main: '#5c6bc0',
       contrastText: 'white'
@@ -59,8 +63,9 @@ const theme = createMuiTheme({
 });
 
 const App = () => {
-  const [user, setUser] = useState(storage.get('savedUser'));
-
+  const [ user, setUser ] = useState(storage.get('savedUser'));
+  const [ search, setSearch] = useState('');
+  
   const { root } = useStyles();
 
   return (
@@ -69,7 +74,9 @@ const App = () => {
         <ThemeProvider theme={theme}>
           {user
             ? <Header
-              setUser={setUser} />
+              setUser={setUser} 
+              setSearch={setSearch}
+              />
             : null}
           <Container className={root}>
             <Switch>
@@ -79,7 +86,7 @@ const App = () => {
                   loginService={loginService} />
               </Route>
               <PrivateRoute exact path='/plans/' roles={[role.hr, role.supervisor]}>
-                <PlanListPage />
+                <PlanListPage search={search}/>
               </PrivateRoute>
               <PrivateRoute path='/plans/:id'>
                 <PlanDetailsPage />

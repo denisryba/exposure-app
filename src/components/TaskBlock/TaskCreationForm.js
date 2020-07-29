@@ -5,9 +5,14 @@ import {
   TextField,
   Button,
   Box,
-  Typography
+  Typography,
+  IconButton,
+  FormControl,
+  Select,
+  MenuItem
  } 
 from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import DateFnsUtils from '@date-io/date-fns';
 import locale from "date-fns/locale/ru";
 import {
@@ -19,6 +24,7 @@ import { useExpService } from '../../context/expService.js';
 const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm }) => {
   const exposureService = useExpService();
   const [name, setName] = useState('');
+  const [isCompleted, setIsCompleted] = useState(false);
   const [description, setDescription] = useState('');
   const [executionStart, setExecutionStart] = useState(new Date());
   let day = new Date().getDate();
@@ -28,6 +34,10 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
   const handleChangeDescription = event => setDescription(event.target.value);
   const handleChangeExecutionStart = date => setExecutionStart(date);
   const handleChangeExecutionEnd = date => setExecutionEnd(date);
+  
+  const handleChangeIsCompleted = (event) => {
+    setIsCompleted(event.target.value);
+  };
 
   const addTask = (event) => {
     event.preventDefault();
@@ -37,7 +47,8 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
       description,
       executionStart,
       executionEnd,
-      plan: planId
+      plan: planId,
+      completed: isCompleted
     };
 
     exposureService
@@ -57,8 +68,11 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
       <Box  p="2rem">
         <form onSubmit={addTask}>
           <Grid container spacing={2} justify='flex-end' >
-            <Grid item xs={12}>
+            <Grid item xs={12} container justify='space-between'>
              <Typography variant="h6">Создание задачи</Typography>
+              <IconButton size="small" onClick={toggleCreationForm} >
+                <CloseIcon />
+              </IconButton> 
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -81,7 +95,7 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
               />
             </Grid>
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-              <Grid item xs={6}>
+              <Grid item sm={6} xs={12}>
                 <KeyboardDatePicker             
                   disableToolbar        
                   variant="inline"
@@ -94,7 +108,7 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
                   inputVariant="outlined"     
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sm={6} xs={12}>
                 <KeyboardDatePicker
                   disableToolbar
                   variant="inline"
@@ -108,6 +122,14 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
                 />
                 </Grid>
             </MuiPickersUtilsProvider>
+            <Grid item xs={12}>
+              <FormControl variant="outlined" fullWidth>
+                <Select value={isCompleted} onChange={handleChangeIsCompleted}>
+                  <MenuItem value={false}>Не выполнена</MenuItem>
+                  <MenuItem value={true}>Выполнена</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={12} sm={3}>
               <Button 
                 variant="contained" 

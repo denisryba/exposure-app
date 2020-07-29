@@ -2,22 +2,21 @@ import React, {useState, useEffect} from 'react';
 import { useExpService } from '../context/expService.js';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import formatService from '../services/formatService.js';
 
-const AutocompleteStaff = ( {variant, label, setValue, path, role, value} ) => {
+const AutocompleteStaff = ( {variant, label, setValue, path, role, attached, value} ) => {
   const [optionList, setOptionList] = useState([]);
   const exposureService = useExpService();
   
   useEffect(() => {
     exposureService
-      .getAll(path, { role })
+      .getAll(path, { role, attached })
       .then(employees => setOptionList(employees))    
-  }, [exposureService, role, path]);
+  }, [exposureService, role, path, attached]);
 
 
   const defaultProps = {
     options: optionList,
-    getOptionLabel: (option) => typeof option.name === "string" ? option.name : formatService.setName(option.name),
+    getOptionLabel: (option) => option.name,
   };
 
   return (
