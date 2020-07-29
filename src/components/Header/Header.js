@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2)
   },
   toolbar: {
-    justifyContent: 'space-between' 
+    flexWrap: "wrap"
   },
   logo: {
     marginRight: theme.spacing(2),
@@ -57,7 +57,9 @@ const useStyles = makeStyles((theme) => ({
   inputInput: {
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
   },
-  
+  button: {
+    marginLeft: 'auto'
+  },
   appName: {
     display: 'flex',
     alignItems: 'center',
@@ -79,7 +81,10 @@ const Header = ({ setUser, setSearch }) => {
   const classes = useStyles();
   const userData = useAuth();
   const history = useHistory();
-  const isShowing = useRouteMatch('/plans/').isExact;
+  const match = useRouteMatch('/plans/');
+  let isShowing = null;
+  if (match)
+   isShowing = match.isExact;
 
   const [ anchorEl, setAnchorEl ] = useState(null);
 
