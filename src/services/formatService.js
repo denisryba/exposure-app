@@ -1,6 +1,5 @@
-const setName = name => name.last + ' ' + name.first + ' ' + name.middle;
 
-const setShortName = (name)=> 'черепашка';
+const setShortName = name => name.split(/\s+/).map((w, i) => (i === 2) ? w : w.substring(0,1).toUpperCase() + '.' ).join(' ');
 
 const getStage = (stage) => {
   switch (stage) {
@@ -22,6 +21,7 @@ const getStage = (stage) => {
   return stage;
 }
 
+
 const setDate = date => new Date(date).toLocaleDateString();
 
 const getRole = role => {
@@ -37,7 +37,6 @@ const capitalizeFirstLetter = str => str[0].toUpperCase() + str.slice(1);
 
 export default {
   getStage,
-  setName,
   setShortName,
   setDate,
   getRole,

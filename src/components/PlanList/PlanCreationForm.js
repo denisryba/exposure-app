@@ -64,6 +64,7 @@ const PlanCreationForm = (
       tasks: []
     };
 
+
     exposureService
       .create('plan', planObject)
       .then(createdPlan => {
@@ -78,11 +79,11 @@ const PlanCreationForm = (
         setPositionObj(null);
         setAdaptationStart(new Date());
         setAdaptationEnd(new Date());
+        toggleCreationMode()
         notify('success', 'План был успешно создан.');
       })
       .catch(error => {
         notify('error', 'Ошибка при создании плана.');
-        toggleCreationMode()
       });
   }
 
@@ -155,7 +156,6 @@ const PlanCreationForm = (
             <Grid item xs={12} sm={3}>
               <Button 
                 variant="contained" 
-                onClick={toggleCreationMode} 
                 color="primary"
                 type="Submit"
                 fullWidth>

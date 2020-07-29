@@ -20,6 +20,7 @@ import {
   KeyboardDatePicker
 } from '@material-ui/pickers';
 import { useExpService } from '../../context/expService.js';
+import Notification, { notify } from '../../reusable/Notification.js';
 
 const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm }) => {
   const exposureService = useExpService();
@@ -60,10 +61,15 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
         setExecutionEnd(new Date());
         setTasks(tasks.concat(createdTask));
         toggleCreationForm();
+        notify('success', 'Задача была успешно создана.');
+      })
+      .catch(error => {
+        notify('error', 'Ошибка при создании задачи.');
       });
   }
 
   return (
+    <>
     <Dialog open={open} onClose={toggleCreationForm}>
       <Box  p="2rem">
         <form onSubmit={addTask}>
@@ -81,6 +87,7 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
                 value={name} 
                 onChange={handleChangeName} 
                 fullWidth
+                required
               />
             </Grid>
             <Grid item xs={12}>
@@ -143,6 +150,8 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
         </form>
       </Box>
     </Dialog>
+    <Notification />
+    </>
   )
 }
 

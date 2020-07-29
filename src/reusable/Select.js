@@ -26,7 +26,7 @@ const AutocompleteStaff = ( {variant, label, setValue, path, role, value} ) => {
     getOptionSelected={(option, value)=> JSON.stringify(option) === JSON.stringify(value)}
     disableClearable
     onChange={(e, newValue) => setValue(newValue, role)}
-    renderInput={(params) => <TextField {...params} label={label} variant={variant}/>}
+    renderInput={(params) => <TextField {...params} label={label} variant={variant} required/>}
   />
   )
 };
