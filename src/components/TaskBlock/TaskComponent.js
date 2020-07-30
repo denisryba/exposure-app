@@ -19,6 +19,7 @@ import {
   IconButton,
   Box
 } from '@material-ui/core';
+import Confirmation from '../../reusable/Confirmation.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -93,6 +94,7 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
 
   const classes = useStyles();
 
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [editing, setEditMode] = useState(false);
   const [expandAccordion, setExpandAccordion] = useState(false);
   const [task, setTask] = useState(taskObj);
@@ -146,9 +148,14 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
     setExpandAccordion(true);
   }
 
-  const handleDeleteIconClick = (e) => {
-    e.stopPropagation();
-    expService.remove('task', task.id)
+  
+  const handleConfirmationOpen = (event) => {
+    setConfirmationOpen(true);
+    event.stopPropagation();
+  };
+
+  const deleteTask = id => {
+    expService.remove('task', id)
       .then(() => {
         removeTask();
       })
@@ -188,6 +195,13 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
 
   return (
     <div className={classes.root}>
+      <Confirmation 
+        isOpen={confirmationOpen}
+        setIsOpen={setConfirmationOpen}
+        message='Вы уверены, что хотите удалить задачу?'
+        deletedId={task.id}
+        action={deleteTask}
+      />
       <Accordion expanded={expandAccordion}>
         <AccordionSummary
           classes={{ content: classes.accordion, root: classes.accordionRoot }}
@@ -238,7 +252,7 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
                 currentRole={user.role}
                 currentStage={planStage}
               >
-                <IconButton  onClick={(e) => handleDeleteIconClick(e)}>
+                <IconButton  onClick={(e) => handleConfirmationOpen(e)}>
                   <DeleteIcon />
                 </IconButton>
               </ComponentAvailability>
