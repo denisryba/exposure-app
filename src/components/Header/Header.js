@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
   },
   search: {
+    minWidth: '20%',
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
   },
   button: {
-    marginLeft: 'auto'
+    marginLeft: "auto"
   },
   appName: {
     display: 'flex',
@@ -109,7 +110,9 @@ const Header = ({ setUser, setSearch }) => {
       <AppBar elevation={1} className={classes.root} color='primary' position='sticky'>
         <Toolbar className={classes.toolbar}>
           <Link to='/' className={classes.appName}>
-            <EmojiPeopleIcon className={classes.logo} />
+            <Hidden xsDown>
+              <EmojiPeopleIcon className={classes.logo} />
+            </Hidden>
             <Hidden smDown>
               <Typography variant='h6'>
                 Exposure App
@@ -135,7 +138,9 @@ const Header = ({ setUser, setSearch }) => {
             color='inherit'
             className={classes.button}
             startIcon={<AccountCircle />}>
-            {format.setShortName(userData.name)}
+            <Hidden xsDown>
+              {format.setShortName(userData.name)}
+            </Hidden>
           </Button>
           <Popover
             elevation={2}
