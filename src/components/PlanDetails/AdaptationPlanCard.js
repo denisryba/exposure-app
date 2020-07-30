@@ -18,7 +18,8 @@ import {
   Select,
   FormHelperText,
   MenuItem,
-  FormControl
+  FormControl,
+  Box
 } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import EditIcon from '@material-ui/icons/Edit';
@@ -28,9 +29,6 @@ import Loader from '../../reusable/Loader.js';
 
 
 const useStyles = makeStyles((theme) => ({
-  title: {
-    margin: '20px 0'
-  },
   cardContainer: {
     position: 'relative',
     padding: theme.spacing(3),
@@ -38,11 +36,8 @@ const useStyles = makeStyles((theme) => ({
   cardHeader: {
     display: 'flex',
     alignItems: 'center',
-    '& h4': {
-      display: 'inline',
-      marginLeft: '9px',
-      fontWeight: '500',
-    }
+    marginBottom: theme.spacing(1),
+    marginLeft: theme.spacing(1)
   },
   bottomCreationDate: {
     textAlign: 'end'
@@ -61,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   saveButtonContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   }
 }));
 
@@ -137,13 +132,15 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
   }
 
   return (
-    <>
-      <Typography className={classes.cardHeader} variant='h6'>
-        <IconButton color="inherit" onClick={handleBackIconClick}>
-          <KeyboardBackspaceIcon />
+    <> 
+      <Box className={classes.cardHeader}>
+        <IconButton size='small' edge='end' color="inherit" onClick={handleBackIconClick}>
+            <KeyboardBackspaceIcon />
         </IconButton>
-        <div className={classes.title}>Адаптационный план сотрудника</div>
-      </Typography>
+        <Typography variant='h5'>
+          Адаптационный план
+        </Typography>
+      </Box> 
       {displayPlan ?
         <Paper elevation={4} className={classes.cardContainer}>
           <ComponentAvailability

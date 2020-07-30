@@ -5,7 +5,7 @@ import {
     Grid,
     Button,  
     Typography,
-    makeStyles} from '@material-ui/core';
+    makeStyles } from '@material-ui/core';
 import Notification, { notify } from '../../reusable/Notification.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -42,8 +42,6 @@ const LoginForm = ({ login }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setUsername('');
-    setPassword('');
     try {
       await login(username, password);
     }

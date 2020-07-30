@@ -15,60 +15,71 @@ import {
   Button,
   TextField,
   Checkbox,
-  IconButton
+  IconButton,
+  Box
 } from '@material-ui/core';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: theme.spacing(1)
+    marginBottom: theme.spacing(1)
   },
   accordion: {
-    display: 'block',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
     '& .arrow-icon': {
+      transform: 'rotate(-90deg)',
       transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
     },
     '&.Mui-expanded .arrow-icon': {
-      transform: 'rotate(90deg)',
+      transform: 'rotate(0deg)',
       transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
     },
   },
-  taskIconBlock: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-evenly',
-    width: '35%',
-    '& span': {
-      padding: '3px'
-    }
-  },
-  taskArrowIcon: {
-    position: 'absolute',
-    top: '0px',
-    left: '-7px'
-  },
   taskHeader: {
+    alignItems: 'center',
     display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between'
+    whiteSpace: 'nowrap'
   },
-  taskTitle: {
-    position: 'relative'
+  additionalInfo: {
+    alignItems: 'center',
+    display: 'flex',
+    whiteSpace: 'nowrap',
+    justifyContent: 'space-between',
+    marginRight: theme.spacing(1)
+  },
+  taskDescription : {
+    minWidth: 0,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    marginRight: theme.spacing(2)
   },
   heading: {
-    paddingLeft: '24px',
+    flex: 1,
+    minWidth: 0,
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    marginLeft: theme.spacing(1),
   },
   headingInput: {
-    marginLeft: '24px',
-    width: '127%'
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
-  lowButtonsBlock: {
-    position: 'relative',
-    '& button': {
-      float: 'right',
-    }
+  calendar: {
+    display: 'flex'
+  },
+  deadlines: {
+    minWidth: '100%'
+  },
+  createdDate: {
+    marginLeft: 'auto'
   },
 }));
 
@@ -155,13 +166,6 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
     setEditMode(false);
   }
 
-  const formatBriefDescription = (description) => {
-    if (description.length > 35) {
-      return description.slice(0, 35) + '...';
-    }
-    return description;
-  }
-
   return (
     <div className={classes.root}>
       <Accordion expanded={expandAccordion}>
@@ -170,33 +174,22 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
           onClick={handleAccordionHeadClick}
         >
           <div className={classes.taskHeader}>
-            <div className={classes.taskTitle}>
-              <ArrowForwardIosIcon color='secondary' classes={{ root: classes.taskArrowIcon }} className="arrow-icon" />
-              {editing ?
-                <TextField
-                  className={classes.headingInput}
-                  label="Имя задачи"
-                  value={task.name}
-                  multiline
-                  rows={1}
-                  rowsMax={2}
-                  onChange={(e) => handleInputChange("name", e)}
-                  onClick={(e) => e.stopPropagation()}
-                />
-                : <Typography className={classes.heading}>{task.name}</Typography>}
-              {!expandAccordion &&
-                <Typography color="textSecondary">
-                  {formatBriefDescription(task.description)}
-                </Typography>}
-            </div>
-            <div className={classes.taskIconBlock}>
-              <Typography
-                color="textSecondary"
-                className={classes.taskDate}
-                variant="body2"
-              >
-                до {formatService.setDate(task.executionEnd).slice(0, 5)}
-              </Typography>
+            <Box color="text.secondary">
+            <ExpandMoreIcon classes={{ root: classes.taskArrowIcon }} className="arrow-icon" />
+            </Box>
+            {editing ?
+              <TextField
+                multiline
+                rowsMax={2}
+                variant='outlined'
+                size='small'
+                className={classes.headingInput}
+                value={task.name}
+                onChange={(e) => handleInputChange("name", e)}
+                onClick={(e) => e.stopPropagation()}
+                fullWidth
+              />
+              : <Typography className={classes.heading}>{task.name}</Typography>}
               <ComponentAvailability
                 stageRoleObj={stageRoleModel.checkBox}
                 currentRole={user.role}
@@ -214,8 +207,10 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
                 currentRole={user.role}
                 currentStage={planStage}
               >
-                <IconButton size="small" color="inherit" onClick={(e) => handleEditIconClick(e)}>
-                  <EditIcon />
+                <IconButton onClick={(e) => handleEditIconClick(e)}>
+                  {editing
+                    ? <CloseIcon />
+                    : <EditIcon />}
                 </IconButton>
               </ComponentAvailability>
               <ComponentAvailability
@@ -223,56 +218,90 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
                 currentRole={user.role}
                 currentStage={planStage}
               >
-                <IconButton size="small" color="inherit" onClick={(e) => handleDeleteIconClick(e)}>
+                <IconButton  onClick={(e) => handleDeleteIconClick(e)}>
                   <DeleteIcon />
                 </IconButton>
               </ComponentAvailability>
-            </div>
           </div>
+          {!expandAccordion &&
+            <Box className={classes.additionalInfo}>
+              <Typography className={classes.taskDescription} color="textSecondary">
+                {task.description}
+              </Typography>
+              <Typography
+                color="textSecondary"
+                variant="body2"
+              >
+                до {formatService.setDate(task.executionEnd).slice(0, 5)}
+              </Typography>
+            </Box>
+          }
         </AccordionSummary>
         <AccordionDetails>
-          <Grid container spacing={1}>
-            {editing &&
-              <Grid item xs={12}>
-                <Calendar
-                  passChanges={handleDateChange}
-                  dateStart={task.executionStart}
-                  dateStartLabel="Начало выполнения"
-                  dateEnd={task.executionEnd}
-                  dateEndLabel="Конец выполнения"
-                />
-              </Grid>
-            }
+          <Grid container direction='row' justify='flex-end' alignItems='center' spacing={1}>
             <Grid item xs={12}>
+                {editing
+                  ? <TextField
+                      variant='outlined'
+                      fullWidth
+                      multiline
+                      rows={2}
+                      rowsMax={5}
+                      value={task.description}
+                      onChange={(e) => handleInputChange("description", e)}
+                    />
+                  : <Typography flex={1} color="textSecondary" gutterBottom>
+                      {task.description}
+                    </Typography>}
+              </Grid>
               {editing
-                ? <TextField
-                  label="Описание задачи"
-                  variant="filled"
-                  fullWidth
-                  multiline
-                  rows={2}
-                  rowsMax={5}
-                  value={task.description}
-                  onChange={(e) => handleInputChange("description", e)}
-                />
-                : <Typography color="textSecondary">
-                  {task.description}
-                </Typography>}
-            </Grid>
-            <Grid item xs={12} className={classes.lowButtonsBlock}>
-              {editing &&
-                <Button
-                  variant="contained"
-                  className={classes.button}
-                  size={"small"}
-                  color="primary"
-                  type="Submit"
-                  onClick={handleSaveBtn}
-                >
-                  Сохранить
-                </Button>
+                ? <Grid className={classes.deadlines} item xs={12}>
+                <Box className={classes.calendar}>
+                  <Calendar
+                    passChanges={handleDateChange}
+                    dateStart={task.executionStart}
+                    dateStartLabel="С"
+                    dateEnd={task.executionEnd}
+                    dateEndLabel="До"
+                  />
+                </Box> 
+              </Grid>
+                : null
               }
-            </Grid>
+              
+              <Grid item xs={12} container justify='space-between'>
+              {!editing
+                ? <Grid item xs={12} sm={9}>
+                    <Typography
+                      color="textSecondary"
+                      variant="body2" >
+                      Срок: с {formatService.setDate(task.executionEnd)} до {formatService.setDate(task.executionEnd)}
+                    </Typography>
+                  </Grid>
+                : null
+              }
+              <Grid className={classes.createdDate} xs={12} item sm={3}>
+                <Typography
+                  
+                  color="textSecondary"
+                  variant="body2">
+                  Создана {formatService.setDate(task.date)}
+                </Typography>
+              </Grid>
+              </Grid>
+              
+              {editing &&
+                <Grid item container justify='flex-end' xs={12}>
+                  <Button
+                    color="primary"
+                    type="Submit"
+                    onClick={handleSaveBtn}
+                  >
+                    Сохранить
+                  </Button>
+                </Grid>
+              }
+            
           </Grid>
         </AccordionDetails>
       </Accordion>

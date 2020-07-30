@@ -17,7 +17,9 @@ import Notification, { notify } from '../../reusable/Notification.js';
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(1),
-
+  },
+  title: {
+    marginBottom: theme.spacing(1)
   },
   commentList: {
     overflow: 'auto',
@@ -66,7 +68,7 @@ const CommentBlock = ({ planId }) => {
 
   return (
     <>
-      <Typography variant='h5'>
+      <Typography className={classes.title} variant='h5'>
         Комментарии {comments ? `(${comments.length})` : ''}
       </Typography>
       {comments ?
