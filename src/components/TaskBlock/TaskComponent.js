@@ -17,7 +17,8 @@ import {
   TextField,
   Checkbox,
   IconButton,
-  Box
+  Box,
+  Collapse
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EditIcon from '@material-ui/icons/Edit';
@@ -310,7 +311,7 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
               </Grid>
               </Grid>
               
-              {editing &&
+              <Collapse in={editing} >
                 <Grid item container justify='flex-end' xs={12}>
                   <Button
                     color="primary"
@@ -320,8 +321,7 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
                     Сохранить
                   </Button>
                 </Grid>
-              }
-            
+              </Collapse>
           </Grid>
         </AccordionDetails>
       </Accordion>
