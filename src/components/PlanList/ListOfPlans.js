@@ -90,7 +90,7 @@ const ListOfPlans = ({ onPlanClicked, plans, isHr, setPlanDeleted }) => {
                   <NameField name={plan.employee.name} />
                   <Typography variant="subtitle1">{plan.employeePosition.name}</Typography>
                 </TableCell>
-                <TableCell><Typography variant="subtitle2">{formatService.getStage(plan.stage)}</Typography></TableCell>
+                <TableCell>{formatService.getStage(plan.stage)}</TableCell>
                 {isHr && <TableCell><NameField  name={plan.supervisor.name}/></TableCell>} 
                 <TableCell>{formatService.setDate(plan.date)}</TableCell>
                 {isHr && 
