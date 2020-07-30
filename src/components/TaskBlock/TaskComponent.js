@@ -4,6 +4,7 @@ import { useAuth } from '../../context/auth.js';
 import Calendar from '../../reusable/Calendar.js';
 import formatService from '../../services/formatService.js';
 import ComponentAvailability from '../../reusable/ComponentAvailability.js';
+import { notify } from '../../reusable/Notification.js';
 
 import {
   makeStyles,
@@ -122,6 +123,22 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
     })
   }
 
+  const handleCheckbox = (e) => {
+    expService.update('task', task.id, {
+      ...task,
+      completed: e.target.checked
+    })
+      .then(res => {
+        res.completed
+          ? notify('success', 'Задача отмечена как выполненная.')
+          : notify('success', 'Задача отмечена как невыполненная.');
+        updateTaskField('completed', res.completed);
+      })
+      .catch(() => {
+        notify('error', 'Ошибка при изменении статуса задачи.');
+      });
+  }
+  
   const handleEditIconClick = (e) => {
     e.stopPropagation();
     setTask(initialTask);
@@ -132,8 +149,11 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
   const handleDeleteIconClick = (e) => {
     e.stopPropagation();
     expService.remove('task', task.id)
-      .then(res => {
-        if (res.status < 300) removeTask();
+      .then(() => {
+        removeTask();
+      })
+      .catch(() => {
+        notify('error', 'Ошибка при удалении задачи.');
       });
   }
 
@@ -144,7 +164,6 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
   }
 
   const handleDateChange = (dateType, value) => {
-    console.log(task);
     dateType = (dateType === 'dateStart') ? 'executionStart' : 'executionEnd';
     updateTaskField(dateType, value.toJSON());
   }
@@ -152,16 +171,12 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
   const handleSaveBtn = () => {
     setEditMode(!editing);
     setInitialTask(task);
-    expService.update('task', task.id, task);
-  }
-
-  const handleCheckbox = (e) => {
-    expService.update('task', task.id, {
-      ...task,
-      completed: e.target.checked
-    })
-      .then(res => {
-        updateTaskField('completed', res.completed);
+    expService.update('task', task.id, task)
+      .then(() => {
+        notify('success', 'Задача изменена.');
+      })
+      .catch(() => {
+        notify('error', 'Ошибка при изменении задачи.');
       });
   }
 

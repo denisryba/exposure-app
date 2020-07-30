@@ -71,27 +71,26 @@ const CommentBlock = ({ planId }) => {
       <Typography className={classes.title} variant='h5'>
         Комментарии {comments ? `(${comments.length})` : ''}
       </Typography>
-      {comments ?
-        <Paper className={classes.root} elevation={2}>
+      <Paper className={classes.root} elevation={2}>
+        {comments ?
           <List className={classes.commentList}>
             {comments.map(comment => <Comment key={comment.id} data={comment} />)}
           </List>
-          <form className={classes.commentForm} onSubmit={onSendClick}>
-            <TextField
-              value={text}
-              onChange={handleCommentChange}
-              size='small'
-              variant='outlined'
-              fullWidth
-              placeholder='Введите ваш комментарий...' />
-            <IconButton type='submit' className={classes.sendBtn}>
-              <SendIcon color='primary' />
-            </IconButton>
-          </form>
-          <Notification />
-        </Paper>
-        : <Loader size={100} />
-      }
+          : <Loader size={100} />}
+        <form className={classes.commentForm} onSubmit={onSendClick}>
+          <TextField
+            value={text}
+            onChange={handleCommentChange}
+            size='small'
+            variant='outlined'
+            fullWidth
+            placeholder='Введите ваш комментарий...' />
+          <IconButton type='submit' className={classes.sendBtn}>
+            <SendIcon color='primary' />
+          </IconButton>
+        </form>
+        <Notification />
+      </Paper>
     </>
 
   );

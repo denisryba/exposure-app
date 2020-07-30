@@ -4,11 +4,15 @@ import { Grid, Fab } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import Pagination from '@material-ui/lab/Pagination';
 import { useExpService } from '../context/expService.js';
+import role from '../utils/role.js'
+import { useAuth } from '../context/auth.js';
 
 import ListOfPlans from '../components/PlanList/ListOfPlans.js';
 import PlanCreationForm from '../components/PlanList/PlanCreationForm.js';
 
 const PlanListPage = ({search}) => {
+  const user = useAuth();
+  const isHr = role.hr === user.role;
   const exposureService = useExpService();
   const [ plans, setPlans ] =  useState([]);
   const [ onCreation, setOnCreation ] = useState(false);
@@ -28,6 +32,8 @@ const PlanListPage = ({search}) => {
       });
   }, [currentPage, exposureService, search]);
 
+
+
   const handleCurrentPage = (event, value) => {
     setCurrentPage(value);
   };
@@ -46,19 +52,22 @@ const PlanListPage = ({search}) => {
           plans={plans}
           onPlanClicked={onPlanClicked}
           setPlans={setPlans} 
+          isHr={isHr}
         />
       </Grid>
       <Grid item>
        <Pagination count={pageCount} page={currentPage} onChange={handleCurrentPage}/>
       </Grid>
     </Grid>
-    <Grid container justify='flex-end'>
+    {isHr 
+    ? <Grid container justify='flex-end'>
       <Fab
         onClick={toggleCreationMode}
         color='primary'>
         <AddIcon />
       </Fab>
       </Grid>
+    : null}
     <PlanCreationForm
       onCreation={onCreation}
       toggleCreationMode={toggleCreationMode}
