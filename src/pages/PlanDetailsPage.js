@@ -98,7 +98,7 @@ const PlanDetailsPage = () => {
   const allowedToForward = () => {
     const permissions = {
       [role.employee]: [1, 0, 1, 0, 0],
-      [role.supervisor]: [0, 1, 1, 1, 0],
+      [role.supervisor]: [0, 1, 0, 1, 0],
       [role.hr]: [1, 1, 1, 1, 0],
     };
     return Boolean(permissions[user.role][plan.stage])
@@ -125,8 +125,8 @@ const PlanDetailsPage = () => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item container xs={12} sm={6}>
-          <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
+          <Grid item>
             <Box className={classes.cardHeader}>
               <IconButton size='small' edge='end' color="inherit" onClick={handleBackIconClick}>
                 <KeyboardBackspaceIcon />
@@ -137,7 +137,7 @@ const PlanDetailsPage = () => {
             </Box>
             <AdapPlan setDisplayPlan={setPlan} />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item>
             <ErrorBoundary>
               <CommentBlock planId={planId} />
             </ErrorBoundary>
