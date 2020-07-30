@@ -27,6 +27,11 @@ const useStyles = makeStyles((theme) => ({
   root: {
     marginBottom: theme.spacing(1)
   },
+  accordionRoot: {
+    '&.Mui-focused': {
+      backgroundColor: theme.palette.common.white
+    }
+  },
   accordion: {
     display: 'flex',
     flexDirection: 'column',
@@ -38,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     '&.Mui-expanded .arrow-icon': {
       transform: 'rotate(0deg)',
       transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
-    },
+    }
   },
   taskHeader: {
     alignItems: 'center',
@@ -170,7 +175,7 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
     <div className={classes.root}>
       <Accordion expanded={expandAccordion}>
         <AccordionSummary
-          classes={{ content: classes.accordion }}
+          classes={{ content: classes.accordion, root: classes.accordionRoot }}
           onClick={handleAccordionHeadClick}
         >
           <div className={classes.taskHeader}>
