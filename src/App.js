@@ -23,6 +23,7 @@ import AuthPage from './pages/AuthPage.js';
 import PlanListPage from './pages/PlanListPage.js';
 import PlanDetailsPage from './pages/PlanDetailsPage.js';
 import Header from './components/Header/Header.js';
+import ErrorBoundary from './reusable/ErrorBoundary.js';
 
 
 const useStyles = makeStyles({
@@ -63,42 +64,44 @@ const theme = createMuiTheme({
 });
 
 const App = () => {
-  const [ user, setUser ] = useState(storage.get('savedUser'));
-  const [ search, setSearch] = useState('');
-  
+  const [user, setUser] = useState(storage.get('savedUser'));
+  const [search, setSearch] = useState('');
+
   const { root } = useStyles();
 
   return (
     <ExpServiceContext.Provider value={exposureService}>
-      <AuthContext.Provider value={user}>
-        <ThemeProvider theme={theme}>
-          {user
-            ? <Header
-              setUser={setUser} 
-              setSearch={setSearch}
+      <ErrorBoundary>
+        <AuthContext.Provider value={user}>
+          <ThemeProvider theme={theme}>
+            {user
+              ? <Header
+                setUser={setUser}
+                setSearch={setSearch}
               />
-            : null}
-          <Container className={root}>
-            <Switch>
-              <Route path='/login'>
-                <AuthPage
-                  setUser={setUser}
-                  loginService={loginService} />
-              </Route>
-              <PrivateRoute exact path='/plans/' roles={[role.hr, role.supervisor]}>
-                <PlanListPage search={search}/>
-              </PrivateRoute>
-              <PrivateRoute path='/plans/:id'>
-                <PlanDetailsPage />
-              </PrivateRoute>
-              <Route path='/'>
-                <Distributor />
-              </Route>
-              <Redirect to='/' />
-            </Switch>
-          </Container>
-        </ThemeProvider>
-      </AuthContext.Provider>
+              : null}
+            <Container className={root}>
+              <Switch>
+                <Route path='/login'>
+                  <AuthPage
+                    setUser={setUser}
+                    loginService={loginService} />
+                </Route>
+                <PrivateRoute exact path='/plans/' roles={[role.hr, role.supervisor]}>
+                  <PlanListPage search={search} />
+                </PrivateRoute>
+                <PrivateRoute path='/plans/:id'>
+                  <PlanDetailsPage />
+                </PrivateRoute>
+                <Route path='/'>
+                  <Distributor />
+                </Route>
+                <Redirect to='/' />
+              </Switch>
+            </Container>
+          </ThemeProvider>
+        </AuthContext.Provider>
+      </ErrorBoundary>
     </ExpServiceContext.Provider>
   );
 };

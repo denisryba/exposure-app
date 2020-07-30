@@ -8,6 +8,7 @@ import SelectUsers from '../../reusable/Select.js';
 import formatService from '../../services/formatService.js'
 import { useExpService } from '../../context/expService.js';
 import ComponentAvailability from '../../reusable/ComponentAvailability.js';
+import ErrorBoundary from '../../reusable/ErrorBoundary.js';
 import role from '../../utils/role.js';
 
 import {
@@ -32,12 +33,6 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     padding: theme.spacing(3),
   },
-  cardHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: theme.spacing(1),
-    marginLeft: theme.spacing(1)
-  },
   bottomCreationDate: {
     textAlign: 'end'
   },
@@ -57,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
+const AdaptationPlanCard = ({ data: displayPlan, setDisplayPlan }) => {
   const expService = useExpService();
   const classes = useStyles();
   const history = useHistory();
@@ -65,6 +60,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
   const user = useAuth()
 
   const [editing, setEditMode] = useState(false);
+  const [plan, setPlan] = useState(displayPlan);
   const [oldDisplayPlan, setOldDisplayPlan] = useState(displayPlan);
 
   const stageRoleModel = {
@@ -79,7 +75,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
   }
 
   const editDisplayPlanField = (position, value) => {
-    setDisplayPlan(prevData => {
+    setPlan(prevData => {
       return {
         ...prevData,
         [position]: value
@@ -93,10 +89,6 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
 
   const passPositionId = (positionObj, role) => {
     editDisplayPlanField(role, positionObj);
-  }
-
-  const handleBackIconClick = () => {
-    history.replace('/plans/');
   }
 
   const handleDataChange = (dataField, value) => {
@@ -113,44 +105,37 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
 
   const handleEditIconClick = () => {
     spaces.current = editing ? 3 : 2;
-    setDisplayPlan(oldDisplayPlan);
+    setPlan(oldDisplayPlan);
     setEditMode(!editing);
   }
 
   const handleSaveBtnClick = () => {
-    expService.update('plan', displayPlan.id, {
-      ...displayPlan,
-      employee: displayPlan.employee.id,
-      hr: displayPlan.hr.id,
-      supervisor: displayPlan.supervisor.id,
-      employeePosition: displayPlan.employeePosition.id,
+    expService.update('plan', plan.id, {
+      ...plan,
+      employee: plan.employee.id,
+      hr: plan.hr.id,
+      supervisor: plan.supervisor.id,
+      employeePosition: plan.employeePosition.id,
     })
-      .then(() => {
+      .then((res) => {
         notify('success', 'Изменения сохранены.');
         spaces.current = editing ? 3 : 2;
+        setDisplayPlan(res);
         setEditMode(false);
-        setOldDisplayPlan(displayPlan);
+        setOldDisplayPlan(res);
       }).catch(() => {
         notify('error', 'Возникла ошибка. Проверьте правильность заполнения полей.');
       });
   }
 
   return (
-    <> 
-      <Box className={classes.cardHeader}>
-        <IconButton size='small' edge='end' color="inherit" onClick={handleBackIconClick}>
-            <KeyboardBackspaceIcon />
-        </IconButton>
-        <Typography variant='h5'>
-          Адаптационный план
-        </Typography>
-      </Box> 
-      {displayPlan ?
+    <>
+      <ErrorBoundary>
         <Paper elevation={4} className={classes.cardContainer}>
           <ComponentAvailability
             stageRoleObj={stageRoleModel.editBtn}
             currentRole={user.role}
-            currentStage={displayPlan.stage}
+            currentStage={plan.stage}
           >
             <IconButton
               color="inherit"
@@ -165,7 +150,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
               <Grid className={classes.fieldLabelContainer} item xs={6}>
                 <Typography className={classes.textEnd}>
                   ФИО Сотрудника:
-                </Typography>
+    </Typography>
               </Grid>
               <Grid item xs={6}>
                 {editing
@@ -176,9 +161,9 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                     path='users'
                     role='employee'
                     attached='false'
-                    value={displayPlan.employee}
+                    value={plan.employee}
                   />
-                  : <Typography>{displayPlan.employee.name} </Typography>
+                  : <Typography>{plan.employee.name} </Typography>
                 }
               </Grid>
             </Grid>
@@ -186,7 +171,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
               <Grid className={classes.fieldLabelContainer} item xs={6}>
                 <Typography className={classes.textEnd}>
                   Должность:
-                </Typography>
+    </Typography>
               </Grid>
               <Grid item xs={6}>
                 {editing
@@ -196,9 +181,9 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                     setValue={passPositionId}
                     path='positions'
                     role='employeePosition'
-                    value={displayPlan.employeePosition}
+                    value={plan.employeePosition}
                   />
-                  : <Typography>{displayPlan.employeePosition.name} </Typography>
+                  : <Typography>{plan.employeePosition.name} </Typography>
                 }
               </Grid>
             </Grid>
@@ -206,7 +191,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
               <Grid className={classes.fieldLabelContainer} item xs={6}>
                 <Typography className={classes.textEnd}>
                   ФИО Руководителя:
-                </Typography>
+    </Typography>
               </Grid>
               <Grid item xs={6}>
                 {editing
@@ -216,10 +201,10 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                     setValue={passUserObj}
                     path='users'
                     role='supervisor'
-                    value={displayPlan.supervisor}
+                    value={plan.supervisor}
                   />
                   : <Typography>
-                    {displayPlan.supervisor.name}
+                    {plan.supervisor.name}
                   </Typography>
                 }
               </Grid>
@@ -228,16 +213,16 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
               <Grid className={classes.fieldLabelContainer} item xs={6}>
                 <Typography className={classes.textEnd}>
                   Начало испытательного срока:
-                </Typography>
+    </Typography>
               </Grid>
               <Grid item xs={6}>
                 {editing
                   ? <CalendarSingle
                     passChanges={handleDataChange}
                     dateField='adaptationStart'
-                    value={displayPlan.adaptationStart}
+                    value={plan.adaptationStart}
                   />
-                  : <Typography>{formatService.setDate(displayPlan.adaptationStart)} </Typography>
+                  : <Typography>{formatService.setDate(plan.adaptationStart)} </Typography>
                 }
               </Grid>
             </Grid>
@@ -245,16 +230,16 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
               <Grid className={classes.fieldLabelContainer} item xs={6}>
                 <Typography className={classes.textEnd}>
                   Конец испытательного срока:
-                </Typography>
+    </Typography>
               </Grid>
               <Grid item xs={6}>
                 {editing
                   ? <CalendarSingle
                     passChanges={handleDataChange}
                     dateField='adaptationEnd'
-                    value={displayPlan.adaptationEnd}
+                    value={plan.adaptationEnd}
                   />
-                  : <Typography>{formatService.setDate(displayPlan.adaptationEnd)} </Typography>
+                  : <Typography>{formatService.setDate(plan.adaptationEnd)} </Typography>
                 }
               </Grid>
             </Grid>
@@ -262,29 +247,29 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
               <Grid className={classes.fieldLabelContainer} item xs={6}>
                 <Typography className={classes.textEnd}>
                   Создан HR-сотрудником:
-                </Typography>
+    </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography>
-                  {displayPlan.hr.name}
+                  {plan.hr.name}
                 </Typography>
               </Grid>
             </Grid>
             {(user.role !== role.employee) &&
               <RateBlock
                 classes={classes}
-                displayPlan={displayPlan}
+                displayPlan={plan}
                 handleCompleteMarkChange={handleCompleteMarkChange}
                 handleRateChange={handleRateChange}
               />
             }
           </Grid>
           <Grid item xs={12}>
-            <ProgressBar stage={displayPlan.stage} />
+            <ProgressBar stage={plan.stage} />
           </Grid>
           <Grid item>
             <Typography color="secondary" variant="body2" className={classes.bottomCreationDate}>
-              Создан {formatService.setDate(displayPlan.date)}
+              Создан {formatService.setDate(plan.date)}
             </Typography>
           </Grid>
           {editing &&
@@ -298,12 +283,11 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                 onClick={handleSaveBtnClick}
               >
                 Сохранить
-              </Button>
+            </Button>
             </Grid>
           }
         </Paper>
-        : <Loader size={200} />
-      }
+      </ErrorBoundary>
     </>
   )
 

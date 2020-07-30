@@ -22,6 +22,16 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     marginRight: theme.spacing(1)
+  },
+  errorBoundary: {
+    padding: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: '#c23934',
+  },
+  errorText: {
+    color: 'white'
   }
 }));
 
@@ -52,11 +62,11 @@ const TasksBlock = ({ planObj }) => {
 
   return (
     <React.Fragment>
-      <Box className={classes.header}>
-        <Typography variant='h5'>
-          Задачи
-        </Typography>
-        <ComponentAvailability
+        <Box className={classes.header}>
+          <Typography variant='h5'>
+            Задачи
+          </Typography>
+          <ComponentAvailability
             stageRoleObj={stageRoleModel.createTaskBtn}
             currentRole={user.role}
             currentStage={planObj.stage}
@@ -66,20 +76,20 @@ const TasksBlock = ({ planObj }) => {
               className={classes.button}>
               Создать
             </Button>
-        </ComponentAvailability>
-      </Box>
-      {tasks ?
-        tasks.map((item, index) => {
-          return <TaskComponent key={item.id} expService={expService} taskObj={item} planStage={planObj.stage} removeTask={() => removeTask(index)} />
-        })
-        : <Loader size={200} />
-      }
-      <TaskCreationForm
-        tasks={tasks}
-        setTasks={setTasks}
-        toggleCreationForm={toggleCreationForm}
-        planId={planObj.id}
-        open={onCreation} />
+          </ComponentAvailability>
+        </Box>
+        {tasks ?
+          tasks.map((item, index) => {
+            return <TaskComponent key={item.id} expService={expService} taskObj={item} planStage={planObj.stage} removeTask={() => removeTask(index)} />
+          })
+          : <Loader size={200} />
+        }
+        <TaskCreationForm
+          tasks={tasks}
+          setTasks={setTasks}
+          toggleCreationForm={toggleCreationForm}
+          planId={planObj.id}
+          open={onCreation} />
     </React.Fragment>
   )
 }

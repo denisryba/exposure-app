@@ -3,7 +3,7 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer, 
+  TableContainer,
   TableHead,
   TableRow,
   IconButton,
@@ -12,18 +12,17 @@ import {
   Typography,
   makeStyles,
   useMediaQuery
-}  
-from '@material-ui/core';
+}
+  from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useExpService } from '../../context/expService.js';
 import formatService from '../../services/formatService.js';
+import ErrorBoundary from '../../reusable/ErrorBoundary.js';
 
-const useStyles = makeStyles((theme)=> ({
+
+const useStyles = makeStyles((theme) => ({
   root: {
     margin: 'auto',
-  },
-  title: {
-    marginBottom: theme.spacing(1)
   },
   highlightedText: {
     color: '#a6ce39'
@@ -43,13 +42,13 @@ const useStyles = makeStyles((theme)=> ({
 }));
 
 
-const ListOfPlans = ({ onPlanClicked, plans, setPlans, isHr }) => {
+const ListOfPlans = ({ onPlanClicked, data: plans, setPlans, isHr }) => {
 
   const classes = useStyles();
-  
-  const NameField = ({name}) => {
-    if (!useMediaQuery('(min-width:960px)')) 
-      name = formatService.setShortName(name) 
+
+  const NameField = ({ name }) => {
+    if (!useMediaQuery('(min-width:960px)'))
+      name = formatService.setShortName(name)
     return <span className={classes.nameField}>{name}</span>;
   }
   const exposureService = useExpService();
@@ -61,9 +60,9 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans, isHr }) => {
   };
 
   return (
-      <Box className={classes.root}>
-        <Typography className={classes.title} variant="h5">Адаптационные планы</Typography>
-        <TableContainer component = {Paper}>
+    <Box className={classes.root}>
+      <ErrorBoundary>
+        <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
@@ -71,34 +70,35 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans, isHr }) => {
                 <TableCell>Статус</TableCell>
                 {isHr && <TableCell>Руководитель</TableCell>}
                 <TableCell>Дата создания</TableCell>
-                {isHr && <TableCell className={classes.deleteColumn}></TableCell>}           
+                {isHr && <TableCell className={classes.deleteColumn}></TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
-            {plans.map(plan => (
-              <TableRow className={classes.planRow} onClick={() => onPlanClicked(plan.id)} key={plan.id}>
-                <TableCell >
-                  <NameField name={plan.employee.name} />
-                  <Typography variant="subtitle1">{plan.employeePosition.name}</Typography>
-                </TableCell>
-                <TableCell><Typography variant="subtitle2">{formatService.getStage(plan.stage)}</Typography></TableCell>
-                {isHr && <TableCell><NameField  name={plan.supervisor.name}/></TableCell>} 
-                <TableCell>{formatService.setDate(plan.date)}</TableCell>
-                {isHr && 
-                  <TableCell>
-                  <IconButton onClick={(e) => deletePlan(plan.id, e)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>} 
-              </TableRow>
+              {plans.map(plan => (
+                <TableRow className={classes.planRow} onClick={() => onPlanClicked(plan.id)} key={plan.id}>
+                  <TableCell >
+                    <NameField name={plan.employee.name} />
+                    <Typography variant="subtitle1">{plan.employeePosition.name}</Typography>
+                  </TableCell>
+                  <TableCell><Typography variant="subtitle2">{formatService.getStage(plan.stage)}</Typography></TableCell>
+                  {isHr && <TableCell><NameField name={plan.supervisor.name} /></TableCell>}
+                  <TableCell>{formatService.setDate(plan.date)}</TableCell>
+                  {isHr &&
+                    <TableCell>
+                      <IconButton onClick={(e) => deletePlan(plan.id, e)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>}
+                </TableRow>
               ))
-            }
+              }
             </TableBody>
           </Table>
         </TableContainer>
-      </Box>   
-    )
-  }
+      </ErrorBoundary>
+    </Box>
+  )
+}
 
 
 
