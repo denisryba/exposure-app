@@ -8,10 +8,12 @@ import {
 }  
 from '@material-ui/core';
 
-const Confirmation = ({isOpen, setIsOpen, message, action, deletedId}) => {
+const Confirmation = ({isOpen, setIsOpen, message, action, deletedId, buttonText}) => {
   const handleClose = () => setIsOpen(false);
   const takeAction = (id) => {
-    action(id);
+    if (id)
+      action(id);
+    else action();
     setIsOpen(false);
   }
   return (
@@ -26,7 +28,7 @@ const Confirmation = ({isOpen, setIsOpen, message, action, deletedId}) => {
           Отменить
         </Button>
         <Button onClick={() => takeAction(deletedId)} color="primary"> 
-          Удалить
+          {buttonText ? buttonText : 'Удалить'}
         </Button>
       </DialogActions>
     </Dialog>
