@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Grid, Fab } from '@material-ui/core';
+import { Grid, Fab, Typography, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import Pagination from '@material-ui/lab/Pagination';
 import { useExpService } from '../context/expService.js';
@@ -10,7 +10,14 @@ import { useAuth } from '../context/auth.js';
 import ListOfPlans from '../components/PlanList/ListOfPlans.js';
 import PlanCreationForm from '../components/PlanList/PlanCreationForm.js';
 
+const useStyles = makeStyles((theme)=> ({
+  message: {
+    minHeight: 500,
+  }
+}));
+
 const PlanListPage = ({search}) => {
+  const classes = useStyles();
   const user = useAuth();
   const isHr = role.hr === user.role;
   const exposureService = useExpService();
@@ -48,6 +55,7 @@ const PlanListPage = ({search}) => {
 
   return (
     <>
+    {plans.length ?
     <Grid justify='center' container spacing={2}>
       <Grid item xs={12}>
         <ListOfPlans
@@ -61,6 +69,7 @@ const PlanListPage = ({search}) => {
        <Pagination count={pageCount} page={currentPage} onChange={handleCurrentPage}/>
       </Grid>
     </Grid>
+    : null}
     {isHr 
     ? <Grid container justify='flex-end'>
       <Fab
@@ -70,6 +79,7 @@ const PlanListPage = ({search}) => {
       </Fab>
       </Grid>
     : null}
+    {plans.length ?
     <PlanCreationForm
       onCreation={onCreation}
       toggleCreationMode={toggleCreationMode}
@@ -80,6 +90,11 @@ const PlanListPage = ({search}) => {
       currentPage={currentPage}
       limit={limit}
       />
+    : 
+    <Grid container justify="center" alignItems="center" className={classes.message} >
+      <Typography variant="subtitle1">Планов пока нет, но они скоро появятся :)</Typography>
+    </Grid>
+    }
     </>
   );
 };
