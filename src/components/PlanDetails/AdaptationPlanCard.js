@@ -2,11 +2,13 @@ import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../context/auth.js';
 
+import RateBlock from './RateBlock.js';
 import ProgressBar from '../../reusable/ProgressBar.js';
 import SelectUsers from '../../reusable/Select.js';
 import formatService from '../../services/formatService.js'
 import { useExpService } from '../../context/expService.js';
 import ComponentAvailability from '../../reusable/ComponentAvailability.js';
+import role from '../../utils/role.js';
 
 import {
   Grid,
@@ -15,22 +17,17 @@ import {
   makeStyles,
   Typography,
   IconButton,
-  Select,
-  FormHelperText,
-  MenuItem,
-  FormControl
+  Box
 } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import CalendarSingle from '../../reusable/CalendarSingle.js';
 import Loader from '../../reusable/Loader.js';
+import { notify } from '../../reusable/Notification.js';
 
 
 const useStyles = makeStyles((theme) => ({
-  title: {
-    margin: '20px 0'
-  },
   cardContainer: {
     position: 'relative',
     padding: theme.spacing(3),
@@ -38,11 +35,8 @@ const useStyles = makeStyles((theme) => ({
   cardHeader: {
     display: 'flex',
     alignItems: 'center',
-    '& h4': {
-      display: 'inline',
-      marginLeft: '9px',
-      fontWeight: '500',
-    }
+    marginBottom: theme.spacing(1),
+    marginLeft: theme.spacing(1)
   },
   bottomCreationDate: {
     textAlign: 'end'
@@ -58,10 +52,8 @@ const useStyles = makeStyles((theme) => ({
     top: '5px',
     right: '3%',
   },
-  saveButtonContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+  rateSelect: {
+    width: '100%'
   }
 }));
 
@@ -111,8 +103,12 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
     editDisplayPlanField(dataField, value);
   }
 
-  const handleStageChange = (e) => {
-    editDisplayPlanField('stage', e.target.value);
+  const handleCompleteMarkChange = (e) => {
+    editDisplayPlanField('completed', e.target.value);
+  }
+
+  const handleRateChange = (e) => {
+    editDisplayPlanField('rate', e.target.value);
   }
 
   const handleEditIconClick = () => {
@@ -130,26 +126,31 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
       employeePosition: displayPlan.employeePosition.id,
     })
       .then(() => {
+        notify('success', 'Изменения сохранены.');
         spaces.current = editing ? 3 : 2;
         setEditMode(false);
         setOldDisplayPlan(displayPlan);
+      }).catch(() => {
+        notify('error', 'Возникла ошибка. Проверьте правильность заполнения полей.');
       });
   }
 
   return (
-    <>
-      <Typography className={classes.cardHeader} variant='h6'>
-        <IconButton color="inherit" onClick={handleBackIconClick}>
-          <KeyboardBackspaceIcon />
+    <> 
+      <Box className={classes.cardHeader}>
+        <IconButton size='small' edge='end' color="inherit" onClick={handleBackIconClick}>
+            <KeyboardBackspaceIcon />
         </IconButton>
-        <div className={classes.title}>Адаптационный план сотрудника</div>
-      </Typography>
+        <Typography variant='h5'>
+          Адаптационный план
+        </Typography>
+      </Box> 
       {displayPlan ?
         <Paper elevation={4} className={classes.cardContainer}>
           <ComponentAvailability
             stageRoleObj={stageRoleModel.editBtn}
             currentRole={user.role}
-            currentStage={oldDisplayPlan.stage}
+            currentStage={displayPlan.stage}
           >
             <IconButton
               color="inherit"
@@ -269,6 +270,14 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                 </Typography>
               </Grid>
             </Grid>
+            {(user.role !== role.employee) &&
+              <RateBlock
+                classes={classes}
+                displayPlan={displayPlan}
+                handleCompleteMarkChange={handleCompleteMarkChange}
+                handleRateChange={handleRateChange}
+              />
+            }
           </Grid>
           <Grid item xs={12}>
             <ProgressBar stage={displayPlan.stage} />
@@ -279,20 +288,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
             </Typography>
           </Grid>
           {editing &&
-            <Grid xs={12} item container className={classes.saveButtonContainer}>
-              <FormControl>
-                <Select
-                  value={displayPlan.stage}
-                  onChange={handleStageChange}
-                >
-                  <MenuItem value={0}>Заполнение</MenuItem>
-                  <MenuItem value={1}>Согласование</MenuItem>
-                  <MenuItem value={2}>Выполнение</MenuItem>
-                  <MenuItem value={3}>Оценка</MenuItem>
-                  <MenuItem value={4}>Завершение</MenuItem>
-                </Select>
-                <FormHelperText>Выберите стадию плана</FormHelperText>
-              </FormControl>
+            <Grid xs={12} item container justify='flex-end'>
               <Button
                 variant="contained"
                 color="primary"
@@ -307,7 +303,8 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
           }
         </Paper>
         : <Loader size={200} />
-      }</>
+      }
+    </>
   )
 
 }

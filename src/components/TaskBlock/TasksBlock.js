@@ -6,28 +6,22 @@ import TaskCreationForm from './TaskCreationForm.js';
 import Loader from '../../reusable/Loader.js';
 import ComponentAvailability from '../../reusable/ComponentAvailability.js';
 
-import { Typography, Button, makeStyles } from '@material-ui/core';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import { Typography, Box, Button, makeStyles } from '@material-ui/core';
 import { useExpService } from '../../context/expService.js';
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    position: 'relative'
-  },
-  title: {
-    margin: '20px 0'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(1)
   },
   button: {
-    float: 'right',
-    backgroundColor: 'white',
-    color: 'black',
-    borderRadius: '30px',
-    '& .MuiButton-startIcon': {
-      color: '#5c6bc0'
-    },
-    '&:hover': {
-      backgroundColor: '#eaeaea'
-    }
+    backgroundColor: theme.palette.common.white,
+    color: theme.palette.primary.main,
+  },
+  icon: {
+    marginRight: theme.spacing(1)
   }
 }));
 
@@ -58,30 +52,27 @@ const TasksBlock = ({ planObj }) => {
 
   return (
     <React.Fragment>
-      <Typography className={classes.header} variant='h6'>
+      <Box className={classes.header}>
+        <Typography variant='h5'>
+          Задачи
+        </Typography>
         <ComponentAvailability
-          stageRoleObj={stageRoleModel.createTaskBtn}
-          currentRole={user.role}
-          currentStage={planObj.stage}
-        >
-          <Button
-            onClick={toggleCreationForm}
-            variant="contained"
-            color="primary"
-            size="small"
-            className={classes.button}
-            startIcon={<NoteAddIcon />}
+            stageRoleObj={stageRoleModel.createTaskBtn}
+            currentRole={user.role}
+            currentStage={planObj.stage}
           >
-            Создать задачу
-        </Button>
+            <Button
+              onClick={toggleCreationForm}
+              className={classes.button}>
+              Создать
+            </Button>
         </ComponentAvailability>
-        <div className={classes.title}>Задачи</div>
-      </Typography>
+      </Box>
       {tasks ?
         tasks.map((item, index) => {
           return <TaskComponent key={item.id} expService={expService} taskObj={item} planStage={planObj.stage} removeTask={() => removeTask(index)} />
-        }) :
-        <Loader size={200} />
+        })
+        : <Loader size={200} />
       }
       <TaskCreationForm
         tasks={tasks}

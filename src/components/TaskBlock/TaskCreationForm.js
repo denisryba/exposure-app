@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { 
+import React, { useState } from 'react';
+import {
   Dialog,
   Grid,
   TextField,
@@ -10,8 +10,8 @@ import {
   FormControl,
   Select,
   MenuItem
- } 
-from '@material-ui/core';
+}
+  from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import DateFnsUtils from '@date-io/date-fns';
 import locale from "date-fns/locale/ru";
@@ -35,14 +35,14 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
   const handleChangeDescription = event => setDescription(event.target.value);
   const handleChangeExecutionStart = date => setExecutionStart(date);
   const handleChangeExecutionEnd = date => setExecutionEnd(date);
-  
+
   const handleChangeIsCompleted = (event) => {
     setIsCompleted(event.target.value);
   };
 
   const addTask = (event) => {
     event.preventDefault();
-    const taskObject = 
+    const taskObject =
     {
       name,
       description,
@@ -70,87 +70,87 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
 
   return (
     <>
-    <Dialog open={open} onClose={toggleCreationForm}>
-      <Box  p="2rem">
-        <form onSubmit={addTask}>
-          <Grid container spacing={2} justify='flex-end' >
-            <Grid item xs={12} container justify='space-between'>
-             <Typography variant="h6">Создание задачи</Typography>
-              <IconButton size="small" onClick={toggleCreationForm} >
-                <CloseIcon />
-              </IconButton> 
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label='Название задачи' 
-                variant="outlined"
-                value={name} 
-                onChange={handleChangeName} 
-                fullWidth
-                required
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label='Описание задачи' 
-                variant="outlined"
-                value={description} 
-                onChange={handleChangeDescription} 
-                fullWidth
-                multiline
-                rows={4}
-              />
-            </Grid>
-            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
-              <Grid item sm={6} xs={12}>
-                <KeyboardDatePicker             
-                  disableToolbar        
-                  variant="inline"
-                  format="dd.MM.yyyy"
-                  label="Дата начала"
-                  value={executionStart}
-                  onChange={handleChangeExecutionStart}
-                  autoOk={true} 
-                  fullWidth    
-                  inputVariant="outlined"     
+      <Dialog open={open} onClose={toggleCreationForm}>
+        <Box p="2rem">
+          <form onSubmit={addTask}>
+            <Grid container spacing={2} justify='flex-end' >
+              <Grid item xs={12} container justify='space-between'>
+                <Typography variant="h6">Создание задачи</Typography>
+                <IconButton size="small" onClick={toggleCreationForm} >
+                  <CloseIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label='Название задачи'
+                  variant="outlined"
+                  value={name}
+                  onChange={handleChangeName}
+                  fullWidth
+                  required
                 />
               </Grid>
-              <Grid item sm={6} xs={12}>
-                <KeyboardDatePicker
-                  disableToolbar
-                  variant="inline"
-                  format="dd.MM.yyyy"
-                  label="Дата окончания"
-                  value={executionEnd}
-                  onChange={handleChangeExecutionEnd}
-                  autoOk={true}
-                  inputVariant="outlined"
+              <Grid item xs={12}>
+                <TextField
+                  label='Описание задачи'
+                  variant="outlined"
+                  value={description}
+                  onChange={handleChangeDescription}
                   fullWidth
+                  multiline
+                  rows={4}
                 />
+              </Grid>
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
+                <Grid item sm={6} xs={12}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="dd.MM.yyyy"
+                    label="Дата начала"
+                    value={executionStart}
+                    onChange={handleChangeExecutionStart}
+                    autoOk={true}
+                    fullWidth
+                    inputVariant="outlined"
+                  />
                 </Grid>
-            </MuiPickersUtilsProvider>
-            <Grid item xs={12}>
-              <FormControl variant="outlined" fullWidth>
-                <Select value={isCompleted} onChange={handleChangeIsCompleted}>
-                  <MenuItem value={false}>Не выполнена</MenuItem>
-                  <MenuItem value={true}>Выполнена</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Button 
-                variant="contained" 
-                color="primary"
-                type="Submit"
-                fullWidth>
-                Создать
+                <Grid item sm={6} xs={12}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="dd.MM.yyyy"
+                    label="Дата окончания"
+                    value={executionEnd}
+                    onChange={handleChangeExecutionEnd}
+                    autoOk={true}
+                    inputVariant="outlined"
+                    fullWidth
+                  />
+                </Grid>
+              </MuiPickersUtilsProvider>
+              <Grid item xs={12}>
+                <FormControl variant="outlined" fullWidth>
+                  <Select value={isCompleted} onChange={handleChangeIsCompleted}>
+                    <MenuItem value={false}>Не выполнена</MenuItem>
+                    <MenuItem value={true}>Выполнена</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="Submit"
+                  fullWidth>
+                  Создать
               </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </Box>
-    </Dialog>
-    <Notification />
+          </form>
+        </Box>
+      </Dialog>
+      <Notification />
     </>
   )
 }

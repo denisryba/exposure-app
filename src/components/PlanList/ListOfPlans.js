@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme)=> ({
   root: {
     margin: 'auto',
   },
+  title: {
+    marginBottom: theme.spacing(1)
+  },
   highlightedText: {
     color: '#a6ce39'
   },
@@ -68,7 +71,7 @@ const ListOfPlans = ({ onPlanClicked, plans, isHr, setPlanDeleted }) => {
 
   return (
       <Box className={classes.root}>
-        <Typography variant="h5">Адаптационные планы</Typography>
+        <Typography className={classes.title} variant="h5">Адаптационные планы</Typography>
         <TableContainer component = {Paper}>
           <Table>
             <TableHead>

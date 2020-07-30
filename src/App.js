@@ -51,10 +51,10 @@ const theme = createMuiTheme({
       fontSize: 14,
     },
     h5: {
-      paddingBottom: 10,
       paddingLeft: 15,
       fontWeight: 500,
-      fontSize: 18
+      lineHeight: 2,
+      fontSize: 18,
     },
     subtitle2: {
       color: '#5c6bc0',
