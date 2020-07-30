@@ -84,7 +84,7 @@ const TasksBlock = ({ planObj }) => {
         tasks.map((item, index) => {
           return <TaskComponent key={item.id} expService={expService} taskObj={item} planStage={planObj.stage} removeTask={() => removeTask(index)} />
         })
-        : <Loader size={200} />
+        : <Loader size={50} />
       }
       <TaskCreationForm
         tasks={tasks}

@@ -4,7 +4,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import AdaptationPlanCard from '../components/PlanDetails/AdaptationPlanCard.js';
 import TasksBlock from '../components/TaskBlock/TasksBlock.js';
 import CommentBlock from '../components/CommentBlock/CommentBlock.js';
-import SendButton from '../components/PlanDetails/SendButton.js';
+import ActionButton from '../reusable/ActionButton.js';
 import { useExpService } from '../context/expService.js';
 import { useAuth } from '../context/auth.js';
 import role from '../utils/role.js';
@@ -134,7 +134,7 @@ const PlanDetailsPage = () => {
               Адаптационный план
             </Typography>
           </Box>
-          <AdapPlan setDisplayPlan={setPlan} />
+            <AdapPlan setDisplayPlan={setPlan} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <ErrorBoundary>
@@ -151,16 +151,14 @@ const PlanDetailsPage = () => {
       {plan &&
         <Box className={classes.sendButtonsBox}>
           {allowedToBackward()
-            ? <SendButton
+            ? <ActionButton
               type='backward'
-              // handler={handleBackwardClick}
               handler={handleSwitchBack}
               text={getSendButtonText(plan.stage, 'backward')} />
             : null}
           {allowedToForward()
-            ? <SendButton
+            ? <ActionButton
               type='forward'
-              // handler={handleForwardClick}
               handler={handleSwitchForward}
               text={getSendButtonText(plan.stage, 'forward')} />
             : null}
@@ -168,14 +166,14 @@ const PlanDetailsPage = () => {
       <Confirmation
         isOpen={isNextStage}
         setIsOpen={setIsNextStage}
-        message='Вы уверены, что хотите перейти на следующий этап?'
+        message='Вы уверены, что хотите отправить план на следующий этап?'
         action={handleForwardClick}
         buttonText='да'
       />
       <Confirmation
         isOpen={isPreviousStage}
         setIsOpen={setIsPreviousStage}
-        message='Вы уверены, что хотите вернуться на предыдущий этап?'
+        message='Вы уверены, что хотите отправить план на предыдущий этап?'
         action={handleBackwardClick}
         buttonText='да'
       />

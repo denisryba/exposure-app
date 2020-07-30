@@ -203,7 +203,7 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
         deletedId={task.id}
         action={deleteTask}
       />
-      <Accordion expanded={expandAccordion}>
+      <Accordion elevation={2} expanded={expandAccordion}>
         <AccordionSummary
           classes={{ content: classes.accordion, root: classes.accordionRoot }}
           onClick={handleAccordionHeadClick}

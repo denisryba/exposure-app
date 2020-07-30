@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, makeStyles, Link } from '@material-ui/core';
+import { Box, Typography, makeStyles, Link } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -21,10 +21,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#c23934',
   },
   errorText:{
-    color: 'white'
+    color: '#c23934'
   }
 }));
 
@@ -33,13 +32,13 @@ export default function ErrorComponent() {
   const classes = useStyles();
 
   return (
-    <Paper elevation={3} className={classes.errorBoundary}>
-      <Typography variant='h4' gutterBottom className={classes.errorText}>
-        У нас произошла ошибка.
+    <Box className={classes.errorBoundary}>
+      <Typography variant='h5' gutterBottom className={classes.errorText}>
+        Упс, произошла ошибка с:
         </Typography>
-      <Typography variant='h5' className={classes.errorText}>
+      <Typography variant='body2' className={classes.errorText}>
         Пожалуйста, дайте <Link href="mailto:help@greenatom.ru" underline={'always'} className={classes.errorText}>нам</Link> знать об этом.
         </Typography>
-    </Paper>
+    </Box>
   )
 }

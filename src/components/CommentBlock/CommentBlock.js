@@ -76,7 +76,7 @@ const CommentBlock = ({ planId }) => {
           <List className={classes.commentList}>
             {comments.map(comment => <Comment key={comment.id} data={comment} />)}
           </List>
-          : <Loader size={100} />}
+          : <Loader size={50} />}
         <form className={classes.commentForm} onSubmit={onSendClick}>
           <TextField
             value={text}

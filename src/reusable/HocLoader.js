@@ -8,7 +8,7 @@ function loaderHoc(View, data) {
       if (JSON.stringify(data) === '[]' || !data) {
         return (
           <Grid container justify='center'>
-            <CircularProgress size={200} />
+            <CircularProgress size={50} />
           </Grid>
         );
       }

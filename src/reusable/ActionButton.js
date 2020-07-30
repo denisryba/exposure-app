@@ -2,13 +2,14 @@ import React from 'react';
 import {
   Fab,
   makeStyles,
-  useScrollTrigger } from '@material-ui/core';
+  useScrollTrigger,
+  Box } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 const useStyles = makeStyles(theme => ({
-  extendedSendIcon: {
-    marginRight: theme.spacing(1)
+  btnText: {
+    marginLeft: theme.spacing(1)
   },
   sendFab: {
     margin: theme.spacing(1),
@@ -19,17 +20,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SendButton = ({ type, handler, text }) => {
+const ActionButton = ({ type, handler, text, innerIcon }) => {
   const classes = useStyles();
   const trigger = useScrollTrigger();
 
-  const iconClassName = trigger ? '' : classes.extendedSendIcon;
-
   const icon = (type === 'forward')
-    ? <ArrowForwardIcon
-        className={iconClassName} />
-    : <ArrowBackIcon
-        className={iconClassName} />;
+    ? <ArrowForwardIcon />
+    : <ArrowBackIcon />;
   
   const variant = trigger
     ? 'round'
@@ -40,12 +37,15 @@ const SendButton = ({ type, handler, text }) => {
       onClick={handler}
       className={classes.sendFab}
       variant={variant}>
-      {icon}
+      { type !== undefined
+        ? icon
+        : innerIcon }
       { !trigger
-        ? text
-        : null}
+
+        ? <Box className={classes.btnText}>{text}</Box>
+        : null }
     </Fab>
   );
 };
 
-export default SendButton;
+export default ActionButton;

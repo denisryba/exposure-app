@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Grid, Fab, Typography, makeStyles } from '@material-ui/core';
+import { Grid, Box, Typography, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import Pagination from '@material-ui/lab/Pagination';
 import { useExpService } from '../context/expService.js';
 import role from '../utils/role.js'
 import { useAuth } from '../context/auth.js';
+import ActionButton from '../reusable/ActionButton.js';
 
 import ListOfPlans from '../components/PlanList/ListOfPlans.js';
 import PlanCreationForm from '../components/PlanList/PlanCreationForm.js';
@@ -14,7 +15,12 @@ import loaderHoc from '../reusable/HocLoader.js';
 const useStyles = makeStyles((theme) => ({
   message: {
     minHeight: 500,
-  }
+  },
+  fab: {
+    position: 'fixed',
+    bottom: theme.spacing(3),
+    right: theme.spacing(3),
+  },
 }));
 
 const PlanListPage = ({ search }) => {
@@ -76,15 +82,6 @@ const PlanListPage = ({ search }) => {
             <Pagination count={pageCount} page={currentPage} onChange={handleCurrentPage} />
           </Grid>}
       </Grid>
-      {isHr
-        ? <Grid container justify='flex-end'>
-          <Fab
-            onClick={toggleCreationMode}
-            color='primary'>
-            <AddIcon />
-          </Fab>
-        </Grid>
-        : null}
       {!loading &&
         (plans.length ?
           <PlanCreationForm
@@ -103,6 +100,14 @@ const PlanListPage = ({ search }) => {
           </Grid>
         )
       }
+      {isHr
+        ? <Box className={classes.fab}>
+            <ActionButton
+              text='Создать план'
+              innerIcon={<AddIcon />}
+              handler={toggleCreationMode} />
+          </Box>
+        : null}
     </>
   );
 };

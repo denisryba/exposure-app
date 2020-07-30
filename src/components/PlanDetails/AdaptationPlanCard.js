@@ -138,7 +138,7 @@ const AdaptationPlanCard = ({ data: displayPlan, setDisplayPlan }) => {
   return (
     <>
       <ErrorBoundary>
-        <Paper elevation={4} className={classes.cardContainer}>
+        <Paper elevation={2} className={classes.cardContainer}>
           <Grid container>
             <ComponentAvailability
               stageRoleObj={stageRoleModel.editBtn}
