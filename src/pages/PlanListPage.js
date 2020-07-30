@@ -17,7 +17,8 @@ const PlanListPage = ({search}) => {
   const [ plans, setPlans ] =  useState([]);
   const [ onCreation, setOnCreation ] = useState(false);
   const [ pageCount, setPageCount ] =  useState(1);
-  const [ currentPage, setCurrentPage] = useState(1);
+  const [ currentPage, setCurrentPage ] = useState(1);
+  const [ planDeleted, setPlanDeleted ] = useState(false);
   const limit = 5;
 
   const history = useHistory();
@@ -28,9 +29,10 @@ const PlanListPage = ({search}) => {
       .getAll(`plans`, { page: currentPage, limit: limit, search: search})
       .then(data => {
         setPlans(data.plans);
-        setPageCount(data.pageCount)
+        setPageCount(data.pageCount);
+        setPlanDeleted(false);
       });
-  }, [currentPage, exposureService, search]);
+  }, [currentPage, exposureService, search, planDeleted]);
 
 
 
@@ -51,8 +53,8 @@ const PlanListPage = ({search}) => {
         <ListOfPlans
           plans={plans}
           onPlanClicked={onPlanClicked}
-          setPlans={setPlans} 
           isHr={isHr}
+          setPlanDeleted={setPlanDeleted}
         />
       </Grid>
       <Grid item>

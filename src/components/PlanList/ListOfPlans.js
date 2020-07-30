@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme)=> ({
 }));
 
 
-const ListOfPlans = ({ onPlanClicked, plans, setPlans, isHr }) => {
+const ListOfPlans = ({ onPlanClicked, plans, isHr, setPlanDeleted }) => {
 
   const classes = useStyles();
   
@@ -53,7 +53,9 @@ const ListOfPlans = ({ onPlanClicked, plans, setPlans, isHr }) => {
 
   const deletePlan = (id, event) => {
     exposureService.remove('plan', id)
-      .then(res => setPlans(plans.filter(plan => plan.id !== id)));
+      .then(res => {
+        setPlanDeleted(true);
+      });
     event.stopPropagation();
   };
 
