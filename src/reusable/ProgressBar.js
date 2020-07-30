@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 export default function ProgressBar({ stage }) {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
-    const steps = ['Заполнение', 'Согласование', 'Выполнение', 'Оценка', 'Завершение'];
+    const steps = ['Заполнение', 'Согласование', 'Выполнение', 'Оценка', 'Завершено'];
 
     useEffect(() => {
         setActiveStep(stage);
