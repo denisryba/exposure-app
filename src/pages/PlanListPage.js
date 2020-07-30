@@ -22,7 +22,6 @@ const PlanListPage = ({ search }) => {
   const limit = 5;
 
   const history = useHistory();
-  console.log(search)
 
   useEffect(() => {
     exposureService

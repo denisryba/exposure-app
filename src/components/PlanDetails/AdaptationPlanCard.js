@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../context/auth.js';
 
 import RateBlock from './RateBlock.js';
@@ -18,44 +17,52 @@ import {
   makeStyles,
   Typography,
   IconButton,
-  Box
+  Collapse
 } from '@material-ui/core';
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
 import CalendarSingle from '../../reusable/CalendarSingle.js';
-import Loader from '../../reusable/Loader.js';
+import CloseIcon from '@material-ui/icons/Close';
 import { notify } from '../../reusable/Notification.js';
 
 
 const useStyles = makeStyles((theme) => ({
   cardContainer: {
     position: 'relative',
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
+  },
+  editIcon: {
+    marginLeft: 'auto',
+    marginBottom: theme.spacing(1)
+  },
+  row: {
+    minHeight: (40 + theme.spacing(1)),
+    alignItems: 'center',
+  },
+  textEnd: {
+    marginRight: theme.spacing(1),
+    marginLeft: 'auto',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  planField: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   bottomCreationDate: {
-    textAlign: 'end'
-  },
-  fieldLabelContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'baseline',
-  },
-  editButtonContainer: {
-    position: 'absolute',
-    zIndex: '2',
-    top: '5px',
-    right: '3%',
+    textAlign: 'end',
+    marginBottom: theme.spacing(1)
   },
   rateSelect: {
-    width: '100%'
+    width: '100%',
+    padding: 0
   }
 }));
 
 const AdaptationPlanCard = ({ data: displayPlan, setDisplayPlan }) => {
   const expService = useExpService();
   const classes = useStyles();
-  const history = useHistory();
   let spaces = useRef(3);
   const user = useAuth()
 
@@ -132,125 +139,137 @@ const AdaptationPlanCard = ({ data: displayPlan, setDisplayPlan }) => {
     <>
       <ErrorBoundary>
         <Paper elevation={4} className={classes.cardContainer}>
-          <ComponentAvailability
-            stageRoleObj={stageRoleModel.editBtn}
-            currentRole={user.role}
-            currentStage={plan.stage}
-          >
-            <IconButton
-              color="inherit"
-              className={classes.editButtonContainer}
-              onClick={handleEditIconClick}
+          <Grid container>
+            <ComponentAvailability
+              stageRoleObj={stageRoleModel.editBtn}
+              currentRole={user.role}
+              currentStage={plan.stage}
             >
-              <EditIcon fontSize="small" />
-            </IconButton>
-          </ComponentAvailability>
-          <Grid container spacing={spaces.current}>
-            <Grid item container spacing={2}>
-              <Grid className={classes.fieldLabelContainer} item xs={6}>
+              <IconButton
+                size='small'
+                className={classes.editIcon}
+                onClick={handleEditIconClick}
+              >
+                {editing
+                  ? <CloseIcon />
+                  : <EditIcon />
+                }
+              </IconButton>
+            </ComponentAvailability>
+          </Grid>
+          <Grid container direction='column' spacing={1}>
+            <Grid item container className={classes.row} alignItems='center'>
+              <Grid item container xs={4}>
                 <Typography className={classes.textEnd}>
-                  ФИО Сотрудника:
-    </Typography>
+                  Сотрудник:
+                </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={8} sm={7}>
                 {editing
                   ? <SelectUsers
                     label=''
-                    variant="standard"
+                    size='small'
+                    variant='outlined'
                     setValue={passUserObj}
                     path='users'
                     role='employee'
                     attached='false'
                     value={plan.employee}
                   />
-                  : <Typography>{plan.employee.name} </Typography>
+                  : <Typography className={classes.plan}>{displayPlan.employee.name} </Typography>
                 }
               </Grid>
             </Grid>
-            <Grid item container spacing={2}>
-              <Grid className={classes.fieldLabelContainer} item xs={6}>
+            <Grid item container className={classes.row} >
+              <Grid item container xs={4}>
                 <Typography className={classes.textEnd}>
                   Должность:
-    </Typography>
+                  </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={8} sm={7}>
                 {editing
                   ? <SelectUsers
+                    size='small'
+                    variant='outlined'
                     label=''
-                    variant="standard"
                     setValue={passPositionId}
                     path='positions'
                     role='employeePosition'
                     value={plan.employeePosition}
                   />
-                  : <Typography>{plan.employeePosition.name} </Typography>
+                  : <Typography className={classes.planField}>{plan.employeePosition.name} </Typography>
                 }
               </Grid>
             </Grid>
-            <Grid item container spacing={2}>
-              <Grid className={classes.fieldLabelContainer} item xs={6}>
+
+            <Grid item container className={classes.row}>
+              <Grid item container xs={4}>
                 <Typography className={classes.textEnd}>
-                  ФИО Руководителя:
-    </Typography>
+                  Руководитель:
+                </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={8} sm={7}>
                 {editing
                   ? <SelectUsers
                     label=''
-                    variant="standard"
+                    size='small'
+                    variant='outlined'
                     setValue={passUserObj}
                     path='users'
                     role='supervisor'
                     value={plan.supervisor}
                   />
-                  : <Typography>
+                  : <Typography className={classes.planField}>
                     {plan.supervisor.name}
                   </Typography>
                 }
               </Grid>
             </Grid>
-            <Grid item container spacing={2}>
-              <Grid className={classes.fieldLabelContainer} item xs={6}>
+
+            <Grid item container className={classes.row}>
+              <Grid item container xs={4}>
                 <Typography className={classes.textEnd}>
-                  Начало испытательного срока:
-    </Typography>
+                  Начало исп. срока:
+                </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={8} sm={7}>
                 {editing
                   ? <CalendarSingle
+                    size='small'
                     passChanges={handleDataChange}
                     dateField='adaptationStart'
                     value={plan.adaptationStart}
                   />
-                  : <Typography>{formatService.setDate(plan.adaptationStart)} </Typography>
+                  : <Typography className={classes.planField}>{formatService.setDate(plan.adaptationStart)} </Typography>
                 }
               </Grid>
             </Grid>
-            <Grid item container spacing={2}>
-              <Grid className={classes.fieldLabelContainer} item xs={6}>
+            <Grid item container className={classes.row}>
+              <Grid item container xs={4}>
                 <Typography className={classes.textEnd}>
-                  Конец испытательного срока:
-    </Typography>
+                  Конец исп. срока:
+                </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={8} sm={7}>
                 {editing
                   ? <CalendarSingle
+                    size='small'
                     passChanges={handleDataChange}
                     dateField='adaptationEnd'
                     value={plan.adaptationEnd}
                   />
-                  : <Typography>{formatService.setDate(plan.adaptationEnd)} </Typography>
+                  : <Typography className={classes.planField}>{formatService.setDate(plan.adaptationEnd)} </Typography>
                 }
               </Grid>
             </Grid>
-            <Grid item container spacing={2}>
-              <Grid className={classes.fieldLabelContainer} item xs={6}>
+            <Grid item container className={classes.row}>
+              <Grid item container xs={4}>
                 <Typography className={classes.textEnd}>
-                  Создан HR-сотрудником:
-    </Typography>
+                  Создан:
+                </Typography>
               </Grid>
-              <Grid item xs={6}>
-                <Typography>
+              <Grid item xs={8} sm={7}>
+                <Typography className={classes.planField}>
                   {plan.hr.name}
                 </Typography>
               </Grid>
@@ -267,25 +286,20 @@ const AdaptationPlanCard = ({ data: displayPlan, setDisplayPlan }) => {
           <Grid item xs={12}>
             <ProgressBar stage={plan.stage} />
           </Grid>
-          <Grid item>
-            <Typography color="secondary" variant="body2" className={classes.bottomCreationDate}>
-              Создан {formatService.setDate(plan.date)}
-            </Typography>
-          </Grid>
-          {editing &&
+          <Typography color='textSecondary' variant="body2" className={classes.bottomCreationDate}>
+            Создан {formatService.setDate(plan.date)}
+          </Typography>
+
+          <Collapse in={editing} timeout="auto" unmountOnExit>
             <Grid xs={12} item container justify='flex-end'>
               <Button
-                variant="contained"
                 color="primary"
                 type="Submit"
-                size='small'
-                startIcon={<SaveIcon />}
-                onClick={handleSaveBtnClick}
-              >
+                onClick={handleSaveBtnClick}>
                 Сохранить
             </Button>
             </Grid>
-          }
+          </Collapse>
         </Paper>
       </ErrorBoundary>
     </>

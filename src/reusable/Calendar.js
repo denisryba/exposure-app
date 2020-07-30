@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Calendar({ passChanges, dateStart, dateEnd, dateStartLabel, dateEndLabel }) {
+export default function Calendar({ passChanges, dateStart, dateEnd, dateStartLabel, dateEndLabel, size }) {
   const classes = useStyles();
 
   const handleDateChange = (e, dateField) => {
@@ -26,11 +26,11 @@ export default function Calendar({ passChanges, dateStart, dateEnd, dateStartLab
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
       <KeyboardDatePicker
+        size={size}
         className={classes.startDate}
         inputVariant="outlined" 
         disableToolbar
         variant="inline"
-
         format="dd.MM.yyyy"
         margin="normal"
         label={dateStartLabel}
@@ -41,7 +41,7 @@ export default function Calendar({ passChanges, dateStart, dateEnd, dateStartLab
       />
       <KeyboardDatePicker
         inputVariant="outlined" 
-
+        size={size}
         disableToolbar
         variant="inline"
         format="dd.MM.yyyy"
