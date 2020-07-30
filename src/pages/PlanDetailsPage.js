@@ -125,28 +125,30 @@ const PlanDetailsPage = () => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Box className={classes.cardHeader}>
-            <IconButton size='small' edge='end' color="inherit" onClick={handleBackIconClick}>
-              <KeyboardBackspaceIcon />
-            </IconButton>
-            <Typography variant='h5'>
-              Адаптационный план
-            </Typography>
-          </Box>
+        <Grid item container xs={12} sm={6}>
+          <Grid item xs={12}>
+            <Box className={classes.cardHeader}>
+              <IconButton size='small' edge='end' color="inherit" onClick={handleBackIconClick}>
+                <KeyboardBackspaceIcon />
+              </IconButton>
+              <Typography variant='h5'>
+                Адаптационный план
+              </Typography>
+            </Box>
             <AdapPlan setDisplayPlan={setPlan} />
+          </Grid>
+          <Grid item xs={12}>
+            <ErrorBoundary>
+              <CommentBlock planId={planId} />
+            </ErrorBoundary>
+          </Grid>
         </Grid>
         <Grid item xs={12} sm={6}>
           <ErrorBoundary>
             {plan &&
               <TasksBlock planObj={plan} />}
           </ErrorBoundary>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <ErrorBoundary>
-            <CommentBlock planId={planId} />
-          </ErrorBoundary>
-        </Grid>
+        </Grid> 
       </Grid>
       {plan &&
         <Box className={classes.sendButtonsBox}>

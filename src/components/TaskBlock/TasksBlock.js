@@ -11,6 +11,9 @@ import { useExpService } from '../../context/expService.js';
 
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    marginBottom: 170
+  },
   header: {
     display: 'flex',
     alignItems: 'center',
@@ -63,7 +66,7 @@ const TasksBlock = ({ planObj }) => {
   }
 
   return (
-    <React.Fragment>
+    <div className={classes.root}>
         <Box className={classes.header}>
           <Typography variant='h5'>
             Задачи
@@ -94,7 +97,7 @@ const TasksBlock = ({ planObj }) => {
         plan={planObj}
         />
 
-    </React.Fragment>
+    </div>
   )
 }
 
