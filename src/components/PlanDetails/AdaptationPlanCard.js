@@ -2,11 +2,13 @@ import React, { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../context/auth.js';
 
+import RateBlock from './RateBlock.js';
 import ProgressBar from '../../reusable/ProgressBar.js';
 import SelectUsers from '../../reusable/Select.js';
 import formatService from '../../services/formatService.js'
 import { useExpService } from '../../context/expService.js';
 import ComponentAvailability from '../../reusable/ComponentAvailability.js';
+import role from '../../utils/role.js';
 
 import {
   Grid,
@@ -14,13 +16,14 @@ import {
   Button,
   makeStyles,
   Typography,
-  IconButton
+  IconButton,
 } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import CalendarSingle from '../../reusable/CalendarSingle.js';
 import Loader from '../../reusable/Loader.js';
+import { notify } from '../../reusable/Notification.js';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
     top: '5px',
     right: '3%',
   },
+  rateSelect: {
+    width: '100%'
+  }
 }));
 
 const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
@@ -102,6 +108,14 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
     editDisplayPlanField(dataField, value);
   }
 
+  const handleCompleteMarkChange = (e) => {
+    editDisplayPlanField('completed', e.target.value);
+  }
+
+  const handleRateChange = (e) => {
+    editDisplayPlanField('rate', e.target.value);
+  }
+
   const handleEditIconClick = () => {
     spaces.current = editing ? 3 : 2;
     setDisplayPlan(oldDisplayPlan);
@@ -117,15 +131,14 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
       employeePosition: displayPlan.employeePosition.id,
     })
       .then(() => {
+        notify('success', 'Изменения сохранены.');
         spaces.current = editing ? 3 : 2;
         setEditMode(false);
         setOldDisplayPlan(displayPlan);
+      }).catch(() => {
+        notify('error', 'Возникла ошибка. Проверьте правильность заполнения полей.');
       });
   }
-
-  React.useEffect(() => {
-    console.log(displayPlan);
-  })
 
   return (
     <>
@@ -260,6 +273,14 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                 </Typography>
               </Grid>
             </Grid>
+            {(user.role !== role.employee) &&
+              <RateBlock
+                classes={classes}
+                displayPlan={displayPlan}
+                handleCompleteMarkChange={handleCompleteMarkChange}
+                handleRateChange={handleRateChange}
+              />
+            }
           </Grid>
           <Grid item xs={12}>
             <ProgressBar stage={displayPlan.stage} />
@@ -285,7 +306,8 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
           }
         </Paper>
         : <Loader size={200} />
-      }</>
+      }
+    </>
   )
 
 }

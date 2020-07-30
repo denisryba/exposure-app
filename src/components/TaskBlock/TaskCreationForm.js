@@ -20,6 +20,7 @@ import {
   KeyboardDatePicker
 } from '@material-ui/pickers';
 import { useExpService } from '../../context/expService.js';
+import { notify } from '../../reusable/Notification.js';
 
 const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm }) => {
   const exposureService = useExpService();
@@ -60,7 +61,11 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
         setExecutionEnd(new Date());
         setTasks(tasks.concat(createdTask));
         toggleCreationForm();
-      });
+        notify('success', 'Задача успешно создана.');
+      })
+      .catch(() => {
+        notify('error', 'Ошибка создании задачи.');
+      });;
   }
 
   return (

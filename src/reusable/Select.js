@@ -23,7 +23,7 @@ const AutocompleteStaff = ( {variant, label, setValue, path, role, attached, val
     <Autocomplete
     {...defaultProps}
     value={value}
-    getOptionSelected={(option, value)=> JSON.stringify(option) === JSON.stringify(value)}
+    getOptionSelected={(option, value)=> option.id === value.id}
     disableClearable
     onChange={(e, newValue) => setValue(newValue, role)}
     renderInput={(params) => <TextField {...params} label={label} variant={variant}/>}
