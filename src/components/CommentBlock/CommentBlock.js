@@ -19,17 +19,19 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
   },
   title: {
+    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1)
   },
   commentList: {
     overflow: 'auto',
-    maxHeight: 270
+    maxHeight: 270,
   },
   commentForm: {
     display: 'flex',
     alignItems: 'center',
     paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1)
+    paddingRight: theme.spacing(1),
+
   },
   sendBtn: {
     marginLeft: theme.spacing(1)
