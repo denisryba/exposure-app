@@ -3,7 +3,7 @@ import { useExpService } from '../context/expService.js';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-const AutocompleteStaff = ( {variant, label, setValue, path, role, attached, value} ) => {
+const AutocompleteStaff = ( {variant, size, label, setValue, path, role, attached, value} ) => {
   const [optionList, setOptionList] = useState([]);
   const exposureService = useExpService();
   
@@ -26,7 +26,7 @@ const AutocompleteStaff = ( {variant, label, setValue, path, role, attached, val
     getOptionSelected={(option, value)=> option.id === value.id}
     disableClearable
     onChange={(e, newValue) => setValue(newValue, role)}
-    renderInput={(params) => <TextField {...params} label={label} variant={variant} required/>}
+    renderInput={(params) => <TextField {...params} label={label} variant={variant} size={size} required/>}
   />
   )
 };

@@ -7,7 +7,7 @@ import {
   KeyboardDatePicker
 } from '@material-ui/pickers';
 
-export default function Calendar({ passChanges, value, dateField }) {
+export default function Calendar({ passChanges, value, dateField, size }) {
 
   const handleDateChange = (e) => {
     const convertedDate = e.toJSON();
@@ -17,9 +17,11 @@ export default function Calendar({ passChanges, value, dateField }) {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={locale}>
       <KeyboardDatePicker
+        inputVariant="outlined"
         disableToolbar
         variant="inline"
         format="dd.MM.yyyy"
+        size={size}
         autoOk={true}
         value={value}
         onChange={handleDateChange}
