@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -17,6 +17,7 @@ from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useExpService } from '../../context/expService.js';
 import formatService from '../../services/formatService.js';
+import Confirmation from '../../reusable/Confirmation.js';
 
 const useStyles = makeStyles((theme)=> ({
   root: {
@@ -41,22 +42,28 @@ const useStyles = makeStyles((theme)=> ({
 
 
 const ListOfPlans = ({ onPlanClicked, plans, isHr, setPlanDeleted }) => {
-
-  const classes = useStyles();
-  
   const NameField = ({name}) => {
     if (!useMediaQuery('(min-width:960px)')) 
       name = formatService.setShortName(name) 
     return <span className={classes.nameField}>{name}</span>;
   }
+ 
+  const classes = useStyles();
   const exposureService = useExpService();
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const [planId, setPlanId] = useState(null);
 
-  const deletePlan = (id, event) => {
+  const handleConfirmationOpen = (id, event) => {
+    setPlanId(id);
+    setConfirmationOpen(true);
+    event.stopPropagation();
+  };
+
+  const deletePlan = id => {
     exposureService.remove('plan', id)
       .then(res => {
         setPlanDeleted(true);
       });
-    event.stopPropagation();
   };
 
   return (
@@ -85,7 +92,7 @@ const ListOfPlans = ({ onPlanClicked, plans, isHr, setPlanDeleted }) => {
                 <TableCell>{formatService.setDate(plan.date)}</TableCell>
                 {isHr && 
                   <TableCell>
-                  <IconButton onClick={(e) => deletePlan(plan.id, e)}>
+                  <IconButton onClick={(e) => handleConfirmationOpen(plan.id, e)}>
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>} 
@@ -95,6 +102,13 @@ const ListOfPlans = ({ onPlanClicked, plans, isHr, setPlanDeleted }) => {
             </TableBody>
           </Table>
         </TableContainer>
+        <Confirmation 
+          isOpen={confirmationOpen}
+          setIsOpen={setConfirmationOpen}
+          message='Вы уверены, что хотите удалить план?'
+          deletedId={planId}
+          action={deletePlan}
+          />
       </Box>   
     )
   }
