@@ -136,6 +136,7 @@ const PlanCreationForm = (
                   label="Начало адаптации"
                   autoOk={true}
                   fullWidth
+                  required
                   value={adaptationStart}
                   onChange={handleAdaptationStart}
                 />
@@ -147,6 +148,7 @@ const PlanCreationForm = (
                   variant="inline"
                   format="dd.MM.yyyy"
                   label="Конец адаптации"
+                  required
                   autoOk={true}
                   fullWidth
                   value={adaptationEnd}

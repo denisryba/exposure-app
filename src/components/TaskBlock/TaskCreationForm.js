@@ -22,14 +22,13 @@ import {
 import { useExpService } from '../../context/expService.js';
 import Notification, { notify } from '../../reusable/Notification.js';
 
-const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm }) => {
+const TaskCreationForm = ({ tasks, setTasks, open, plan, toggleCreationForm }) => {
   const exposureService = useExpService();
   const [name, setName] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
   const [description, setDescription] = useState('');
   const [executionStart, setExecutionStart] = useState(new Date());
-  let day = new Date().getDate();
-  const [executionEnd, setExecutionEnd] = useState(new Date().setDate(day + 7));
+  const [executionEnd, setExecutionEnd] = useState(new Date(plan.adaptationEnd));
 
   const handleChangeName = event => setName(event.target.value);
   const handleChangeDescription = event => setDescription(event.target.value);
@@ -48,7 +47,7 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
       description,
       executionStart,
       executionEnd,
-      plan: planId,
+      plan: plan.id,
       completed: isCompleted
     };
 
@@ -112,6 +111,7 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
                     onChange={handleChangeExecutionStart}
                     autoOk={true}
                     fullWidth
+                    required
                     inputVariant="outlined"
                   />
                 </Grid>
@@ -125,6 +125,7 @@ const TaskCreationForm = ({ tasks, setTasks, open, planId, toggleCreationForm })
                     onChange={handleChangeExecutionEnd}
                     autoOk={true}
                     inputVariant="outlined"
+                    required
                     fullWidth
                   />
                 </Grid>

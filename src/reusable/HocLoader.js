@@ -5,7 +5,7 @@ import { Grid, CircularProgress } from '@material-ui/core';
 function loaderHoc(View, data) {
   return function (props) {
 
-      if (!data) {
+      if (JSON.stringify(data) === '[]' || !data) {
         return (
           <Grid container justify='center'>
             <CircularProgress size={200} />

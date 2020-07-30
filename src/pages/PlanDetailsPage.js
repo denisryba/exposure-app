@@ -15,6 +15,7 @@ import ErrorBoundary from '../reusable/ErrorBoundary.js';
 import { Grid, makeStyles, Box, IconButton, Typography } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
+import Confirmation from '../reusable/Confirmation.js';
 
 const useStyles = makeStyles(theme => ({
   sendButtonsBox: {
@@ -40,6 +41,11 @@ const PlanDetailsPage = () => {
   const user = useAuth();
   const history = useHistory();
   const classes = useStyles();
+  const [isNextStage, setIsNextStage] = useState(false);
+  const [isPreviousStage, setIsPreviousStage] = useState(false);
+
+  const handleSwitchForward = () => setIsNextStage(true);
+  const handleSwitchBack = () => setIsPreviousStage(true);
 
   useEffect(() => {
     expService
@@ -147,16 +153,32 @@ const PlanDetailsPage = () => {
           {allowedToBackward()
             ? <SendButton
               type='backward'
-              handler={handleBackwardClick}
+              // handler={handleBackwardClick}
+              handler={handleSwitchBack}
               text={getSendButtonText(plan.stage, 'backward')} />
             : null}
           {allowedToForward()
             ? <SendButton
               type='forward'
-              handler={handleForwardClick}
+              // handler={handleForwardClick}
+              handler={handleSwitchForward}
               text={getSendButtonText(plan.stage, 'forward')} />
             : null}
         </Box>}
+      <Confirmation
+        isOpen={isNextStage}
+        setIsOpen={setIsNextStage}
+        message='Вы уверены, что хотите перейти на следующий этап?'
+        action={handleForwardClick}
+        buttonText='да'
+      />
+      <Confirmation
+        isOpen={isPreviousStage}
+        setIsOpen={setIsPreviousStage}
+        message='Вы уверены, что хотите вернуться на предыдущий этап?'
+        action={handleBackwardClick}
+        buttonText='да'
+      />
     </>
   );
 };

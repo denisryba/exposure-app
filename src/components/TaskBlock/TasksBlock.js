@@ -9,6 +9,7 @@ import ComponentAvailability from '../../reusable/ComponentAvailability.js';
 import { Typography, Box, Button, makeStyles } from '@material-ui/core';
 import { useExpService } from '../../context/expService.js';
 
+
 const useStyles = makeStyles((theme) => ({
   header: {
     display: 'flex',
@@ -40,7 +41,8 @@ const TasksBlock = ({ planObj }) => {
   const classes = useStyles();
   const [tasks, setTasks] = useState(null);
   const [onCreation, setOnCreation] = useState(false);
-  const user = useAuth()
+  const user = useAuth();
+
 
   const stageRoleModel = {
     createTaskBtn: {
@@ -76,20 +78,22 @@ const TasksBlock = ({ planObj }) => {
               className={classes.button}>
               Создать
             </Button>
-          </ComponentAvailability>
-        </Box>
-        {tasks ?
-          tasks.map((item, index) => {
-            return <TaskComponent key={item.id} expService={expService} taskObj={item} planStage={planObj.stage} removeTask={() => removeTask(index)} />
-          })
-          : <Loader size={200} />
-        }
-        <TaskCreationForm
-          tasks={tasks}
-          setTasks={setTasks}
-          toggleCreationForm={toggleCreationForm}
-          planId={planObj.id}
-          open={onCreation} />
+        </ComponentAvailability>
+      </Box>
+      {tasks ?
+        tasks.map((item, index) => {
+          return <TaskComponent key={item.id} expService={expService} taskObj={item} planStage={planObj.stage} removeTask={() => removeTask(index)} />
+        })
+        : <Loader size={200} />
+      }
+      <TaskCreationForm
+        tasks={tasks}
+        setTasks={setTasks}
+        toggleCreationForm={toggleCreationForm}
+        open={onCreation} 
+        plan={planObj}
+        />
+
     </React.Fragment>
   )
 }

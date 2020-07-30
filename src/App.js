@@ -56,9 +56,6 @@ const theme = createMuiTheme({
       fontWeight: 500,
       lineHeight: 2,
       fontSize: 18,
-    },
-    subtitle2: {
-      color: '#5c6bc0',
     }
   }
 });

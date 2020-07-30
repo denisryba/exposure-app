@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Grid, Fab, Typography } from '@material-ui/core';
+import { Grid, Fab, Typography, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import Pagination from '@material-ui/lab/Pagination';
 import { useExpService } from '../context/expService.js';
@@ -11,14 +11,23 @@ import ListOfPlans from '../components/PlanList/ListOfPlans.js';
 import PlanCreationForm from '../components/PlanList/PlanCreationForm.js';
 import loaderHoc from '../reusable/HocLoader.js';
 
+const useStyles = makeStyles((theme) => ({
+  message: {
+    minHeight: 500,
+  }
+}));
+
 const PlanListPage = ({ search }) => {
+  const classes = useStyles();
   const user = useAuth();
   const isHr = role.hr === user.role;
   const exposureService = useExpService();
-  const [plans, setPlans] = useState(null);
+  const [plans, setPlans] = useState([]);
   const [onCreation, setOnCreation] = useState(false);
   const [pageCount, setPageCount] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [planDeleted, setPlanDeleted] = useState(false);
+  const [loading, setLoading] = useState(true);
   const limit = 5;
 
   const history = useHistory();
@@ -28,9 +37,11 @@ const PlanListPage = ({ search }) => {
       .getAll(`plans`, { page: currentPage, limit: limit, search: search })
       .then(data => {
         setPlans(data.plans);
-        setPageCount(data.pageCount)
+        setPageCount(data.pageCount);
+        setPlanDeleted(false);
+        setLoading(false);
       });
-  }, [currentPage, exposureService, search]);
+  }, [currentPage, exposureService, search, planDeleted]);
 
 
 
@@ -44,7 +55,7 @@ const PlanListPage = ({ search }) => {
     history.push(id);
   };
 
-  const ListOfPlansLoader = loaderHoc(
+  const ListOfPlansWithLoader = loaderHoc(
     ListOfPlans,
     plans
   )
@@ -54,33 +65,44 @@ const PlanListPage = ({ search }) => {
       <Grid justify='center' container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h5">Адаптационные планы</Typography>
-          <ListOfPlansLoader onPlanClicked={onPlanClicked} setPlans={setPlans} isHr={isHr} />
+          <ListOfPlansWithLoader
+            onPlanClicked={onPlanClicked}
+            isHr={isHr}
+            setPlanDeleted={setPlanDeleted}
+          />
         </Grid>
-        <Grid item>
-          {plans &&
-            <Pagination count={pageCount} page={currentPage} onChange={handleCurrentPage} />}
-        </Grid>
+        {!loading &&
+          <Grid item>
+            <Pagination count={pageCount} page={currentPage} onChange={handleCurrentPage} />
+          </Grid>}
       </Grid>
-      {plans &&
-        (isHr
-          ? <Grid container justify='flex-end'>
-            <Fab
-              onClick={toggleCreationMode}
-              color='primary'>
-              <AddIcon />
-            </Fab>
+      {isHr
+        ? <Grid container justify='flex-end'>
+          <Fab
+            onClick={toggleCreationMode}
+            color='primary'>
+            <AddIcon />
+          </Fab>
+        </Grid>
+        : null}
+      {!loading &&
+        (plans.length ?
+          <PlanCreationForm
+            onCreation={onCreation}
+            toggleCreationMode={toggleCreationMode}
+            plans={plans}
+            setPlans={setPlans}
+            pageCount={pageCount}
+            setPageCount={setPageCount}
+            currentPage={currentPage}
+            limit={limit}
+          />
+          :
+          <Grid container justify="center" alignItems="center" className={classes.message} >
+            <Typography variant="subtitle1">Планов пока нет, но они скоро появятся :)</Typography>
           </Grid>
-          : null)}
-      <PlanCreationForm
-        onCreation={onCreation}
-        toggleCreationMode={toggleCreationMode}
-        plans={plans}
-        setPlans={setPlans}
-        pageCount={pageCount}
-        setPageCount={setPageCount}
-        currentPage={currentPage}
-        limit={limit}
-      />
+        )
+      }
     </>
   );
 };
