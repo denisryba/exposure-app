@@ -26,7 +26,7 @@ const AutocompleteStaff = ( {variant, label, setValue, path, role, attached, val
     getOptionSelected={(option, value)=> option.id === value.id}
     disableClearable
     onChange={(e, newValue) => setValue(newValue, role)}
-    renderInput={(params) => <TextField {...params} label={label} variant={variant}/>}
+    renderInput={(params) => <TextField {...params} label={label} variant={variant} required/>}
   />
   )
 };

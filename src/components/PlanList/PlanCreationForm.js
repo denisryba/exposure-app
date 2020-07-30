@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useExpService } from '../../context/expService.js';
+import { useAuth } from '../../context/auth.js';
 import {
   Box,
   Dialog,
@@ -34,6 +35,7 @@ const PlanCreationForm = (
     limit
   }
 ) => {
+  const user = useAuth();
   let month = new Date().getMonth();
   const exposureService = useExpService();
 
@@ -53,7 +55,7 @@ const PlanCreationForm = (
       employeePosition: positionObj.id,
       employee: employeeObj.id,
       supervisor: supervisorObj.id,
-      hr: "5e680f360f94107d10acba1d",
+      hr: user.id,
       stage: 0,
       adaptationStart: adaptationStart,
       adaptationEnd: adaptationEnd,
@@ -61,6 +63,7 @@ const PlanCreationForm = (
       rate: "A",
       tasks: []
     };
+
 
     exposureService
       .create('plan', planObject)
@@ -76,11 +79,11 @@ const PlanCreationForm = (
         setPositionObj(null);
         setAdaptationStart(new Date());
         setAdaptationEnd(new Date());
+        toggleCreationMode()
         notify('success', 'План был успешно создан.');
       })
       .catch(error => {
         notify('error', 'Ошибка при создании плана.');
-        toggleCreationMode()
       });
   }
 
@@ -154,7 +157,6 @@ const PlanCreationForm = (
             <Grid item xs={12} sm={3}>
               <Button 
                 variant="contained" 
-                onClick={toggleCreationMode} 
                 color="primary"
                 type="Submit"
                 fullWidth>

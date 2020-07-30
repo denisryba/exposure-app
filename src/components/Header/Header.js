@@ -9,6 +9,7 @@ import {
   InputBase,
   useScrollTrigger, 
   Slide,
+  Hidden,
   Popover } from '@material-ui/core';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -16,7 +17,7 @@ import UserCard from './UserCard.js';
 import { useAuth } from '../../context/auth.js';
 import storage from '../../utils/storage.js';
 import SearchIcon from '@material-ui/icons/Search';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, useRouteMatch  } from 'react-router-dom';
 import format from '../../services/formatService.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2)
   },
   toolbar: {
-    justifyContent: 'space-between' 
+    flexWrap: "wrap"
   },
   logo: {
     marginRight: theme.spacing(2),
@@ -57,7 +58,9 @@ const useStyles = makeStyles((theme) => ({
   inputInput: {
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
   },
-  
+  button: {
+    marginLeft: 'auto'
+  },
   appName: {
     display: 'flex',
     alignItems: 'center',
@@ -79,8 +82,10 @@ const Header = ({ setUser, setSearch }) => {
   const classes = useStyles();
   const userData = useAuth();
   const history = useHistory();
-  const [isShowing, setIsShowing] = useState(history.location.pathname === '/plans/')
-  history.listen((location) => setIsShowing(location.pathname  === '/plans/'))
+  const match = useRouteMatch('/plans/');
+  let isShowing = null;
+  if (match)
+   isShowing = match.isExact;
 
   const [ anchorEl, setAnchorEl ] = useState(null);
 
@@ -105,11 +110,13 @@ const Header = ({ setUser, setSearch }) => {
         <Toolbar className={classes.toolbar}>
           <Link to='/' className={classes.appName}>
             <EmojiPeopleIcon className={classes.logo} />
-            <Typography variant='h6'>
-              Exposure App
-            </Typography>
+            <Hidden smDown>
+              <Typography variant='h6'>
+                Exposure App
+              </Typography>
+            </Hidden>
           </Link>
-          {isShowing ? 
+          {isShowing &&
             <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -122,8 +129,7 @@ const Header = ({ setUser, setSearch }) => {
                 input: classes.inputInput,
               }}
           />
-          </div>
-          : null}
+          </div>}
           <Button
             onClick={handleNameClick}
             color='inherit'
