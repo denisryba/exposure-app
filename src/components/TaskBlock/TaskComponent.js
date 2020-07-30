@@ -303,14 +303,12 @@ const TaskComponent = ({ taskObj, expService, planStage, removeTask }) => {
               }
               <Grid className={classes.createdDate} xs={12} item sm={3}>
                 <Typography
-                  
                   color="textSecondary"
                   variant="body2">
                   Создана {formatService.setDate(task.date)}
                 </Typography>
               </Grid>
               </Grid>
-              
               <Collapse in={editing} >
                 <Grid item container justify='flex-end' xs={12}>
                   <Button

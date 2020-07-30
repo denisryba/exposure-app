@@ -11,6 +11,11 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
+  author: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
   date: {
     marginLeft: 'auto'
   }
@@ -27,7 +32,7 @@ const Comment = ({ data : { content, user, date }}) => {
 
   return (
     <ListItem className={classes.root}>
-      <Typography variant='subtitle1'>
+      <Typography className={classes.author} variant='subtitle1'>
         {commentAuthor()}
       </Typography>
       <Typography>
