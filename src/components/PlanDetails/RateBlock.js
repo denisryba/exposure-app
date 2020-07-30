@@ -41,9 +41,9 @@ export default function RateBlock({ classes, displayPlan, handleCompleteMarkChan
               } 
               }
               variant='outlined'
-              size='small'
               value={displayPlan.completed}
               onChange={handleCompleteMarkChange}
+              className={classes.rateSelect}
             >
               <MenuItem value={false}>Программа не пройдена</MenuItem>
               <MenuItem value={true}>Программа пройдена</MenuItem>
@@ -69,7 +69,6 @@ export default function RateBlock({ classes, displayPlan, handleCompleteMarkChan
               } 
               }
               variant='outlined'
-              size='small'
               value={displayPlan.rate}
               onChange={handleRateChange}
               className={classes.rateSelect}

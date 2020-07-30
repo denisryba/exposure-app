@@ -43,7 +43,15 @@ const useStyles = makeStyles((theme) => ({
   },
   textEnd: {
     marginRight: theme.spacing(1),
-    marginLeft: 'auto'
+    marginLeft: 'auto',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  planField :{
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   cardHeader: {
     display: 'flex',
@@ -188,7 +196,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                     attached='false'
                     value={displayPlan.employee}
                   />
-                  : <Typography>{displayPlan.employee.name} </Typography>
+                  : <Typography className={classes.planField}>{displayPlan.employee.name} </Typography>
                 }
               </Grid>
             </Grid>
@@ -209,7 +217,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                       role='employeePosition'
                       value={displayPlan.employeePosition}
                     />
-                    : <Typography>{displayPlan.employeePosition.name} </Typography>
+                    : <Typography className={classes.planField}>{displayPlan.employeePosition.name} </Typography>
                   }
                 </Grid>
               </Grid>
@@ -231,7 +239,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                       role='supervisor'
                       value={displayPlan.supervisor}
                     />
-                    : <Typography>
+                    : <Typography className={classes.planField}>
                       {displayPlan.supervisor.name}
                     </Typography>
                   }
@@ -252,7 +260,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                     dateField='adaptationStart'
                     value={displayPlan.adaptationStart}
                   />
-                  : <Typography>{formatService.setDate(displayPlan.adaptationStart)} </Typography>
+                  : <Typography className={classes.planField}>{formatService.setDate(displayPlan.adaptationStart)} </Typography>
                 }
               </Grid>
             </Grid>
@@ -270,7 +278,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                     dateField='adaptationEnd'
                     value={displayPlan.adaptationEnd}
                   />
-                  : <Typography>{formatService.setDate(displayPlan.adaptationEnd)} </Typography>
+                  : <Typography className={classes.planField}>{formatService.setDate(displayPlan.adaptationEnd)} </Typography>
                 }
               </Grid>
             </Grid>
@@ -281,7 +289,7 @@ const AdaptationPlanCard = ({ displayPlan, setDisplayPlan }) => {
                 </Typography>
               </Grid>
               <Grid item xs={8} sm={7}>
-                <Typography>
+                <Typography className={classes.planField}>
                   {displayPlan.hr.name}
                 </Typography>
               </Grid>
