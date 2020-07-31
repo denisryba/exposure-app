@@ -13,3 +13,18 @@ Extremely convenient way to track your new employees affiliation progress.
   npm start
   
   http://localhost:3001
+  
+## Данные для входа 
+  hr:  
+    username: Svetlana, 
+    password: helloworld;
+    
+  руководитель:  
+    username: Kate, 
+    password: helloworld;
+  
+  сотрудник: 
+    username: Vasya,
+    password: helloworld;
+    
+    
