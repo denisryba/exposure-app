@@ -15,15 +15,15 @@ Extremely convenient way to track your new employees affiliation progress.
   http://localhost:3001
   
 ## Данные для входа 
-  hr:  
+ # hr:  
     username: Svetlana, 
     password: helloworld;
     
-  руководитель:  
+ # руководитель:  
     username: Kate, 
     password: helloworld;
   
-  сотрудник: 
+ # сотрудник: 
     username: Vasya,
     password: helloworld;
     
