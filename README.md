@@ -8,7 +8,8 @@ Extremely convenient way to track your new employees affiliation progress.
 -[Отчет за вторую неделю](https://youtu.be/-0WG5laPraQ)
 
 ## Как использовать:
-  ```npm install
+  ```
+     npm install
      npm start
   ```
   http://localhost:3001
