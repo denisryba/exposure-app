@@ -7,24 +7,22 @@ Extremely convenient way to track your new employees affiliation progress.
 -[Отчет за первую неделю](https://youtu.be/-ZwnUnwZZlc)
 -[Отчет за вторую неделю](https://youtu.be/-0WG5laPraQ)
 
-## Как использовать
+## Как использовать:
   npm install
-  
   npm start
-  
   http://localhost:3001
   
 ## Данные для входа 
 ### hr:  
     username: Svetlana, 
-    password: helloworld;
+    password: helloworld
     
 ### руководитель:  
     username: Kate, 
-    password: helloworld;
+    password: helloworld
   
 ### сотрудник: 
     username: Vasya,
-    password: helloworld;
+    password: helloworld
     
     
