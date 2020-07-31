@@ -10,8 +10,6 @@ Extremely convenient way to track your new employees affiliation progress.
 ## Как использовать
   npm install
   
-  сформировать .env
-  
   npm start
   
-  открыть http://localhost:3001
+  http://localhost:3001
