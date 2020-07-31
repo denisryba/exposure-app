@@ -1,7 +1,11 @@
 # Exposure App
 Extremely convenient way to track your new employees affiliation progress.
 
-[Отчет за первую неделю](https://youtu.be/-ZwnUnwZZlc)
+# Важная информация
+Актуальный бэкенд нашего приложения лежит в ветке master. Код фронта вы можете найти в ветке [front](https://github.com/greenatom-hr-case-lab/exposure-app-4x4/tree/front).
+
+-[Отчет за первую неделю](https://youtu.be/-ZwnUnwZZlc)
+-[Отчет за вторую неделю](https://youtu.be/-0WG5laPraQ)
 
 ## How to use
   Type following to start dev server
