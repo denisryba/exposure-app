@@ -17,14 +17,14 @@ Extremely convenient way to track your new employees affiliation progress.
 ## Данные для входа 
   hr:  
     username: Svetlana, 
-    password: helloworld
+    password: helloworld;
     
   руководитель:  
     username: Kate, 
-    password: helloworld
+    password: helloworld;
   
   сотрудник: 
     username: Vasya,
-    password: helloworld
+    password: helloworld;
     
     
