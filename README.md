@@ -9,7 +9,8 @@ Extremely convenient way to track your new employees affiliation progress.
 
 ## Как использовать:
   ```npm install
-     npm start```
+     npm start
+  ```
   http://localhost:3001
   
 ## Данные для входа 
