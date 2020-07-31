@@ -7,9 +7,8 @@ Extremely convenient way to track your new employees affiliation progress.
 -[Отчет за первую неделю](https://youtu.be/-ZwnUnwZZlc)
 -[Отчет за вторую неделю](https://youtu.be/-0WG5laPraQ)
 
-## How to use
-  Type following to start dev server
-  `npm run dev`
-
-## Features
-  - '/api/plans', '/api/users', 'api/tasks', 'api/positions' support GET, POST, DELETE, PUT requests
+## Как использовать
+  npm install
+  сформировать .env
+  npm start
+  открыть http://localhost:3001
