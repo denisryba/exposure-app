@@ -28,6 +28,7 @@ mongoose.connect(config.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: 
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 const logTemplate = ':method :url :status :res[content-length] - :response-time ms :body';
 
+app.use(express.static('build'));
 app.use(cors());
 app.use(express.json());
 app.use(morgan(logTemplate));
@@ -46,5 +47,6 @@ app.use('/api/comments', commentsRouter);
 
 app.use(middleware.unknownRoute);
 app.use(middleware.errorHandler);
+
 
 module.exports = app;
